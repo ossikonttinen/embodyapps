@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embody Apps – calm iPhone apps for facilitation, wellbeing and connection</title>
+<meta name="description" content="Small, quiet iPhone apps for facilitators, wellbeing and connection: Facilitimer, Timepace, Simple HRV, Friendist and more. No ads, no tracking. Made in Finland.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Tilauslomakkeet */
+  .notify{margin-top:16px}
+  .notify-row{display:flex;flex-wrap:wrap;gap:8px}
+  .notify input[type=email]{flex:1 1 170px;min-width:0;font:inherit;font-size:15px;padding:10px 16px;
+    border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink)}
+  .notify input[type=email]::placeholder{color:var(--muted)}
+  .notify input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .notify button{font:600 14px/1 Figtree,system-ui,sans-serif;padding:11px 18px;border:0;border-radius:999px;
+    background:var(--accent);color:var(--card);cursor:pointer;white-space:nowrap}
+  .notify button:disabled{opacity:.6;cursor:default}
+  .app .notify button{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+  .notify-note{font-size:13px;color:var(--muted);margin:8px 0 0 6px}
+  .notify.collapsed input[type=email],.notify.collapsed .notify-note{display:none}
+  .notify .hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;opacity:0}
+  .notify-msg,.app .notify-msg{margin:16px 0 0;font-weight:600;color:var(--accent)}
+  .notify-err{font-size:14px;color:#b3261e;margin:8px 0 0 6px}
+  .newsletter{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-top:72px}
+  .newsletter h2{margin-top:0;margin-bottom:8px}
+  .newsletter > p:not(.notify-msg){color:var(--muted);margin:0}
+  /* Tietosuojaseloste supistettuna */
+  .policy summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px}
+  .policy summary::-webkit-details-marker{display:none}
+  .policy summary::after{content:"";width:9px;height:9px;margin-top:72px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-4px);transition:transform .2s}
+  .policy[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+  .policy summary h2{margin-bottom:20px}
+  .policy:not([open]) summary h2{margin-bottom:0}
+  /* Tietosuojaseloste sivun lopussa pienemmällä fontilla */
+  .policy-sec{margin-top:56px}
+  .policy summary h2{font-size:19px;margin-top:0}
+  .policy .quiet{font-size:13px}
+  .policy dl{font-size:14px;line-height:1.55}
+  .policy dt{margin-top:14px}
+  .policy summary::after{margin-top:0}
+  /* Testaajaraita etusivulla */
+  .beta-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px;padding:12px 16px;border-radius:14px;
+    background:var(--accent-soft);color:var(--ink);text-decoration:none;font-size:15px;line-height:1.35}
+  .beta-strip strong{color:var(--accent)}
+  .beta-strip span{color:var(--ink);flex:1 1 200px}
+  .beta-strip i{font-style:normal;color:var(--accent);font-weight:700}
+  .beta-strip:hover strong{text-decoration:underline}
+  /* Appiryhmien väliotsikot */
+  .group-title{font:600 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:36px 0 14px}
+  #apps h2 + .group-title,#apit h2 + .group-title{margin-top:8px}
+  /* Appikortin kuvake ja nimi vievät apin omalle sivulle */
+  a.head{text-decoration:none;color:inherit}
+  a.head h3::after{content:" →";color:var(--accent);font-family:Figtree,system-ui,sans-serif;font-size:.8em}
+  a.head:hover h3{color:var(--accent)}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Organization", "name": "Embody Apps", "url": "https://embodyapps.fi/", "logo": "https://embodyapps.fi/apple-touch-icon.png", "email": "hello@embodyapps.fi", "description": "Small iPhone apps for presence and connection by Ossi Konttinen. No ads, no feeds, no tracking.", "founder": {"@type": "Person", "name": "Ossi Konttinen"}}
+</script>
+<link rel="canonical" href="https://embodyapps.fi/">
+</head>
+<body>
+<!--
+  ============================================================
+  MUOKKAUSOHJE
+  - Muokkaa vain tekstiä tagien välissä, esim. <p>TÄMÄ TEKSTI</p>
+  - Älä poista < > -merkkejä tai lainausmerkkejä.
+  - Englanninkielinen sivu on ensin (ENGLANTI), suomenkielinen
+    sen jälkeen (SUOMI). Muuta molemmat, jos muutat sisältöä.
+  - & kirjoitetaan muodossa &amp;
+  - Päivitys: raahaa koko embodyapps-kansio Netlifyyn.
+  ============================================================
+-->
+
+<div class="lang" role="group" aria-label="Language / Kieli">
+  <button type="button" data-to="en" aria-pressed="true">EN</button>
+  <button type="button" data-to="fi" aria-pressed="false">FI</button>
+</div>
+
+<!-- ===================== ENGLANTI ===================== -->
+<main id="en" lang="en">
+
+  <!-- Otsikko ja johdanto -->
+  <header>
+    <div class="brand"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="86 21" transform="rotate(125 24 24)"/><circle cx="24" cy="24" r="5" fill="currentColor"/></svg><span>Embody Apps</span></div>
+    <h1>Small, quiet apps for presence, connection and play.</h1>
+    <p class="lede">No feeds, no accounts, no tracking. Your data stays on your phone.</p>
+    <!-- Testaajahaku: linkki omalle sivulle -->
+    <a class="beta-strip" href="/testers/"><strong>Beta testers wanted</strong><span>Try upcoming apps on your iPhone before launch</span><i aria-hidden="true">→</i></a>
+  </header>
+
+  <!-- Apit: yksi <article> per appi -->
+  <section id="apps">
+    <h2>Apps</h2>
+    <!-- Ryhmä: Wellbeing -->
+    <h3 class="group-title">Wellbeing</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/affirmation-of-life/"><img class="icon" src="icons/affirmation-of-life.webp" alt="" width="56" height="56"><h3>Affirmation of Life</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Affirmations across eight areas of life, revealed through small playful rituals: scratch, breathe, puzzle.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Affirmation of Life" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Affirmation of Life">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/friendist/"><img class="icon" src="icons/friendist.webp" alt="" width="56" height="56"><h3>Friendist</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>The people close to you, in one place. Circles instead of a contact list, with gentle reminders to stay in touch.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Friendist" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Friendist">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/bodybreath/"><img class="icon" src="icons/bodybreath.webp" alt="" width="56" height="56"><h3>Bodybreath</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Relaxing, energising or sleep-inducing breathing, plus a body scan. Guided by gentle vibration or a calm voice.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Bodybreath" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Bodybreath">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/balance-of-life/"><img class="icon" src="icons/balance-of-life.webp" alt="" width="56" height="56"><h3>Balance of Life</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A wheel of life: rate eight areas of life each month and keep your values and goals in view.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Balance of Life" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Balance of Life">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/simple-hrv/"><img class="icon" src="icons/simple-hrv.webp" alt="" width="56" height="56"><h3>Simple HRV</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Measure heart rate variability with your fingertip on the camera. Daily averages and how today compares to your own level.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Simple HRV" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Simple HRV">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/glimmers-triggers/"><img class="icon" src="icons/glimmers-triggers.webp" alt="" width="56" height="56"><h3>Glimmers &amp; Triggers</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Two buttons: a glimmer when you relax, a trigger when you tense up. Over the days you see what calms you and what keeps coming back.</p>
+        <form class="notify collapsed" data-app="Glimmers &amp; Triggers" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Glimmers & Triggers">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+    </div>
+    <!-- Ryhmä: Timing -->
+    <h3 class="group-title">Timing</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/facilitimer/"><img class="icon" src="facilitimer.webp" alt="" width="56" height="56"><h3>Facilitimer</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A timer for facilitators, teachers and anyone who runs sessions. Presets with gentle interval chimes, a clear clock view, and nothing to fiddle with mid-session.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Facilitimer" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Facilitimer">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/timepace/"><img class="icon" src="icons/timepace.webp" alt="" width="56" height="56"><h3>Timepace</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Plan the flow of a workshop, then run it. Sections, timings and a presenter view.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Timepace" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Timepace">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fairtimer/"><img class="icon" src="icons/fairtimer.webp" alt="" width="56" height="56"><h3>Fairtimer</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>Timers, a stopwatch and a speaking-time mode that shows how talking time is shared in a group.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Fairtimer" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Fairtimer">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fidget-time/"><img class="icon" src="icons/fidget-time.webp" alt="" width="56" height="56"><h3>Fidget time</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A calming clock and a fidget toy in one: the time is built from cubes you can press, drag and shake. Try it in your browser.</p>
+        <form class="notify collapsed" data-app="Fidget time" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Fidget time">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+    </div>
+    <!-- Ryhmä: Games -->
+    <h3 class="group-title">Games</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/blindslide/"><img class="icon" src="icons/blindslide.webp" alt="" width="56" height="56"><h3>Blindslide</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A collection of four reaction games played by sound and touch. Fully playable without seeing the screen.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Blindslide" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Blindslide">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/shapeslide/"><img class="icon" src="icons/shapeslide.webp" alt="" width="56" height="56"><h3>Shapeslide</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A geometric series of reaction games. Four ways to play, nine fields. Get absorbed and unwind.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Shapeslide" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Shapeslide">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/haptisynth/"><img class="icon" src="icons/haptisynth.webp" alt="" width="56" height="56"><h3>Haptisynth</h3></a><span class="tag soon">Coming soon</span></div>
+        <p>A synthesizer you play by tilting the phone. Your finger starts the note, and the phone ticks in your hand on every note.</p>
+        <form class="notify collapsed" data-app="Haptisynth" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: Haptisynth">
+            <button type="submit">Notify me at launch</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <!-- Tuki -->
+  <section id="support">
+    <h2>Support</h2>
+    <p>Questions, bugs or ideas? Email <a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a> and mention which app and iPhone model you are using. Replies usually within a few days.</p>
+  </section>
+
+  <!-- Uutiskirje (appi = "kaikki") -->
+  <section id="newsletter" class="newsletter">
+    <h2>Newsletter</h2>
+    <p>Hear when new apps launch. A few emails a year at most.</p>
+    <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+    <form class="notify open" data-app="kaikki" novalidate>
+      <div class="notify-row">
+        <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Email for launch news: newsletter">
+        <button type="submit">Subscribe</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+    </form>
+  </section>
+
+  <!-- Tietosuojaseloste: <dt> = otsikko, <dd> = teksti -->
+  <section id="privacy" class="policy-sec">
+    <details class="policy">
+    <summary><h2>Privacy policy</h2></summary>
+    <p class="quiet">Applies to all Embody Apps and this website. Last updated November 2026.</p>
+    <dl>
+      <dt>What the apps collect</dt>
+      <dd>Nothing. Our apps do not collect, transmit or sell personal data. There are no accounts, no analytics and no advertising.</dd>
+      <dt>Where your data lives</dt>
+      <dd>Everything you create in an app (presets, entries, scores) is stored only on your device. If you delete the app, the data is deleted with it. Some apps let you export a backup file; that file is yours and never leaves your device unless you share it.</dd>
+      <dt>Purchases</dt>
+      <dd>In-app purchases are handled by Apple. We receive no payment details or personal information from them.</dd>
+      <dt>Permissions</dt>
+      <dd>An app may ask for notifications (reminders) or haptics (vibration). These are used only for the feature you turned on and can be switched off in Settings.</dd>
+      <dt>Children</dt>
+      <dd>Our apps are not directed at children under 13 and collect no data from anyone.</dd>
+      <dt>Newsletter and launch news (this website)</dt>
+      <dd>The only personal data this website collects is the email address you enter in a subscription form, together with the app you asked about, your language and the date. We use it only to send launch news and our newsletter. It is stored in Google Sheets (Google), is not shared with or sold to anyone else, and is deleted on request: email hello@embodyapps.fi. Every email includes a way to unsubscribe.</dd>
+      <dt>Beta testers (this website)</dt>
+      <dd>If you sign up as a tester, we also store your name and the apps you chose, so we can send TestFlight invites and messages about testing. Same storage and deletion as above. Apple handles TestFlight itself.</dd>
+      <dt>When you contact us</dt>
+      <dd>If you email us, we use your email address and message only to reply to you. We do not add you to any list, and we delete old support emails when they are no longer needed.</dd>
+      <dt>Who is responsible</dt>
+      <dd>Keho &amp; Yhteys (Business ID 2729215-4), Finland. Contact: hello@embodyapps.fi. You have the right to ask what data we hold about you and to have it deleted, and to lodge a complaint with the Finnish Data Protection Ombudsman.</dd>
+      <dt>Changes</dt>
+      <dd>If this policy changes, the new version will be published on this page.</dd>
+    </dl>
+    </details>
+  </section>
+
+  <!-- Alalaita -->
+  <footer>
+    Embody Apps is made by Keho &amp; Yhteys, Finland · Business ID 2729215-4<br>
+    <a href="#privacy">Privacy</a> · <a href="#support">Support</a>
+  </footer>
+</main>
+
+<!-- ======================= SUOMI ======================= -->
+<main id="fi" lang="fi" hidden>
+
+  <!-- Otsikko ja johdanto -->
+  <header>
+    <div class="brand"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="86 21" transform="rotate(125 24 24)"/><circle cx="24" cy="24" r="5" fill="currentColor"/></svg><span>Embody Apps</span></div>
+    <h1>Pieniä, läsnäoloa ja yhteyttä vahvistavia appeja.</h1>
+    <p class="lede">Ei mainoksia tai syötteitä, ei tilejä, tai seurantaa. Tietosi pysyvät omassa laitteessasi.</p>
+    <!-- Testaajahaku: linkki omalle sivulle -->
+    <a class="beta-strip" href="/testaajat/"><strong>Etsitään testaajia</strong><span>Kokeile tulevia appeja iPhonella ennen julkaisua</span><i aria-hidden="true">→</i></a>
+  </header>
+
+  <!-- Apit: yksi <article> per appi -->
+  <section id="apit">
+    <h2>Apit</h2>
+    <!-- Ryhmä: Hyvinvointi -->
+    <h3 class="group-title">Hyvinvointi</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/affirmation-of-life/"><img class="icon" src="icons/affirmation-of-life.webp" alt="" width="56" height="56"><h3>Affirmation of Life</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Affirmaatioita elämän kahdeksalle osa-alueelle pienten leikkistten minitehtävien kautta: hengitä, pelaa, tai luo omia affirmaatiota.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Affirmation of Life" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Affirmation of Life">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/friendist/"><img class="icon" src="icons/friendist.webp" alt="" width="56" height="56"><h3>Friendist</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Sinulle läheiset ihmiset yhdessä paikassa. Ihmissuhdeverkostosi ja läheistesi kartoitus ja lempeät muistutukset pitää yhteyttä.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Friendist" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Friendist">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/bodybreath/"><img class="icon" src="icons/bodybreath.webp" alt="" width="56" height="56"><h3>Bodybreath</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Rentouttava, aktivoiva tai uneen saatteleva hengitys sekä kehoskannaus. Valittavana värinä tai lempeä puhe.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Bodybreath" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Bodybreath">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/balance-of-life/"><img class="icon" src="icons/balance-of-life.webp" alt="" width="56" height="56"><h3>Balance of Life</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Elämänpyörä: arvioi kahdeksan elämänaluetta kuukausittain ja pidä arvot ja tavoitteet näkyvillä.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Balance of Life" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Balance of Life">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/simple-hrv/"><img class="icon" src="icons/simple-hrv.webp" alt="" width="56" height="56"><h3>Simple HRV</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Mittaa sykevälivaihtelu sormi kameraa vasten. Päivän keskiarvot ja vertailu omaan tasoosi.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Simple HRV" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Simple HRV">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/glimmers-triggers/"><img class="icon" src="icons/glimmers-triggers.webp" alt="" width="56" height="56"><h3>Glimmers &amp; Triggers</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Kaksi nappia: glimmer, kun rentoudut, trigger, kun jännityt. Päivien mittaan näet, mikä rauhoittaa ja mikä toistuu.</p>
+        <form class="notify collapsed" data-app="Glimmers &amp; Triggers" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Glimmers & Triggers">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+    </div>
+    <!-- Ryhmä: Aikataulutus -->
+    <h3 class="group-title">Aikataulutus</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/facilitimer/"><img class="icon" src="facilitimer.webp" alt="" width="56" height="56"><h3>Facilitimer</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Ajastin fasilitaattoreille, opettajille ja kaikille, jotka aikatauluttavat tapahtumia. Valmiit ajastukset lempeillä väliäänillä, selkeä kellonäkymä eikä mitään säädettävää kesken session.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Facilitimer" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Facilitimer">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/timepace/"><img class="icon" src="icons/timepace.webp" alt="" width="56" height="56"><h3>Timepace</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Suunnittele tapahtuman kulku ja vedä se. Suunnittelu, ajoitus, tulostus ja esitysnäkymä.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Timepace" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Timepace">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/fairtimer/"><img class="icon" src="icons/fairtimer.webp" alt="" width="56" height="56"><h3>Fairtimer</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Ajastimet, sekuntikello ja puheaikatila, joka näyttää, miten puheaika jakautuu ryhmässä.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Fairtimer" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Fairtimer">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/fidget-time/"><img class="icon" src="icons/fidget-time.webp" alt="" width="56" height="56"><h3>Fidget time</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Rauhoittava kello ja leikkikalu samassa: kellonaika rakentuu kuutioista, joita voit painaa, vetää ja ravistella. Kokeile selaimessa.</p>
+        <form class="notify collapsed" data-app="Fidget time" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Fidget time">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+    </div>
+    <!-- Ryhmä: Pelit -->
+    <h3 class="group-title">Pelit</h3>
+    <div class="apps">
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/blindslide/"><img class="icon" src="icons/blindslide.webp" alt="" width="56" height="56"><h3>Blindslide</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Neljän reaktiopelin kokoelma, joita pelataan äänen ja kosketuksen avulla. Mahdollisuus pelata myös näkemättä näyttöä.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Blindslide" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Blindslide">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/shapeslide/"><img class="icon" src="icons/shapeslide.webp" alt="" width="56" height="56"><h3>Shapeslide</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Geometrinen reaktiopelien sarja. Neljä pelitapaa, 9 kenttää. Uppoudu ja rentoudu.</p>
+        <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+        <form class="notify collapsed" data-app="Shapeslide" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Shapeslide">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+      <article class="app">
+        <div class="row"><a class="head" href="/fi/haptisynth/"><img class="icon" src="icons/haptisynth.webp" alt="" width="56" height="56"><h3>Haptisynth</h3></a><span class="tag soon">Tulossa</span></div>
+        <p>Syntetisaattori, jota soitetaan kallistamalla puhelinta. Sormi käynnistää äänen, ja puhelin tikittää kädessä jokaisella sävelellä.</p>
+        <form class="notify collapsed" data-app="Haptisynth" novalidate>
+          <div class="notify-row">
+            <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: Haptisynth">
+            <button type="submit">Ilmoita julkaisusta</button>
+          </div>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <!-- Tuki -->
+  <section id="tuki">
+    <h2>Tuki</h2>
+    <p>Kysyttävää, vikoja tai ideoita? Lähetä sähköpostia osoitteeseen <a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a> ja kerro, mistä apista ja mistä iPhone-mallista on kyse. Vastaan yleensä muutaman päivän sisällä.</p>
+  </section>
+
+  <!-- Uutiskirje (appi = "kaikki") -->
+  <section id="uutiskirje" class="newsletter">
+    <h2>Uutiskirje</h2>
+    <p>Kuulet, kun uusia appeja julkaistaan. Korkeintaan muutama viesti vuodessa.</p>
+    <!-- Tilauslomake: data-app = sarakkeeseen "appi" tallentuva nimi -->
+    <form class="notify open" data-app="kaikki" novalidate>
+      <div class="notify-row">
+        <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostisi" aria-label="Sähköposti julkaisu-uutisille: uutiskirje">
+        <button type="submit">Tilaa</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="notify-note">Vain julkaisu-uutisia. Voit perua milloin vain.</p>
+    </form>
+  </section>
+
+  <!-- Tietosuojaseloste: <dt> = otsikko, <dd> = teksti -->
+  <section id="tietosuoja" class="policy-sec">
+    <details class="policy">
+    <summary><h2>Tietosuojaseloste</h2></summary>
+    <p class="quiet">Koskee kaikkia Embody Apps -appeja ja tätä sivustoa. Päivitetty marraskuussa 2026.</p>
+    <dl>
+      <dt>Mitä appit keräävät</dt>
+      <dd>Eivät mitään. Appimme eivät kerää, lähetä tai myy henkilötietoja. Niissä ei ole käyttäjätilejä, analytiikkaa eikä mainoksia.</dd>
+      <dt>Missä tietosi ovat</dt>
+      <dd>Kaikki appiin luomasi (ajastukset, merkinnät, tulokset) tallentuu vain laitteellesi. Jos poistat apin, tiedot poistuvat sen mukana. Osassa appeja voit viedä varmuuskopiotiedoston; se on sinun, eikä se lähde laitteeltasi, ellet itse jaa sitä.</dd>
+      <dt>Ostot</dt>
+      <dd>Sovelluksen sisäiset ostot hoitaa Apple. Emme saa niistä maksu- tai henkilötietoja.</dd>
+      <dt>Käyttöoikeudet</dt>
+      <dd>Appi voi pyytää lupaa ilmoituksiin (muistutukset) tai värinään. Niitä käytetään vain itse valitsemaasi toimintoon, ja ne voi kytkeä pois Asetuksista.</dd>
+      <dt>Lapset</dt>
+      <dd>Appejamme ei ole suunnattu alle 13-vuotiaille, emmekä kerää tietoja keneltäkään.</dd>
+      <dt>Uutiskirje ja julkaisu-uutiset (tämä sivusto)</dt>
+      <dd>Sivusto kerää ainoastaan sähköpostiosoitteen, jonka annat tilauslomakkeeseen, sekä apin, josta olet kiinnostunut, kielen ja päivämäärän. Käytämme osoitetta vain julkaisu-uutisten ja uutiskirjeen lähettämiseen. Tiedot säilytetään Google Sheetsissä (Google), niitä ei luovuteta tai myydä eteenpäin, ja ne poistetaan pyynnöstä: hello@embodyapps.fi. Jokaisessa viestissä on myös peruutuslinkki.</dd>
+      <dt>Testaajat (tämä sivusto)</dt>
+      <dd>Jos ilmoittaudut testaajaksi, tallennamme myös nimesi ja valitsemasi apit, jotta voimme lähettää TestFlight-kutsuja ja testaukseen liittyviä viestejä. Säilytys ja poisto kuten yllä. TestFlightia hallinnoi Apple.</dd>
+      <dt>Kun otat yhteyttä</dt>
+      <dd>Jos lähetät meille sähköpostia, käytämme osoitettasi ja viestiäsi vain vastaamiseen. Emme lisää sinua millekään listalle, ja poistamme vanhat tukiviestit, kun niitä ei enää tarvita.</dd>
+      <dt>Rekisterinpitäjä</dt>
+      <dd>Keho &amp; Yhteys (Y-tunnus 2729215-4), Suomi. Yhteys: hello@embodyapps.fi. Sinulla on oikeus tietää, mitä tietoja sinusta on, pyytää niiden poistamista sekä tehdä valitus tietosuojavaltuutetulle.</dd>
+      <dt>Muutokset</dt>
+      <dd>Jos tämä seloste muuttuu, uusi versio julkaistaan tällä sivulla.</dd>
+    </dl>
+    </details>
+  </section>
+
+  <!-- Alalaita -->
+  <footer>
+    Embody Apps -appeja tekee Keho &amp; Yhteys, Suomi · Y-tunnus 2729215-4<br>
+    <a href="#tietosuoja">Tietosuoja</a> · <a href="#tuki">Tuki</a>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+<!-- ============================================================
+  TILAUSLOMAKKEIDEN OSOITE
+  Liitä alle Apps Scriptin verkkosovelluksen osoite (päättyy /exec)
+  ============================================================ -->
+<script>
+const SUBSCRIBE_URL = 'https://script.google.com/macros/s/AKfycbwDNhQvIeNaigZbrI6iroZY_uQ0hjrruPk45Z2LZq_xE37s-2uujYl5-wvtRnwVQfrqZg/exec';
+
+(function(){
+  const MSG = {
+    en:{ok:"Thanks! We'll let you know.", dup:"You're already on the list. Thanks!",
+        send:'Send', bad:'Please check the email address.', err:'Something went wrong. Please try again or email hello@embodyapps.fi.', wait:'Sending…'},
+    fi:{ok:'Kiitos! Kerromme sinulle.', dup:'Olet jo listalla. Kiitos!',
+        send:'Lähetä', bad:'Tarkista sähköpostiosoite.', err:'Jokin meni vikaan. Yritä uudelleen tai lähetä viesti hello@embodyapps.fi.', wait:'Lähetetään…'}
+  };
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function done(form, text){
+    const p = document.createElement('p');
+    p.className = 'notify-msg'; p.setAttribute('role','status'); p.textContent = text;
+    form.replaceWith(p);
+  }
+  function showErr(form, text){
+    let e = form.querySelector('.notify-err');
+    if(!e){ e = document.createElement('p'); e.className = 'notify-err'; e.setAttribute('role','alert'); form.appendChild(e); }
+    e.textContent = text;
+  }
+
+  document.querySelectorAll('form.notify').forEach(function(form){
+    if(form.classList.contains('collapsed')) form.querySelector('button').setAttribute('aria-expanded','false');
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      const lang = form.closest('main').getAttribute('lang') === 'fi' ? 'fi' : 'en';
+      const m = MSG[lang];
+      if(form.classList.contains('collapsed')){                 // 1. painallus avaa kentän
+        form.classList.remove('collapsed');
+        const b = form.querySelector('button'); b.textContent = m.send; b.setAttribute('aria-expanded','true');
+        form.email.focus();
+        return;
+      }
+      const email = form.email.value.trim();
+      if(form.website.value){ done(form, m.ok); return; }          // honeypot: botti
+      if(!EMAIL_RE.test(email)){ showErr(form, m.bad); form.email.focus(); return; }
+      if(SUBSCRIBE_URL.indexOf('https://') !== 0){ showErr(form, m.err); console.warn('SUBSCRIBE_URL puuttuu'); return; }
+
+      const btn = form.querySelector('button'); const label = btn.textContent;
+      btn.disabled = true; btn.textContent = m.wait;
+      try{
+        const res = await fetch(SUBSCRIBE_URL, {
+          method:'POST',
+          body: new URLSearchParams({email: email, app: form.dataset.app, lang: lang, website: ''})
+        });
+        const data = await res.json();
+        if(data.result === 'ok') done(form, m.ok);
+        else if(data.result === 'duplicate') done(form, m.dup);
+        else if(data.reason === 'email') { showErr(form, m.bad); btn.disabled = false; btn.textContent = label; }
+        else throw new Error(data.reason || 'error');
+      }catch(err){
+        showErr(form, m.err); btn.disabled = false; btn.textContent = label;
+      }
+    });
+  });
+})();
+</script>
+
+
+<script>
+/* Tietosuojaseloste aukeaa itsestään, jos sivulle tullaan linkillä #privacy tai #tietosuoja */
+(function(){
+  function openFromHash(){
+    var id = location.hash.slice(1); if(!id) return;
+    var el = document.getElementById(id); if(!el) return;
+    var d = el.querySelector('details.policy');
+    if(d && !d.open){ d.open = true; el.scrollIntoView(); }
+  }
+  openFromHash();
+  window.addEventListener('hashchange', function(){ setTimeout(openFromHash, 0); });
+  document.querySelectorAll('a[href="#privacy"],a[href="#tietosuoja"]').forEach(function(a){
+    a.addEventListener('click', function(){ setTimeout(openFromHash, 0); });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colorlunch – värireaktiopeli (iPhone)</title>
+<meta name="description" content="Pidä sormi palikan värisellä reunalla, ja väri kurottaa ja syö sen. Värireaktiopeli, jossa joka tasolla uusia värejä, liikettä ja melodioita. Ei mainoksia, ei seurantaa.">
+<link rel="canonical" href="https://embodyapps.fi/fi/colorlunch/">
+<link rel="alternate" hreflang="en" href="https://embodyapps.fi/colorlunch/">
+<link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/colorlunch/">
+<link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/colorlunch/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://embodyapps.fi/fi/colorlunch/">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:site_name" content="Embody Apps">
+<meta property="og:title" content="Colorlunch – värireaktiopeli (iPhone)">
+<meta property="og:description" content="Pidä sormi palikan värisellä reunalla, ja väri kurottaa ja syö sen. Värireaktiopeli, jossa joka tasolla uusia värejä, liikettä ja melodioita. Ei mainoksia, ei seurantaa.">
+<meta property="og:image" content="https://embodyapps.fi/colorlunch/img/fi-syo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Colorlunch", "applicationCategory": "GameApplication", "operatingSystem": "iOS", "inLanguage": ["en", "fi"], "description": "Pidä sormi palikan värisellä reunalla, ja väri kurottaa ja syö sen. Värireaktiopeli, jossa joka tasolla uusia värejä, liikettä ja melodioita. Ei mainoksia, ei seurantaa.", "url": "https://embodyapps.fi/fi/colorlunch/", "image": "https://embodyapps.fi/colorlunch/img/fi-syo.jpg", "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Colorlunch – Kaikki tasot", "price": "1.99", "priceCurrency": "EUR"}], "publisher": {"@type": "Organization", "name": "Embody Apps", "url": "https://embodyapps.fi/", "email": "hello@embodyapps.fi"}}
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  /* Glimmers & Triggers-sivu. Suomenkielinen versio on osoitteessa /fi/. */
+  main{max-width:980px}
+  .wrap{max-width:640px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}
+  .top a.brand{text-decoration:none;margin:0}
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
+  @media (min-width:820px){ .hero{grid-template-columns:1.15fr .85fr;gap:56px} }
+  .app-id{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .app-id img{width:64px;height:64px;border-radius:15px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .app-id b{display:block;font:600 19px/1.2 Figtree,system-ui,sans-serif}
+  .app-id span{font-size:15px;color:var(--muted)}
+  .hero h1{font-size:clamp(40px,6.4vw,60px)}
+  .hero .lede{max-width:34ch}
+  .cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:26px}
+  .soon-badge{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Figtree,system-ui,sans-serif;padding:12px 18px;
+    border-radius:999px;background:var(--ink);color:var(--bg)}
+    .cta a{font-weight:600;font-size:15px}
+  /* Puhelinkuvat */
+  .shot{display:block;width:100%;height:auto;border-radius:28px;background:#111;box-shadow:0 18px 40px -18px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06)}
+  .hero .shot{max-width:300px;margin:0 auto}
+  /* Osiot */
+  section{margin-top:96px}
+  section h2{margin-top:0}
+  .eyebrow{margin-bottom:10px}
+  .split{display:grid;grid-template-columns:1fr;gap:36px;align-items:start}
+  @media (min-width:820px){ .split{grid-template-columns:1.2fr .8fr;gap:56px} .split.rev{grid-template-columns:.8fr 1.2fr} .split.rev > :first-child{order:2} }
+  .split .shot{max-width:280px;margin:0 auto}
+  ul.ticks{list-style:none;padding:0;margin:0}
+  ul.ticks li{position:relative;padding-left:26px;margin:9px 0}
+  ul.ticks li::before{content:"";position:absolute;left:2px;top:.62em;width:9px;height:9px;border-radius:50%;
+    box-shadow:0 0 0 2px var(--accent);background:transparent}
+  .problem{font-family:Fraunces,Georgia,serif;font-size:clamp(24px,3.4vw,32px);line-height:1.3;max-width:28ch;margin:0}
+  .problem + p{margin-top:16px;color:var(--muted);max-width:56ch}
+  /* Kaavat */
+  .formulas{width:100%;border-collapse:collapse;margin:8px 0 18px}
+  .formulas td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:16px}
+  .formulas td:first-child{width:9.5em;padding-right:14px}
+  code,.f{font:600 16px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .f{display:inline-block;padding:6px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+  .legend{font-size:15px;color:var(--muted)}
+  .legend code{font-size:15px;color:var(--ink)}
+  /* Kokeile kaavaa */
+  .try{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 22px 18px;margin-top:28px}
+  .try h3{font:600 17px/1.3 Figtree,system-ui,sans-serif;margin:0 0 12px}
+  .try-row{display:flex;gap:8px;flex-wrap:wrap}
+  .try input{flex:1 1 200px;min-width:0;font:600 20px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:12px 16px;border-radius:12px;
+    border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+  .try input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .ex{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+  .ex button{font:600 13px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;color:var(--ink);cursor:pointer}
+  .ex button:hover{border-color:var(--accent);color:var(--accent)}
+  .bars{display:flex;gap:3px;margin-top:18px;height:34px}
+  .bar{position:relative;flex:1 1 0;min-width:4px;border-radius:6px;background:var(--accent)}
+  .bar:nth-child(even){background:color-mix(in srgb,var(--accent) 72%,var(--card))}
+  .bar i{position:absolute;top:-5px;bottom:-5px;width:2px;margin-left:-1px;border-radius:2px;background:var(--ink)}
+  .sum{margin:12px 0 0;font-size:15px;color:var(--muted);min-height:1.6em}
+  .sum b{color:var(--ink)}
+  .sum.err{color:#b3261e}
+  /* Ennakkovaroitus-sirut */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chips span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  /* Kuvagalleria */
+  .gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 22px;margin:22px -24px 0;padding-left:24px;padding-right:24px}
+  .gallery figure{flex:0 0 200px;margin:0;scroll-snap-align:start}
+  .gallery figcaption{font-size:14px;color:var(--muted);margin-top:10px;text-align:center}
+  /* Kaksoisajastin */
+  .dual{display:flex;gap:12px;margin-top:20px}
+  .dual div{flex:1;border-radius:16px;padding:18px;text-align:center;font:600 30px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#fff}
+  .dual small{display:block;font:500 13px/1.3 Figtree,system-ui,sans-serif;margin-top:8px;opacity:.85}
+  /* Ilmainen vs Pro */
+  .plans{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px}
+  @media (min-width:640px){ .plans{grid-template-columns:1fr 1fr} }
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+  .plan.pro{border:1.5px solid var(--accent)}
+  .plan h3{font-size:24px}
+  .price{font:600 15px/1.3 Figtree,system-ui,sans-serif;color:var(--muted);margin:6px 0 14px}
+  .plan.pro .price{color:var(--accent)}
+  .plan ul.ticks li{font-size:16px}
+  .note{font-size:14px;color:var(--muted);margin-top:14px}
+  /* Yksityisyys */
+  .privacy{background:var(--accent-soft);border-radius:22px;padding:28px 26px}
+  .privacy h2{margin-bottom:10px}
+  .privacy p{margin:0 0 10px;max-width:56ch}
+  /* Lopun CTA ja lomake */
+  .final{text-align:center;margin-left:auto;margin-right:auto}
+  .final h2{font-size:clamp(30px,4.6vw,40px);margin-bottom:12px}
+  .final > p{color:var(--muted);max-width:44ch;margin:0 auto}
+  .notify{max-width:460px;margin:24px auto 0}
+  .notify-row{display:flex;flex-wrap:wrap;gap:8px}
+  .notify input[type=email]{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;padding:12px 18px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--ink)}
+  .notify input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .notify button{font:600 15px/1 Figtree,system-ui,sans-serif;padding:13px 20px;border:0;border-radius:999px;background:var(--accent);color:var(--card);cursor:pointer}
+  .notify button:disabled{opacity:.6}
+  .notify .hp{position:absolute;left:-10000px;width:1px;height:1px;opacity:0}
+  .notify-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+  .notify-msg{font-weight:600;color:var(--accent);margin:22px 0 0}
+  .notify-err{font-size:14px;color:#b3261e;margin:8px 0 0}
+  .final .tf{display:inline-block;margin-top:22px;font-weight:600;font-size:15px}
+  footer .row{display:flex;flex-wrap:wrap;gap:6px 18px}
+  .pair{display:flex;gap:16px;justify-content:center}
+  .pair .shot{width:48%;max-width:240px;min-width:0}
+  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
+  .faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--accent);font-weight:600;font-size:20px;line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{margin:10px 0 0;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chips span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  .games4{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+  @media (min-width:640px){ .games4{grid-template-columns:1fr 1fr} }
+  .games4 div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .games4 b{display:block;font:600 18px/1.3 Figtree,system-ui,sans-serif;margin-bottom:4px}
+  .games4 span{color:var(--muted);font-size:15px}
+  .med{font-size:15px;color:var(--muted);border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin-top:20px}
+  /* Kielilinkit ja muut appit */
+  .lang a{font:600 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.06em;border-radius:999px;padding:8px 14px;text-decoration:none;color:var(--muted)}
+  .lang a[aria-current]{background:var(--accent);color:var(--card)}
+  .lang a:not([aria-current]):hover{color:var(--accent)}
+  .more{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+  @media (min-width:640px){ .more{grid-template-columns:repeat(3,1fr)} }
+  .more a{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-decoration:none;color:var(--ink)}
+  .more a:hover{border-color:var(--accent)}
+  .more img{width:44px;height:44px;border-radius:10px;flex:none}
+  .more b{display:block;font-size:16px}
+  .more span{font-size:14px;color:var(--muted)}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Miten peliä pelataan?", "acceptedAnswer": {"@type": "Answer", "text": "Pidä sormi reunalla, joka on samaa väriä kuin keskellä oleva palikka. Väri kurottaa ja syö palikan. Nosta sormi ennen osumaa, niin virhe peruuntuu. Tuplanapautus mustaan keskiosaan = tauko."}}, {"@type": "Question", "name": "Miten palautan oston uuteen puhelimeen?", "acceptedAnswer": {"@type": "Answer", "text": "Kun ostoruutu tulee tason 3 jälkeen, napauta Palauta ostokset samalla Apple ID:llä."}}, {"@type": "Question", "name": "Toimiiko äänetön tila?", "acceptedAnswer": {"@type": "Answer", "text": "Kyllä. Äänet noudattavat äänetöntä tilaa eivätkä katkaise musiikkia. Äänet ja värinän voi kytkeä pois asetuksista."}}]}
+</script>
+<style>
+.wl{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent,#12705f);color:#fff;font:500 14px/1.35 Figtree,system-ui,sans-serif;padding:10px 64px 10px 16px;text-align:center}
+.wl a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+body.has-wl .lang{top:56px}
+</style>
+</head>
+<body class="has-wl">
+<div class="wl" role="region" aria-label="Waitlist"><span>Tulossa App Storeen.</span> <a href="#notify-fi">Saat tiedon julkaisusta →</a></div>
+
+<nav class="lang" aria-label="Language">
+  <a href="/colorlunch/" data-to="en" hreflang="en">EN</a>
+  <a href="/fi/colorlunch/" data-to="fi" hreflang="fi" aria-current="page">FI</a>
+</nav>
+
+<main id="fi" lang="fi">
+  <div class="top"><a class="brand" href="/"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="86 21" transform="rotate(125 24 24)"/><circle cx="24" cy="24" r="5" fill="currentColor"/></svg><span>Embody Apps</span></a></div>
+
+  <div class="hero">
+    <div>
+      <div class="app-id"><img src="/icons/colorlunch.png" alt="" width="64" height="64"><div><b>Colorlunch</b><span>Syö värejä</span></div></div>
+      <h1>Syö värejä.</h1>
+      <p class="lede">Keskelle ilmestyy palikka, ympärillä on värikaistat. Pidä sormi samanvärisellä reunalla, ja väri kurottaa ja nielaisee palikan. Painoitko väärää? Nosta sormi ennen osumaa.</p>
+      <div class="cta">
+        <span class="soon-badge">Tulossa App Storeen</span>
+        <a href="#notify-fi">Saat tiedon julkaisusta →</a>
+      </div>
+    </div>
+    <img class="shot" src="/colorlunch/img/fi-syo.jpg" alt="Väri kurottaa reunalta ja syö palikan" width="600" height="1304">
+  </div>
+
+  <section>
+    <div class="split rev">
+      <img class="shot" src="/colorlunch/img/fi-liike.jpg" alt="Taso 6: pelialue kääntyy ja palikoita tulee useampi" width="600" height="1304" loading="lazy">
+      <div>
+        <div class="eyebrow">Joka tasolla uusi temppu</div>
+        <h2>Helppo oppia, vaikea hallita</h2>
+        <ul class="ticks">
+          <li>Joka 40. kierros uusi taso: uusi väri, oma sävelasteikko ja uutta liikettä</li>
+          <li>Värit liukuvat kehällä, keskusta liikkuu ja kääntyy</li>
+          <li>Monta palikkaa kerralla, kerrospalikoita, väriä vaihtavia palikoita</li>
+          <li>Kimaltava sateenkaarireuna, hehkuva hidastuspalikka ja kehän pysäyttävä musta reikä</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="split">
+      <div>
+        <div class="eyebrow">Pelaa omalla tavallasi</div>
+        <h2>Helppo, Normaali vai Haastava</h2>
+        <ul class="ticks">
+          <li>Helppo: enemmän aikaa, ja ensimmäisellä tasolla reunat ovat leveät ja kapenevat kierros kierrokselta</li>
+          <li>Normaali: alkuperäinen peli</li>
+          <li>Haastava: vähemmän aikaa, alkaa pidemmältä</li>
+          <li>Oma Top 10 ja tilastot jokaiselle vaikeustasolle</li>
+          <li>Jokainen oikea vastaus soittaa melodian seuraavan sävelen, joka nousee ja laskee putken mukana</li>
+        </ul>
+      </div>
+      <div class="pair"><img class="shot" src="/colorlunch/img/fi-kerros.jpg" alt="Kerrospalikka syödään ulkoa sisään" width="600" height="1304" loading="lazy"><img class="shot" src="/colorlunch/img/fi-taso.jpg" alt="Tasotauko: uusi väri ja asteikko" width="600" height="1304" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Hinta</div>
+    <h2>Kolme tasoa ilmaiseksi. Loput kerralla, ei tilausta.</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Ilmainen</h3>
+        <div class="price">0 €</div>
+        <ul class="ticks">
+          <li>Tasot 1–3 jokaisella vaikeustasolla</li>
+          <li>Top 10, tilastot ja kaikki asetukset</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <h3>Kaikki tasot</h3>
+        <div class="price">1,99 € · kertaosto</div>
+        <ul class="ticks">
+          <li>Kaikki tasot tasosta 4 eteenpäin</li>
+          <li>Peli jatkuu suoraan tasolta 4 – pisteet, putki ja elämät säilyvät</li>
+          <li>Perhejako</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap faq">
+    <div class="eyebrow">Tuki</div>
+    <h2>Kysymyksiä ja vastauksia</h2>
+      <details><summary>Miten peliä pelataan?</summary><p>Pidä sormi reunalla, joka on samaa väriä kuin keskellä oleva palikka. Väri kurottaa ja syö palikan. Nosta sormi ennen osumaa, niin virhe peruuntuu. Tuplanapautus mustaan keskiosaan = tauko.</p></details>
+      <details><summary>Miten palautan oston uuteen puhelimeen?</summary><p>Kun ostoruutu tulee tason 3 jälkeen, napauta Palauta ostokset samalla Apple ID:llä.</p></details>
+      <details><summary>Toimiiko äänetön tila?</summary><p>Kyllä. Äänet noudattavat äänetöntä tilaa eivätkä katkaise musiikkia. Äänet ja värinän voi kytkeä pois asetuksista.</p></details>
+    <p style="margin-top:18px">Yhteys: <a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a></p>
+  </section>
+
+  <section class="wrap privacy">
+    <h2>Ei tiliä. Ei mainoksia. Ei seurantaa.</h2>
+    <p>Colorlunch ei kerää mitään. Tuloksesi pysyvät omassa puhelimessasi.</p>
+    <p><a href="/colorlunch/privacy/#fi">Tietosuojaseloste →</a> &nbsp; <a href="/colorlunch/support/#fi">Tuki ja käyttöohje →</a></p>
+  </section>
+
+  <section class="wrap final" id="notify-fi">
+    <h2>Tulossa pian App Storeen</h2>
+    <p>iPhonelle, suomeksi ja englanniksi. Jätä sähköpostiosoitteesi, niin kerron julkaisupäivänä.</p>
+    <form class="notify" data-app="Colorlunch" novalidate>
+      <div class="notify-row">
+        <input type="email" name="email" required autocomplete="email" placeholder="Sähköpostiosoite" aria-label="Sähköpostiosoite">
+        <button type="submit">Ilmoita minulle</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="notify-note">Vain julkaisu-uutiset. Voit perua milloin vain.</p>
+    </form>
+    <a class="tf" href="/testers/?app=Colorlunch">Tai kokeile heti TestFlightissa →</a>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Muita Embody Apps -sovelluksia</div>
+    <div class="more"><a href="/fi/shapeslide/"><img src="/icons/shapeslide.webp" alt="" width="44" height="44" loading="lazy"><div><b>Shapeslide</b><span>Reaktiopeli: välähdys, värinä tai ääni</span></div></a><a href="/fi/haptisynth/"><img src="/icons/haptisynth.webp" alt="" width="44" height="44" loading="lazy"><div><b>Haptisynth</b><span>Kallista ja tunne: syntetisaattori</span></div></a><a href="/fi/fidget-time/"><img src="/icons/fidget-time.webp" alt="" width="44" height="44" loading="lazy"><div><b>Fidget time</b><span>Haptinen fidget-lelu</span></div></a></div>
+  </section>
+
+  <footer class="wrap">
+    <div class="row"><a href="/fi/">← Kaikki sovellukset</a><a href="/colorlunch/support/#fi">Tuki</a><a href="/colorlunch/privacy/#fi">Tietosuoja</a><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Käyttöehdot (Applen vakio-EULA)</a><a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a></div>
+    <p style="margin-top:14px">Colorlunchin tekee Embody Apps (Ossi Konttinen) · Keho &amp; Yhteys · Y-tunnus 2729215-4</p>
+  </footer>
+</main>
+
+<script>
+/* Sama osoite kuin etusivun tilauslomakkeissa (Google Apps Script) */
+const SUBSCRIBE_URL = 'https://script.google.com/macros/s/AKfycbwDNhQvIeNaigZbrI6iroZY_uQ0hjrruPk45Z2LZq_xE37s-2uujYl5-wvtRnwVQfrqZg/exec';
+
+/* Kielivalinta muistetaan etusivua varten */
+document.querySelectorAll('.lang a').forEach(function(a){ a.addEventListener('click', function(){ try{ localStorage.setItem('embody-lang', a.dataset.to); }catch(e){} }); });
+
+/* Julkaisuilmoitus: tallentuu Sheetsiin Tilaajat-välilehdelle, appi = Colorlunch */
+(function(){
+  var MSG = {
+    en:{ok:"Thanks! I'll email you when Colorlunch is in the App Store.", dup:"You're already on the list.", bad:'Please check the email address.', err:'Something went wrong. Please try again or email hello@embodyapps.fi.', wait:'Sending…'},
+    fi:{ok:'Kiitos! Lähetän viestin, kun Colorlunch on App Storessa.', dup:'Olet jo listalla.', bad:'Tarkista sähköpostiosoite.', err:'Jokin meni vikaan. Yritä uudelleen tai lähetä viesti hello@embodyapps.fi.', wait:'Lähetetään…'}
+  };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  document.querySelectorAll('form.notify').forEach(function(form){
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      var lang = form.closest('main').getAttribute('lang') === 'fi' ? 'fi' : 'en', m = MSG[lang];
+      var old = form.querySelector('.notify-err'); if(old) old.remove();
+      function err(t){ var e = document.createElement('p'); e.className = 'notify-err'; e.setAttribute('role','alert'); e.textContent = t; form.appendChild(e); }
+      function done(t){ var p = document.createElement('p'); p.className = 'notify-msg'; p.setAttribute('role','status'); p.textContent = t; form.replaceWith(p); }
+      if(form.website.value){ done(m.ok); return; }
+      var email = form.email.value.trim();
+      if(!EMAIL_RE.test(email)){ err(m.bad); form.email.focus(); return; }
+      var btn = form.querySelector('button'), label = btn.textContent; btn.disabled = true; btn.textContent = m.wait;
+      try{
+        var res = await fetch(SUBSCRIBE_URL, {method:'POST', body:new URLSearchParams({email:email, app:form.dataset.app, lang:lang, website:''})});
+        var data = await res.json();
+        if(data.result === 'ok') done(m.ok);
+        else if(data.result === 'duplicate') done(m.dup);
+        else if(data.reason === 'email'){ err(m.bad); btn.disabled = false; btn.textContent = label; }
+        else throw new Error('x');
+      }catch(e){ err(m.err); btn.disabled = false; btn.textContent = label; }
+    });
+  });
+})();
+</script>
+</body>
+</html>

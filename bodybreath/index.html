@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bodybreath – Breathing and Body Scan App (iPhone)</title>
+<meta name="description" content="A ball of light travels over a body silhouette in the rhythm of your breath. Body scan, calming breath, sleep, yogic breath and Power Breath.">
+<link rel="canonical" href="https://embodyapps.fi/bodybreath/">
+<link rel="alternate" hreflang="en" href="https://embodyapps.fi/bodybreath/">
+<link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/bodybreath/">
+<link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/bodybreath/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://embodyapps.fi/bodybreath/">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Embody Apps">
+<meta property="og:title" content="Bodybreath – Breathing and Body Scan App (iPhone)">
+<meta property="og:description" content="A ball of light travels over a body silhouette in the rhythm of your breath. Body scan, calming breath, sleep, yogic breath and Power Breath.">
+<meta property="og:image" content="https://embodyapps.fi/bodybreath/img/en-hengitys.webp">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Bodybreath", "applicationCategory": "HealthApplication", "operatingSystem": "iOS", "inLanguage": ["en"], "description": "A quiet breathing and body practice: a ball of light travels over a body silhouette in the rhythm of your breath. Body scan, calming breath, yogic breath, Power Breath and your own route.", "url": "https://embodyapps.fi/bodybreath/", "image": "https://embodyapps.fi/bodybreath/img/en-hengitys.webp", "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Bodybreath Pro", "price": "5.99", "priceCurrency": "EUR"}], "publisher": {"@type": "Organization", "name": "Embody Apps", "url": "https://embodyapps.fi/", "email": "hello@embodyapps.fi"}}
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  /* Bodybreath-sivu. Suomenkielinen versio on osoitteessa /fi/. */
+  main{max-width:980px}
+  .wrap{max-width:640px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}
+  .top a.brand{text-decoration:none;margin:0}
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
+  @media (min-width:820px){ .hero{grid-template-columns:1.15fr .85fr;gap:56px} }
+  .app-id{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .app-id img{width:64px;height:64px;border-radius:15px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .app-id b{display:block;font:600 19px/1.2 Figtree,system-ui,sans-serif}
+  .app-id span{font-size:15px;color:var(--muted)}
+  .hero h1{font-size:clamp(40px,6.4vw,60px)}
+  .hero .lede{max-width:34ch}
+  .cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:26px}
+  .soon-badge{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Figtree,system-ui,sans-serif;padding:12px 18px;
+    border-radius:999px;background:var(--ink);color:var(--bg)}
+    .cta a{font-weight:600;font-size:15px}
+  /* Puhelinkuvat */
+  .shot{display:block;width:100%;height:auto;border-radius:28px;background:#111;box-shadow:0 18px 40px -18px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06)}
+  .hero .shot{max-width:300px;margin:0 auto}
+  /* Osiot */
+  section{margin-top:96px}
+  section h2{margin-top:0}
+  .eyebrow{margin-bottom:10px}
+  .split{display:grid;grid-template-columns:1fr;gap:36px;align-items:start}
+  @media (min-width:820px){ .split{grid-template-columns:1.2fr .8fr;gap:56px} .split.rev{grid-template-columns:.8fr 1.2fr} .split.rev > :first-child{order:2} }
+  .split .shot{max-width:280px;margin:0 auto}
+  ul.ticks{list-style:none;padding:0;margin:0}
+  ul.ticks li{position:relative;padding-left:26px;margin:9px 0}
+  ul.ticks li::before{content:"";position:absolute;left:2px;top:.62em;width:9px;height:9px;border-radius:50%;
+    box-shadow:0 0 0 2px var(--accent);background:transparent}
+  .problem{font-family:Fraunces,Georgia,serif;font-size:clamp(24px,3.4vw,32px);line-height:1.3;max-width:28ch;margin:0}
+  .problem + p{margin-top:16px;color:var(--muted);max-width:56ch}
+  /* Kaavat */
+  .formulas{width:100%;border-collapse:collapse;margin:8px 0 18px}
+  .formulas td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:16px}
+  .formulas td:first-child{width:9.5em;padding-right:14px}
+  code,.f{font:600 16px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .f{display:inline-block;padding:6px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+  .legend{font-size:15px;color:var(--muted)}
+  .legend code{font-size:15px;color:var(--ink)}
+  /* Kokeile kaavaa */
+  .try{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 22px 18px;margin-top:28px}
+  .try h3{font:600 17px/1.3 Figtree,system-ui,sans-serif;margin:0 0 12px}
+  .try-row{display:flex;gap:8px;flex-wrap:wrap}
+  .try input{flex:1 1 200px;min-width:0;font:600 20px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:12px 16px;border-radius:12px;
+    border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+  .try input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .ex{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+  .ex button{font:600 13px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;color:var(--ink);cursor:pointer}
+  .ex button:hover{border-color:var(--accent);color:var(--accent)}
+  .bars{display:flex;gap:3px;margin-top:18px;height:34px}
+  .bar{position:relative;flex:1 1 0;min-width:4px;border-radius:6px;background:var(--accent)}
+  .bar:nth-child(even){background:color-mix(in srgb,var(--accent) 72%,var(--card))}
+  .bar i{position:absolute;top:-5px;bottom:-5px;width:2px;margin-left:-1px;border-radius:2px;background:var(--ink)}
+  .sum{margin:12px 0 0;font-size:15px;color:var(--muted);min-height:1.6em}
+  .sum b{color:var(--ink)}
+  .sum.err{color:#b3261e}
+  /* Ennakkovaroitus-sirut */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chips span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  /* Kuvagalleria */
+  .gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 22px;margin:22px -24px 0;padding-left:24px;padding-right:24px}
+  .gallery figure{flex:0 0 200px;margin:0;scroll-snap-align:start}
+  .gallery figcaption{font-size:14px;color:var(--muted);margin-top:10px;text-align:center}
+  /* Kaksoisajastin */
+  .dual{display:flex;gap:12px;margin-top:20px}
+  .dual div{flex:1;border-radius:16px;padding:18px;text-align:center;font:600 30px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#fff}
+  .dual small{display:block;font:500 13px/1.3 Figtree,system-ui,sans-serif;margin-top:8px;opacity:.85}
+  /* Ilmainen vs Pro */
+  .plans{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px}
+  @media (min-width:640px){ .plans{grid-template-columns:1fr 1fr} }
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+  .plan.pro{border:1.5px solid var(--accent)}
+  .plan h3{font-size:24px}
+  .price{font:600 15px/1.3 Figtree,system-ui,sans-serif;color:var(--muted);margin:6px 0 14px}
+  .plan.pro .price{color:var(--accent)}
+  .plan ul.ticks li{font-size:16px}
+  .note{font-size:14px;color:var(--muted);margin-top:14px}
+  /* Yksityisyys */
+  .privacy{background:var(--accent-soft);border-radius:22px;padding:28px 26px}
+  .privacy h2{margin-bottom:10px}
+  .privacy p{margin:0 0 10px;max-width:56ch}
+  /* Lopun CTA ja lomake */
+  .final{text-align:center;margin-left:auto;margin-right:auto}
+  .final h2{font-size:clamp(30px,4.6vw,40px);margin-bottom:12px}
+  .final > p{color:var(--muted);max-width:44ch;margin:0 auto}
+  .notify{max-width:460px;margin:24px auto 0}
+  .notify-row{display:flex;flex-wrap:wrap;gap:8px}
+  .notify input[type=email]{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;padding:12px 18px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--ink)}
+  .notify input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .notify button{font:600 15px/1 Figtree,system-ui,sans-serif;padding:13px 20px;border:0;border-radius:999px;background:var(--accent);color:var(--card);cursor:pointer}
+  .notify button:disabled{opacity:.6}
+  .notify .hp{position:absolute;left:-10000px;width:1px;height:1px;opacity:0}
+  .notify-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+  .notify-msg{font-weight:600;color:var(--accent);margin:22px 0 0}
+  .notify-err{font-size:14px;color:#b3261e;margin:8px 0 0}
+  .final .tf{display:inline-block;margin-top:22px;font-weight:600;font-size:15px}
+  footer .row{display:flex;flex-wrap:wrap;gap:6px 18px}
+  .pair{display:flex;gap:16px;justify-content:center}
+  .pair .shot{width:48%;max-width:240px;min-width:0}
+  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
+  .faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--accent);font-weight:600;font-size:20px;line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{margin:10px 0 0;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chips span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  .games4{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+  @media (min-width:640px){ .games4{grid-template-columns:1fr 1fr} }
+  .games4 div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .games4 b{display:block;font:600 18px/1.3 Figtree,system-ui,sans-serif;margin-bottom:4px}
+  .games4 span{color:var(--muted);font-size:15px}
+  .med{font-size:15px;color:var(--muted);border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin-top:20px}
+  /* Kielilinkit ja muut appit */
+  .lang a{font:600 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.06em;border-radius:999px;padding:8px 14px;text-decoration:none;color:var(--muted)}
+  .lang a[aria-current]{background:var(--accent);color:var(--card)}
+  .lang a:not([aria-current]):hover{color:var(--accent)}
+  .more{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+  @media (min-width:640px){ .more{grid-template-columns:repeat(3,1fr)} }
+  .more a{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-decoration:none;color:var(--ink)}
+  .more a:hover{border-color:var(--accent)}
+  .more img{width:44px;height:44px;border-radius:10px;flex:none}
+  .more b{display:block;font-size:16px}
+  .more span{font-size:14px;color:var(--muted)}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "I do not feel the vibration.", "acceptedAnswer": {"@type": "Answer", "text": "Turn on Breath haptics in the tile settings (⋯)."}}, {"@type": "Question", "name": "I cannot hear the voice.", "acceptedAnswer": {"@type": "Answer", "text": "Choose a voice under ⚙ Voice. Check the volume; the voice works with the silent switch on too."}}, {"@type": "Question", "name": "Pro has disappeared.", "acceptedAnswer": {"@type": "Answer", "text": "Settings ⚙ → Restore purchases, with the same Apple ID you bought with."}}, {"@type": "Question", "name": "Is Power Breath safe?", "acceptedAnswer": {"@type": "Answer", "text": "Do it sitting or lying down. Never in water, while driving or standing: a long breath hold can make you faint."}}]}
+</script>
+<style>
+.wl{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent,#12705f);color:#fff;font:500 14px/1.35 Figtree,system-ui,sans-serif;padding:10px 64px 10px 16px;text-align:center}
+.wl a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+body.has-wl .lang{top:56px}
+</style>
+</head>
+<body class="has-wl">
+<div class="wl" role="region" aria-label="Waitlist"><span>Coming to the App Store.</span> <a href="#notify-en">Join the waitlist →</a></div>
+
+<nav class="lang" aria-label="Language">
+  <a href="/bodybreath/" data-to="en" hreflang="en" aria-current="page">EN</a>
+  <a href="/fi/bodybreath/" data-to="fi" hreflang="fi">FI</a>
+</nav>
+
+<main id="en" lang="en">
+  <div class="top"><a class="brand" href="/"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="86 21" transform="rotate(125 24 24)"/><circle cx="24" cy="24" r="5" fill="currentColor"/></svg><span>Embody Apps</span></a></div>
+
+  <div class="hero">
+    <div>
+      <div class="app-id"><img src="/icons/bodybreath.webp" alt="" width="64" height="64"><div><b>Bodybreath</b><span>Breathing and body scan</span></div></div>
+      <h1>Breathe. The light moves, attention follows.</h1>
+      <p class="lede">Bodybreath is a quiet breathing and body practice. A ball of light travels over a body silhouette in the rhythm of your breath. Voice guidance is optional.</p>
+      <div class="cta">
+        <span class="soon-badge">Coming to the App Store</span>
+        <a href="#notify-en">Get notified at launch →</a>
+      </div>
+    </div>
+    <img class="shot" src="/bodybreath/img/en-hengitys.webp" alt="Calming breath: the body view fills with the breath" width="600" height="1304">
+  </div>
+
+  <section>
+    <div class="split rev">
+      <img class="shot" src="/bodybreath/img/en-skannaus.webp" alt="Body scan: the light rests at the feet" width="600" height="1304" loading="lazy">
+      <div>
+        <div class="eyebrow">How it works</div>
+        <h2>Rest the phone on your chest and close your eyes</h2>
+        <ul class="ticks">
+          <li>A point of light rests on one part of the body at a time; when it moves on, the phone taps once</li>
+          <li>The ball breathes with you: it fills as you breathe in and empties as you breathe out</li>
+          <li>At the start and the end the whole body lights up</li>
+          <li>Tap the screen to pause and resume</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Exercises</div>
+      <h2>Five ways to breathe</h2>
+    </div>
+    <div class="games4"><div><b>Body scan</b><span>The whole body, upper body or core, upwards or downwards, both sides at once or alternating.</span></div><div><b>Calming breath</b><span>Long exhale, sigh, box breathing and Sleep: the breath slows, the voice fades and the screen goes dark.</span></div><div><b>Yogic breath</b><span>Full yogic breath: belly, chest, collarbones.</span></div><div><b>Power Breath</b><span>Thirty quick breaths, a hold and recovery breaths, in 1–5 rounds.</span></div><div><b>Own route</b><span>Tap the body in the order you want. Save up to three of your own tiles.</span></div></div>
+  </section>
+
+  <section>
+    <div class="split">
+      <div>
+        <div class="eyebrow">Voice and touch</div>
+        <h2>Guidance by voice, vibration or nothing at all</h2>
+        <ul class="ticks">
+          <li>Voice guidance in Finnish or English, male or female voice, or off</li>
+          <li>Breath haptics: a gentle vibration follows the breath</li>
+          <li>Each tile remembers its own settings</li>
+          <li>Light and dark backgrounds; the screen stays on during practice</li>
+        </ul>
+      </div>
+      <div class="pair"><img class="shot" src="/bodybreath/img/en-laatat.webp" alt="The home screen with five exercises" width="600" height="1304" loading="lazy"><img class="shot" src="/bodybreath/img/en-silmat.webp" alt="Body scan moving down: eyes and forehead" width="600" height="1304" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Price</div>
+    <h2>Free to use. Pro once, no subscription.</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Free</h3>
+        <div class="price">0 €</div>
+        <ul class="ticks">
+          <li>Body scan and calming breath, unlimited</li>
+          <li>No ads, no account</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <h3>Bodybreath Pro</h3>
+        <div class="price">5,99 € · one-time purchase</div>
+        <ul class="ticks">
+          <li>Yogic breath, Power Breath and box breathing</li>
+          <li>Own route and three own tiles</li>
+          <li>Body scan areas, direction and alternating sides</li>
+          <li>Bar and body views, all background colours</li>
+        </ul>
+      </div>
+    </div>
+    <p class="med">Bodybreath is a relaxation and body-awareness practice, not a medical device. It does not replace care from a doctor or therapist.</p>
+  </section>
+
+  <section class="wrap faq">
+    <div class="eyebrow">Support</div>
+    <h2>Questions and answers</h2>
+      <details><summary>I do not feel the vibration.</summary><p>Turn on Breath haptics in the tile settings (⋯).</p></details>
+      <details><summary>I cannot hear the voice.</summary><p>Choose a voice under ⚙ Voice. Check the volume; the voice works with the silent switch on too.</p></details>
+      <details><summary>Pro has disappeared.</summary><p>Settings ⚙ → Restore purchases, with the same Apple ID you bought with.</p></details>
+      <details><summary>Is Power Breath safe?</summary><p>Do it sitting or lying down. Never in water, while driving or standing: a long breath hold can make you faint.</p></details>
+    <p style="margin-top:18px">Contact: <a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a>. Tell me your iPhone model and iOS version.</p>
+  </section>
+
+  <section class="wrap privacy">
+    <h2>No account. No ads. No tracking.</h2>
+    <p>Bodybreath collects nothing. Your settings stay on your own phone.</p>
+    <p><a href="/bodybreath/privacy/">Privacy policy →</a> &nbsp; <a href="/bodybreath/support/">Support and instructions →</a></p>
+  </section>
+
+  <section class="wrap final" id="notify-en">
+    <h2>Coming soon to the App Store</h2>
+    <p>For iPhone, in English and Finnish. Leave your email and I'll let you know the day it's out.</p>
+    <form class="notify" data-app="Bodybreath" novalidate>
+      <div class="notify-row">
+        <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Your email">
+        <button type="submit">Notify me</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+    </form>
+    <a class="tf" href="/testers/?app=Bodybreath">Or try it now in TestFlight →</a>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">More from Embody Apps</div>
+    <div class="more"><a href="/simple-hrv/"><img src="/icons/simple-hrv.webp" alt="" width="44" height="44" loading="lazy"><div><b>Simple HRV</b><span>HRV from your fingertip</span></div></a><a href="/affirmation-of-life/"><img src="/icons/affirmation-of-life.webp" alt="" width="44" height="44" loading="lazy"><div><b>Affirmation of Life</b><span>Affirmations you feel</span></div></a><a href="/fidget-time/"><img src="/icons/fidget-time.webp" alt="" width="44" height="44" loading="lazy"><div><b>Fidget time</b><span>Haptic fidget cubes and a calm clock</span></div></a></div>
+  </section>
+
+  <footer class="wrap">
+    <div class="row"><a href="/">← All apps</a><a href="/bodybreath/support/">Support</a><a href="/bodybreath/privacy/">Privacy</a><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of use (Apple standard EULA)</a><a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a></div>
+    <p style="margin-top:14px">Bodybreath is made by Embody Apps (Ossi Konttinen) · Keho &amp; Yhteys · Business ID 2729215-4</p>
+  </footer>
+</main>
+
+<script>
+/* Sama osoite kuin etusivun tilauslomakkeissa (Google Apps Script) */
+const SUBSCRIBE_URL = 'https://script.google.com/macros/s/AKfycbwDNhQvIeNaigZbrI6iroZY_uQ0hjrruPk45Z2LZq_xE37s-2uujYl5-wvtRnwVQfrqZg/exec';
+
+/* Kielivalinta muistetaan etusivua varten */
+document.querySelectorAll('.lang a').forEach(function(a){ a.addEventListener('click', function(){ try{ localStorage.setItem('embody-lang', a.dataset.to); }catch(e){} }); });
+
+/* Julkaisuilmoitus: tallentuu Sheetsiin Tilaajat-välilehdelle, appi = Bodybreath */
+(function(){
+  var MSG = {
+    en:{ok:"Thanks! I'll email you when Bodybreath is in the App Store.", dup:"You're already on the list.", bad:'Please check the email address.', err:'Something went wrong. Please try again or email hello@embodyapps.fi.', wait:'Sending…'},
+    fi:{ok:'Kiitos! Lähetän viestin, kun Bodybreath on App Storessa.', dup:'Olet jo listalla.', bad:'Tarkista sähköpostiosoite.', err:'Jokin meni vikaan. Yritä uudelleen tai lähetä viesti hello@embodyapps.fi.', wait:'Lähetetään…'}
+  };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  document.querySelectorAll('form.notify').forEach(function(form){
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      var lang = form.closest('main').getAttribute('lang') === 'fi' ? 'fi' : 'en', m = MSG[lang];
+      var old = form.querySelector('.notify-err'); if(old) old.remove();
+      function err(t){ var e = document.createElement('p'); e.className = 'notify-err'; e.setAttribute('role','alert'); e.textContent = t; form.appendChild(e); }
+      function done(t){ var p = document.createElement('p'); p.className = 'notify-msg'; p.setAttribute('role','status'); p.textContent = t; form.replaceWith(p); }
+      if(form.website.value){ done(m.ok); return; }
+      var email = form.email.value.trim();
+      if(!EMAIL_RE.test(email)){ err(m.bad); form.email.focus(); return; }
+      var btn = form.querySelector('button'), label = btn.textContent; btn.disabled = true; btn.textContent = m.wait;
+      try{
+        var res = await fetch(SUBSCRIBE_URL, {method:'POST', body:new URLSearchParams({email:email, app:form.dataset.app, lang:lang, website:''})});
+        var data = await res.json();
+        if(data.result === 'ok') done(m.ok);
+        else if(data.result === 'duplicate') done(m.dup);
+        else if(data.reason === 'email'){ err(m.bad); btn.disabled = false; btn.textContent = label; }
+        else throw new Error('x');
+      }catch(e){ err(m.err); btn.disabled = false; btn.textContent = label; }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Affirmation of Life – Daily Affirmations &amp; Breathing for iPhone</title>
+<meta name="description" content="400 affirmations from eight areas of life: a daily affirmation and widget, guided breathing with haptics and calm games. No account, no ads.">
+<link rel="canonical" href="https://embodyapps.fi/affirmation-of-life/">
+<link rel="alternate" hreflang="en" href="https://embodyapps.fi/affirmation-of-life/">
+<link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/affirmation-of-life/">
+<link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/affirmation-of-life/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://embodyapps.fi/affirmation-of-life/">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Embody Apps">
+<meta property="og:title" content="Affirmation of Life – Daily Affirmations &amp; Breathing for iPhone">
+<meta property="og:description" content="400 affirmations from eight areas of life: a daily affirmation and widget, guided breathing with haptics and calm games. No account, no ads.">
+<meta property="og:image" content="https://embodyapps.fi/affirmation-of-life/img/en-home.webp">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Affirmation of Life", "applicationCategory": "HealthApplication", "operatingSystem": "iOS 15+", "inLanguage": ["en"], "description": "400 affirmations from eight areas of life, following the Wheel of Life. Daily affirmation, widget, guided breathing with haptics, scratch reveal and calm games. No account, no ads.", "url": "https://embodyapps.fi/affirmation-of-life/", "image": "https://embodyapps.fi/affirmation-of-life/img/en-home.webp", "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Pro yearly", "price": "7.99", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Pro lifetime", "price": "17.99", "priceCurrency": "EUR"}], "publisher": {"@type": "Organization", "name": "Embody Apps", "url": "https://embodyapps.fi/", "email": "hello@embodyapps.fi"}}
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  /* Affirmation of Life -sivu. Suomenkielinen versio on osoitteessa /fi/. */
+  main{max-width:980px}
+  .wrap{max-width:640px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}
+  .top a.brand{text-decoration:none;margin:0}
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
+  @media (min-width:820px){ .hero{grid-template-columns:1.15fr .85fr;gap:56px} }
+  .app-id{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .app-id img{width:64px;height:64px;border-radius:15px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .app-id b{display:block;font:600 19px/1.2 Figtree,system-ui,sans-serif}
+  .app-id span{font-size:15px;color:var(--muted)}
+  .hero h1{font-size:clamp(40px,6.4vw,60px)}
+  .hero .lede{max-width:34ch}
+  .cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:26px}
+  .soon-badge{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Figtree,system-ui,sans-serif;padding:12px 18px;
+    border-radius:999px;background:var(--ink);color:var(--bg)}
+    .cta a{font-weight:600;font-size:15px}
+  /* Puhelinkuvat */
+  .shot{display:block;width:100%;height:auto;border-radius:28px;background:#111;box-shadow:0 18px 40px -18px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06)}
+  .hero .shot{max-width:300px;margin:0 auto}
+  /* Osiot */
+  section{margin-top:96px}
+  section h2{margin-top:0}
+  .eyebrow{margin-bottom:10px}
+  .split{display:grid;grid-template-columns:1fr;gap:36px;align-items:start}
+  @media (min-width:820px){ .split{grid-template-columns:1.2fr .8fr;gap:56px} .split.rev{grid-template-columns:.8fr 1.2fr} .split.rev > :first-child{order:2} }
+  .split .shot{max-width:280px;margin:0 auto}
+  ul.ticks{list-style:none;padding:0;margin:0}
+  ul.ticks li{position:relative;padding-left:26px;margin:9px 0}
+  ul.ticks li::before{content:"";position:absolute;left:2px;top:.62em;width:9px;height:9px;border-radius:50%;
+    box-shadow:0 0 0 2px var(--accent);background:transparent}
+  .problem{font-family:Fraunces,Georgia,serif;font-size:clamp(24px,3.4vw,32px);line-height:1.3;max-width:28ch;margin:0}
+  .problem + p{margin-top:16px;color:var(--muted);max-width:56ch}
+  /* Kaavat */
+  .formulas{width:100%;border-collapse:collapse;margin:8px 0 18px}
+  .formulas td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top;font-size:16px}
+  .formulas td:first-child{width:9.5em;padding-right:14px}
+  code,.f{font:600 16px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .f{display:inline-block;padding:6px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+  .legend{font-size:15px;color:var(--muted)}
+  .legend code{font-size:15px;color:var(--ink)}
+  /* Kokeile kaavaa */
+  .try{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 22px 18px;margin-top:28px}
+  .try h3{font:600 17px/1.3 Figtree,system-ui,sans-serif;margin:0 0 12px}
+  .try-row{display:flex;gap:8px;flex-wrap:wrap}
+  .try input{flex:1 1 200px;min-width:0;font:600 20px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:12px 16px;border-radius:12px;
+    border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+  .try input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .ex{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+  .ex button{font:600 13px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:8px 10px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;color:var(--ink);cursor:pointer}
+  .ex button:hover{border-color:var(--accent);color:var(--accent)}
+  .bars{display:flex;gap:3px;margin-top:18px;height:34px}
+  .bar{position:relative;flex:1 1 0;min-width:4px;border-radius:6px;background:var(--accent)}
+  .bar:nth-child(even){background:color-mix(in srgb,var(--accent) 72%,var(--card))}
+  .bar i{position:absolute;top:-5px;bottom:-5px;width:2px;margin-left:-1px;border-radius:2px;background:var(--ink)}
+  .sum{margin:12px 0 0;font-size:15px;color:var(--muted);min-height:1.6em}
+  .sum b{color:var(--ink)}
+  .sum.err{color:#b3261e}
+  /* Ennakkovaroitus-sirut */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chips span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  /* Kuvagalleria */
+  .gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 22px;margin:22px -24px 0;padding-left:24px;padding-right:24px}
+  .gallery figure{flex:0 0 200px;margin:0;scroll-snap-align:start}
+  .gallery figcaption{font-size:14px;color:var(--muted);margin-top:10px;text-align:center}
+  /* Kaksoisajastin */
+  .dual{display:flex;gap:12px;margin-top:20px}
+  .dual div{flex:1;border-radius:16px;padding:18px;text-align:center;font:600 30px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#fff}
+  .dual small{display:block;font:500 13px/1.3 Figtree,system-ui,sans-serif;margin-top:8px;opacity:.85}
+  /* Ilmainen vs Pro */
+  .plans{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px}
+  @media (min-width:640px){ .plans{grid-template-columns:1fr 1fr} }
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+  .plan.pro{border:1.5px solid var(--accent)}
+  .plan h3{font-size:24px}
+  .price{font:600 15px/1.3 Figtree,system-ui,sans-serif;color:var(--muted);margin:6px 0 14px}
+  .plan.pro .price{color:var(--accent)}
+  .plan ul.ticks li{font-size:16px}
+  .note{font-size:14px;color:var(--muted);margin-top:14px}
+  /* Yksityisyys */
+  .privacy{background:var(--accent-soft);border-radius:22px;padding:28px 26px}
+  .privacy h2{margin-bottom:10px}
+  .privacy p{margin:0 0 10px;max-width:56ch}
+  /* Lopun CTA ja lomake */
+  .final{text-align:center;margin-left:auto;margin-right:auto}
+  .final h2{font-size:clamp(30px,4.6vw,40px);margin-bottom:12px}
+  .final > p{color:var(--muted);max-width:44ch;margin:0 auto}
+  .notify{max-width:460px;margin:24px auto 0}
+  .notify-row{display:flex;flex-wrap:wrap;gap:8px}
+  .notify input[type=email]{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;padding:12px 18px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--ink)}
+  .notify input[type=email]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .notify button{font:600 15px/1 Figtree,system-ui,sans-serif;padding:13px 20px;border:0;border-radius:999px;background:var(--accent);color:var(--card);cursor:pointer}
+  .notify button:disabled{opacity:.6}
+  .notify .hp{position:absolute;left:-10000px;width:1px;height:1px;opacity:0}
+  .notify-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+  .notify-msg{font-weight:600;color:var(--accent);margin:22px 0 0}
+  .notify-err{font-size:14px;color:#b3261e;margin:8px 0 0}
+  .final .tf{display:inline-block;margin-top:22px;font-weight:600;font-size:15px}
+  footer .row{display:flex;flex-wrap:wrap;gap:6px 18px}
+
+  /* Affirmation of Life */
+  .hero-art{position:relative;max-width:320px;margin:0 auto}
+  .hero-art::before{content:"";position:absolute;inset:-8% -14%;border-radius:50%;filter:blur(38px);opacity:.55;z-index:-1;
+    background:radial-gradient(circle at 25% 30%,#39c27a,transparent 55%),radial-gradient(circle at 75% 35%,#8b4fd6,transparent 55%),radial-gradient(circle at 50% 80%,#f0703c,transparent 55%)}
+  .hero .shot{max-width:300px}
+  .tagline{font-family:Fraunces,Georgia,serif;font-style:italic;color:var(--accent);font-size:20px;margin:14px 0 0}
+  .areas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 14px}
+  @media (min-width:640px){ .areas{grid-template-columns:1fr 1fr 1fr 1fr} }
+  .areas div{border-radius:14px;padding:14px 12px;color:#fff;font:600 14px/1.3 Figtree,system-ui,sans-serif;min-height:74px;display:flex;flex-direction:column;justify-content:space-between}
+  .areas small{font-weight:500;opacity:.85;font-size:12px}
+  .ways{display:grid;grid-template-columns:1fr;gap:26px;margin-top:26px}
+  @media (min-width:700px){ .ways{grid-template-columns:repeat(3,1fr)} }
+  .ways figure{margin:0}
+  .ways .shot{max-width:240px;margin:0 auto}
+  .ways h3{font:600 18px/1.3 Figtree,system-ui,sans-serif;margin:16px 0 4px}
+  .ways p{color:var(--muted);font-size:16px;margin:0}
+  .pair{display:flex;gap:16px;justify-content:center}
+  .pair .shot{width:48%;max-width:240px;min-width:0}
+  .games{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .games span{font:600 14px/1 Figtree,system-ui,sans-serif;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+  .sibling{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px}
+  .sibling img{width:56px;height:56px;border-radius:13px;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .sibling h3{font:600 18px/1.3 Figtree,system-ui,sans-serif;margin:0 0 2px}
+  .sibling p{margin:0;color:var(--muted);font-size:15px}
+  .plan .price small{display:block;font-weight:500;color:var(--muted);margin-top:2px}
+  /* Kielilinkit ja muut appit */
+  .lang a{font:600 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.06em;border-radius:999px;padding:8px 14px;text-decoration:none;color:var(--muted)}
+  .lang a[aria-current]{background:var(--accent);color:var(--card)}
+  .lang a:not([aria-current]):hover{color:var(--accent)}
+  .more{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+  @media (min-width:640px){ .more{grid-template-columns:repeat(3,1fr)} }
+  .more a{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-decoration:none;color:var(--ink)}
+  .more a:hover{border-color:var(--accent)}
+  .more img{width:44px;height:44px;border-radius:10px;flex:none}
+  .more b{display:block;font-size:16px}
+  .more span{font-size:14px;color:var(--muted)}
+  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
+  .faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--accent);font-weight:600;font-size:20px;line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{margin:10px 0 0;color:var(--muted)}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "No. Everything stays on your phone, and there are no ads or tracking."}}, {"@type": "Question", "name": "What does Pro cost?", "acceptedAnswer": {"@type": "Answer", "text": "7,99 € a year with a 7-day free trial, or 17,99 € once for life."}}, {"@type": "Question", "name": "How do I cancel the subscription?", "acceptedAnswer": {"@type": "Answer", "text": "On your iPhone: Settings → your name → Subscriptions → Affirmation of Life."}}, {"@type": "Question", "name": "Which languages are there?", "acceptedAnswer": {"@type": "Answer", "text": "English and Finnish."}}]}
+</script>
+<style>
+.wl{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent,#12705f);color:#fff;font:500 14px/1.35 Figtree,system-ui,sans-serif;padding:10px 64px 10px 16px;text-align:center}
+.wl a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+body.has-wl .lang{top:56px}
+</style>
+</head>
+<body class="has-wl">
+<div class="wl" role="region" aria-label="Waitlist"><span>Coming to the App Store.</span> <a href="#notify-en">Join the waitlist →</a></div>
+
+<nav class="lang" aria-label="Language">
+  <a href="/affirmation-of-life/" data-to="en" hreflang="en" aria-current="page">EN</a>
+  <a href="/fi/affirmation-of-life/" data-to="fi" hreflang="fi">FI</a>
+</nav>
+
+<main id="en" lang="en">
+  <div class="top"><a class="brand" href="/"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="86 21" transform="rotate(125 24 24)"/><circle cx="24" cy="24" r="5" fill="currentColor"/></svg><span>Embody Apps</span></a></div>
+
+  <div class="hero">
+    <div>
+      <div class="app-id"><img src="/icons/affirmation-of-life.webp" alt="" width="64" height="64"><div><b>Affirmation of Life</b><span>Affirmations you feel</span></div></div>
+      <h1>Affirmations you feel, not just read.</h1>
+      <p class="lede">A calm daily practice with 400 affirmations from eight areas of life. Breathe them, reveal them, play with them. No account, no ads, everything stays on your phone.</p>
+      <div class="cta">
+        <span class="soon-badge">Coming to the App Store</span>
+        <a href="#notify-en">Get notified at launch →</a>
+      </div>
+    </div>
+    <div class="hero-art"><img class="shot" src="/affirmation-of-life/img/en-home.webp" alt="Affirmation of Life home screen with the daily affirmation" width="600" height="1304"></div>
+  </div>
+
+  <section class="wrap">
+    <div class="eyebrow">Daily affirmation</div>
+    <h2>One affirmation a day, where you see it</h2>
+    <ul class="ticks">
+        <li>A new affirmation every day on the home screen</li>
+        <li>A widget for your home screen and lock screen</li>
+        <li>Gentle reminders on the lock screen at times you choose</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="split">
+      <div>
+        <div class="eyebrow">The Wheel of Life</div>
+        <h2>Your whole life gets attention</h2>
+        <p>The 400 affirmations follow the Wheel of Life: 50 for each of eight areas. So every part of your life gets attention, not only the one that shouts the loudest.</p>
+        <div class="areas">
+      <div style="background:#2f9e6b">Health and wellbeing<small>50 affirmations</small></div>
+      <div style="background:#7b4fd0">Growth and spirituality<small>50 affirmations</small></div>
+      <div style="background:#e0743a">Family and friends<small>50 affirmations</small></div>
+      <div style="background:#d4456f">Love and relationships<small>50 affirmations</small></div>
+      <div style="background:#2b7fbf">Work and calling<small>50 affirmations</small></div>
+      <div style="background:#b8892a">Money and abundance<small>50 affirmations</small></div>
+      <div style="background:#3c8f8a">Home and order<small>50 affirmations</small></div>
+      <div style="background:#c25bb4">Leisure and relaxation<small>50 affirmations</small></div>
+        </div>
+        <p>"What do you long for in your life right now?" Choose the areas you want to focus on, and the practice follows.</p>
+      </div>
+      <img class="shot" src="/affirmation-of-life/img/en-affirmations.webp" alt="The eight areas of life, 50 affirmations each" width="600" height="1304" loading="lazy">
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Ways to practise</div>
+      <h2>Feel it in your body</h2>
+    </div>
+    <div class="ways">
+      <figure><img class="shot" src="/affirmation-of-life/img/en-slideshow.webp" alt="Slideshow" width="600" height="1304" loading="lazy"><h3>Slideshow</h3><p>Affirmations flow by on their own on changing colourful backgrounds.</p></figure>
+      <figure><img class="shot" src="/affirmation-of-life/img/en-breathing.webp" alt="Breathing" width="600" height="1304" loading="lazy"><h3>Breathing</h3><p>Guided breathing with soft haptics, an affirmation with every breath.</p></figure>
+      <figure><img class="shot" src="/affirmation-of-life/img/en-scratch.webp" alt="Reveal" width="600" height="1304" loading="lazy"><h3>Reveal</h3><p>Scratch the colour away with your finger and find your affirmation, with confetti.</p></figure>
+    </div>
+    <p class="wrap" style="margin-top:28px"><strong>Small steps:</strong> after an affirmation, write down one small step towards it.</p>
+  </section>
+
+  <section>
+    <div class="split rev">
+      <div class="pair"><img class="shot" src="/affirmation-of-life/img/en-games.webp" alt="The five games" width="600" height="1304" loading="lazy"><img class="shot" src="/affirmation-of-life/img/en-puzzle.webp" alt="Puzzle game with affirmation pieces" width="600" height="1304" loading="lazy"></div>
+      <div>
+        <div class="eyebrow">Calm games</div>
+        <h2>Play your way into the words</h2>
+        <p>Five gentle games, each built around affirmations. No timers or pressure, just a playful way to let the sentences sink in.</p>
+        <div class="games"><span>Puzzle</span><span>Portal</span><span>Memory</span><span>Word Bubbles</span><span>Tilt</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Make it yours</div>
+    <h2>Your words, your colours</h2>
+    <ul class="ticks">
+        <li>Write your own affirmations and collect favourites</li>
+        <li>Colour themes, fonts, light and dark mode, changing background colours</li>
+        <li>In English and Finnish</li>
+    </ul>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Price</div>
+    <h2>Start free. Go Pro when it fits.</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Free</h3>
+        <div class="price">0 €</div>
+        <ul class="ticks">
+        <li>Daily affirmation and widget</li>
+        <li>10 slideshow affirmations, 10 breaths and 10 reveals a day</li>
+        <li>Games at the basic level</li>
+        <li>10 affirmations of your own</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <h3>Pro</h3>
+        <div class="price">7,99 € / year<small>7-day free trial · or 17,99 € once for life</small></div>
+        <ul class="ticks">
+        <li>Slideshow, breathing and reveal without limits</li>
+        <li>All breathing views and rhythms</li>
+        <li>All game levels, including future games</li>
+        <li>Unlimited affirmations of your own</li>
+        </ul>
+        <p class="note">The subscription renews automatically unless cancelled at least 24 hours before the end of the period. Manage it in your App Store account settings.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap faq">
+    <div class="eyebrow">Questions</div>
+    <h2>Frequently asked</h2>
+      <details><summary>Do I need an account?</summary><p>No. Everything stays on your phone, and there are no ads or tracking.</p></details>
+      <details><summary>What does Pro cost?</summary><p>7,99 € a year with a 7-day free trial, or 17,99 € once for life.</p></details>
+      <details><summary>How do I cancel the subscription?</summary><p>On your iPhone: Settings → your name → Subscriptions → Affirmation of Life.</p></details>
+      <details><summary>Which languages are there?</summary><p>English and Finnish.</p></details>
+  </section>
+
+  <section class="wrap privacy">
+    <h2>No account. No ads. No tracking.</h2>
+    <p>Affirmation of Life collects nothing. Your affirmations, favourites and small steps stay on your own phone.</p>
+    <p><a href="/affirmation-of-life/privacy/">Privacy policy →</a></p>
+  </section>
+
+  <section class="wrap">
+    <div class="sibling"><img src="/icons/balance-of-life.webp" alt="" width="56" height="56"><div><h3>Coming next: Balance of Life</h3><p>A life wheel you rate every month, with your values and goals in view. A natural companion to Affirmation of Life.</p></div></div>
+  </section>
+
+  <section class="wrap final" id="notify-en">
+    <h2>Coming soon to the App Store</h2>
+    <p>For iPhone, in English and Finnish. Leave your email and I'll let you know the day it's out.</p>
+    <form class="notify" data-app="Affirmation of Life" novalidate>
+      <div class="notify-row">
+        <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Your email">
+        <button type="submit">Notify me</button>
+      </div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="notify-note">Only launch news. Unsubscribe anytime.</p>
+    </form>
+    <a class="tf" href="/testers/?app=Affirmation%20of%20Life">Or try it now in TestFlight →</a>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">More from Embody Apps</div>
+    <div class="more"><a href="/simple-hrv/"><img src="/icons/simple-hrv.webp" alt="" width="44" height="44" loading="lazy"><div><b>Simple HRV</b><span>HRV from your fingertip</span></div></a><a href="/friendist/"><img src="/icons/friendist.webp" alt="" width="44" height="44" loading="lazy"><div><b>Friendist</b><span>Your people in one place</span></div></a><a href="/fidget-time/"><img src="/icons/fidget-time.webp" alt="" width="44" height="44" loading="lazy"><div><b>Fidget time</b><span>Haptic fidget cubes and a calm clock</span></div></a></div>
+  </section>
+
+  <footer class="wrap">
+    <div class="row"><a href="/">← All apps</a><a href="/affirmation-of-life/support/">Support</a><a href="/affirmation-of-life/privacy/">Privacy</a><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of use (Apple standard EULA)</a><a href="mailto:hello@embodyapps.fi">hello@embodyapps.fi</a></div>
+    <p style="margin-top:14px">Affirmation of Life is made by Embody Apps (Ossi Konttinen) · Keho &amp; Yhteys · Business ID 2729215-4</p>
+  </footer>
+</main>
+
+<script>
+/* Sama osoite kuin etusivun tilauslomakkeissa (Google Apps Script) */
+const SUBSCRIBE_URL = 'https://script.google.com/macros/s/AKfycbwDNhQvIeNaigZbrI6iroZY_uQ0hjrruPk45Z2LZq_xE37s-2uujYl5-wvtRnwVQfrqZg/exec';
+
+/* Kielivalinta muistetaan etusivua varten */
+document.querySelectorAll('.lang a').forEach(function(a){ a.addEventListener('click', function(){ try{ localStorage.setItem('embody-lang', a.dataset.to); }catch(e){} }); });
+
+/* Julkaisuilmoitus: tallentuu Sheetsiin Tilaajat-välilehdelle, appi = Affirmation of Life */
+(function(){
+  var MSG = {
+    en:{ok:"Thanks! I'll email you when Affirmation of Life is in the App Store.", dup:"You're already on the list.", bad:'Please check the email address.', err:'Something went wrong. Please try again or email hello@embodyapps.fi.', wait:'Sending…'},
+    fi:{ok:'Kiitos! Lähetän viestin, kun Affirmation of Life on App Storessa.', dup:'Olet jo listalla.', bad:'Tarkista sähköpostiosoite.', err:'Jokin meni vikaan. Yritä uudelleen tai lähetä viesti hello@embodyapps.fi.', wait:'Lähetetään…'}
+  };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  document.querySelectorAll('form.notify').forEach(function(form){
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      var lang = form.closest('main').getAttribute('lang') === 'fi' ? 'fi' : 'en', m = MSG[lang];
+      var old = form.querySelector('.notify-err'); if(old) old.remove();
+      function err(t){ var e = document.createElement('p'); e.className = 'notify-err'; e.setAttribute('role','alert'); e.textContent = t; form.appendChild(e); }
+      function done(t){ var p = document.createElement('p'); p.className = 'notify-msg'; p.setAttribute('role','status'); p.textContent = t; form.replaceWith(p); }
+      if(form.website.value){ done(m.ok); return; }
+      var email = form.email.value.trim();
+      if(!EMAIL_RE.test(email)){ err(m.bad); form.email.focus(); return; }
+      var btn = form.querySelector('button'), label = btn.textContent; btn.disabled = true; btn.textContent = m.wait;
+      try{
+        var res = await fetch(SUBSCRIBE_URL, {method:'POST', body:new URLSearchParams({email:email, app:form.dataset.app, lang:lang, website:''})});
+        var data = await res.json();
+        if(data.result === 'ok') done(m.ok);
+        else if(data.result === 'duplicate') done(m.dup);
+        else if(data.reason === 'email'){ err(m.bad); btn.disabled = false; btn.textContent = label; }
+        else throw new Error('x');
+      }catch(e){ err(m.err); btn.disabled = false; btn.textContent = label; }
+    });
+  });
+})();
+</script>
+</body>
+</html>

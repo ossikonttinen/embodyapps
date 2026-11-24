@@ -1,0 +1,229 @@
+{
+ "version": 1,
+ "apps": [
+  {
+   "id": "facilitimer",
+   "name": "Facilitimer",
+   "appStoreId": "6833988826",
+   "group": "fasilitointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/facilitimer.webp",
+   "tagline": {
+    "fi": "Ajastin fasilitaattoreille",
+    "en": "Timer for facilitators"
+   },
+   "promotes": [
+    "timepace",
+    "fairtimer"
+   ]
+  },
+  {
+   "id": "timepace",
+   "name": "Timepace",
+   "appStoreId": "6834112629",
+   "group": "fasilitointi",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/timepace.webp",
+   "tagline": {
+    "fi": "Työpajan suunnittelu ja ajoitus",
+    "en": "Plan and pace your workshop"
+   },
+   "promotes": [
+    "facilitimer"
+   ]
+  },
+  {
+   "id": "fairtimer",
+   "name": "Fairtimer",
+   "appStoreId": "6834022916",
+   "group": "fasilitointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/icons/fairtimer.webp",
+   "tagline": {
+    "fi": "Puheaika ja ajastimet ryhmälle",
+    "en": "Speaking time and timers for groups"
+   },
+   "promotes": [
+    "facilitimer"
+   ]
+  },
+  {
+   "id": "affirmationoflife",
+   "name": "Affirmation of Life",
+   "appStoreId": "6833995281",
+   "group": "hyvinvointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/icons/affirmation-of-life.webp",
+   "tagline": {
+    "fi": "Päivän affirmaatio ja pelit",
+    "en": "Daily affirmation and games"
+   },
+   "promotes": [
+    "balanceoflife",
+    "friendist"
+   ]
+  },
+  {
+   "id": "balanceoflife",
+   "name": "Balance of Life",
+   "appStoreId": "6833995656",
+   "group": "hyvinvointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/icons/balance-of-life.webp",
+   "tagline": {
+    "fi": "Elämänpyörä: 8 aluetta kuukausittain",
+    "en": "Wheel of life, month by month"
+   },
+   "promotes": [
+    "affirmationoflife",
+    "friendist"
+   ]
+  },
+  {
+   "id": "bodybreath",
+   "name": "Bodybreath",
+   "appStoreId": "6834037485",
+   "group": "hyvinvointi",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/bodybreath.webp",
+   "tagline": {
+    "fi": "Hengitys ja kehoskannaus silmät kiinni",
+    "en": "Breathing and body scan, eyes closed"
+   },
+   "promotes": [
+    "simplehrv"
+   ]
+  },
+  {
+   "id": "simplehrv",
+   "name": "Simple HRV",
+   "appStoreId": "6833992352",
+   "group": "hyvinvointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/icons/simple-hrv.webp",
+   "tagline": {
+    "fi": "HRV-mittaus puhelimen kameralla",
+    "en": "Measure HRV with your phone camera"
+   },
+   "promotes": [
+    "bodybreath"
+   ]
+  },
+  {
+   "id": "friendist",
+   "name": "Friendist",
+   "appStoreId": "6833994113",
+   "group": "hyvinvointi",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/friendist.webp",
+   "tagline": {
+    "fi": "Pidä yhteyttä tärkeisiin ihmisiin",
+    "en": "Stay close to the people who matter"
+   },
+   "promotes": [
+    "affirmationoflife",
+    "balanceoflife"
+   ]
+  },
+  {
+   "id": "triggersglimmers",
+   "name": "Glimmers & Triggers",
+   "appStoreId": "6836828967",
+   "group": "hyvinvointi",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/glimmers-triggers.png",
+   "tagline": {
+    "fi": "Huomaa, mikä rentouttaa ja mikä jännittää",
+    "en": "Notice what calms you and what tenses you"
+   },
+   "promotes": [
+    "bodybreath",
+    "simplehrv",
+    "balanceoflife"
+   ]
+  },
+  {
+   "id": "shapeslide",
+   "name": "Shapeslide",
+   "appStoreId": "6834024238",
+   "group": "pelit",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/shapeslide.webp",
+   "tagline": {
+    "fi": "Reaktiopeli: välähdys, värinä tai ääni",
+    "en": "Reaction game: flash, buzz or sound"
+   },
+   "promotes": [
+    "fidgettime",
+    "haptisynth",
+    "blindslide"
+   ]
+  },
+  {
+   "id": "blindslide",
+   "name": "Blindslide",
+   "appStoreId": "6834026979",
+   "group": "pelit",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/blindslide.webp",
+   "tagline": {
+    "fi": "Ääni- ja värinäpeli katsomatta",
+    "en": "Sound and haptic game, no screen needed"
+   },
+   "promotes": [
+    "haptisynth"
+   ]
+  },
+  {
+   "id": "fidgettime",
+   "name": "Fidget time",
+   "appStoreId": "6835926454",
+   "group": "pelit",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/fidget-time.webp",
+   "tagline": {
+    "fi": "Haptinen fidget-lelu",
+    "en": "Haptic fidget toy"
+   },
+   "promotes": [
+    "haptisynth",
+    "shapeslide",
+    "blindslide"
+   ]
+  },
+  {
+   "id": "haptisynth",
+   "name": "Haptisynth",
+   "appStoreId": "6835923234",
+   "group": "pelit",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/haptisynth.webp",
+   "tagline": {
+    "fi": "Kallista ja tunne: syntetisaattori",
+    "en": "Tilt & feel synth"
+   },
+   "promotes": [
+    "fidgettime",
+    "shapeslide",
+    "blindslide"
+   ]
+  },
+  {
+   "id": "colorlunch",
+   "name": "Colorlunch",
+   "appStoreId": "6838213930",
+   "group": "pelit",
+   "released": false,
+   "icon": "https://embodyapps.fi/icons/colorlunch.png",
+   "tagline": {
+    "fi": "Värireaktiopeli: syö värejä",
+    "en": "Color reaction game: eat the colors"
+   },
+   "promotes": [
+    "shapeslide",
+    "haptisynth",
+    "fidgettime"
+   ]
+  }
+ ]
+}

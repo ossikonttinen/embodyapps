@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Fidget time</title>
+<style>
+  html,body{margin:0;height:100%;background:#1b1712;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8dcc6;transition:background .4s}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+  #c{image-rendering:pixelated;image-rendering:crisp-edges}
+  #k{display:none}
+  button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;color:inherit}
+
+  #start{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(20,18,16,.74);z-index:5;text-align:center;padding:24px;transition:opacity .6s}
+  #start.hide{opacity:0;pointer-events:none}
+  #start h1{font-weight:500;letter-spacing:.06em;margin:0;font-size:30px}
+  #start #logo{position:static;display:block;margin:0 auto 6px}
+  #start p{margin:0;opacity:.8;max-width:310px;line-height:1.55;font-size:17px;letter-spacing:.03em}
+  #start small{opacity:.5;max-width:300px;line-height:1.5;font-size:12.5px}
+  label.sub{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.55;margin:4px 0 8px}
+  #langSeg{margin-left:auto;margin-right:10px}
+  #langSeg button{padding:6px 11px;font-size:12.5px;flex:none}
+  #tapgo{font-size:15px;letter-spacing:.04em;opacity:.55;margin-top:6px}
+  #start{cursor:pointer}
+
+  #bar{position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:calc(env(safe-area-inset-right) + 10px);z-index:3;display:flex;gap:8px;opacity:.6;transition:opacity .3s}
+  #bar:hover{opacity:1}
+  #bar button{background:rgba(232,220,198,.1);border:1px solid rgba(232,220,198,.16);border-radius:999px;padding:7px 13px;font-size:13px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  #gear{font-size:16px!important;padding:5px 11px!important}
+
+  #pad{position:fixed;left:calc(env(safe-area-inset-left) + 18px);bottom:calc(env(safe-area-inset-bottom) + 26px);width:92px;height:92px;border-radius:50%;border:1px solid rgba(232,220,198,.22);background:rgba(232,220,198,.05);z-index:3;display:none;touch-action:none}
+  #pad i{position:absolute;width:26px;height:26px;border-radius:50%;background:rgba(217,195,154,.55);left:33px;top:33px;pointer-events:none}
+  #pad span{position:absolute;bottom:-19px;left:0;right:0;text-align:center;font-size:11px;opacity:.45}
+  #dim{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:2;transition:opacity .6s}
+  #bar,#pad{transition:opacity .5s}
+  body.night #bar,body.night #pad{opacity:0;pointer-events:none}
+  body.night.ctl #bar{opacity:.6;pointer-events:auto}
+  body.night.ctl #pad{opacity:1;pointer-events:auto}
+  body.nograv #pad{display:none!important}
+  #status{position:fixed;left:16px;right:16px;top:calc(env(safe-area-inset-top) + 54px);text-align:center;font-size:12px;opacity:0;transition:opacity .5s;z-index:3;pointer-events:none}
+
+  #sheet{position:fixed;left:0;right:0;bottom:0;z-index:4;margin:0 auto;max-width:440px;background:rgba(28,26,24,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(232,220,198,.12);border-bottom:0;border-radius:20px 20px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom) + 16px);box-sizing:border-box;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);color:#ece3d3}
+  #sheet.open{transform:none}
+  #sheet{max-height:calc(100% - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+  #sheetHead{position:sticky;top:-18px;z-index:2;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:-18px -18px 14px;padding:14px 18px 10px;background:#1c1a18;box-shadow:0 6px 10px -6px rgba(0,0,0,.5)}
+  #proTag{display:none;font-size:10.5px;letter-spacing:.08em;font-weight:700;background:#d9c39a;color:#1b1712;border-radius:999px;padding:2px 7px;margin-left:6px;vertical-align:1px}
+  body.locked #proTag{display:inline-block}
+  #pro{position:fixed;inset:0;z-index:9;background:rgba(10,9,8,.72);display:none;align-items:center;justify-content:center;padding:24px}
+  #pro.open{display:flex}
+  #proCard{background:#1c1a18;border:1px solid rgba(232,220,198,.16);border-radius:20px;padding:22px 20px 16px;max-width:340px;width:100%;color:#ece3d3;text-align:center}
+  #proCard h2{margin:0 0 8px;font-size:19px;font-weight:600}
+  #proCard p{margin:0 0 16px;font-size:14px;line-height:1.5;opacity:.8}
+  #proBuy{width:100%;background:#d9c39a;color:#1b1712;border:0;border-radius:999px;padding:12px;font-size:16px;font-weight:600}
+  #proBuy:disabled{opacity:.5}
+  #proRestore,#proLater{width:100%;background:none;border:0;padding:10px;font-size:14px;opacity:.75;margin-top:4px}
+  #proMsg{font-size:12.5px;opacity:.7;min-height:16px;margin-top:6px}
+  #helpBtn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);font-size:15px;font-weight:600;margin-left:10px;padding:0;line-height:28px}
+  #help{position:fixed;inset:0;z-index:8;background:#141210;color:#ece3d3;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:none;padding:calc(env(safe-area-inset-top) + 14px) 20px calc(env(safe-area-inset-bottom) + 30px)}
+  #help.open{display:block}
+  #helpIn{max-width:520px;margin:0 auto}
+  #helpHead{position:sticky;top:calc(-14px - env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;padding:10px 0;background:#141210;z-index:1}
+  #helpHead h2{margin:0;font-size:17px;font-weight:600}
+  #helpClose{background:#d9c39a;color:#1b1712;border:0;border-radius:999px;padding:8px 18px;font-size:14px;font-weight:600}
+  #help h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin:22px 0 8px;font-weight:600}
+  #help p,#help li{font-size:14.5px;line-height:1.55;opacity:.9;margin:0 0 8px}
+  #help ul{padding-left:18px;margin:0}
+  #help b{color:#fff;font-weight:600}
+  #sheetHead h2{margin:0;font-size:15px;font-weight:600;letter-spacing:.04em;opacity:.85}
+  #voiceChips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  #voiceChips button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 11px;font-size:13px}
+  #voiceChips button.on{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+  .row{margin-bottom:16px}
+  .row.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  #presets{width:100%;margin-top:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  #presets button{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;color:inherit}
+  #presets button.on{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.1)}
+  #presets canvas{position:static;width:56px;height:56px;display:block}
+  #presets small{font-size:11.5px;opacity:.75}
+  #sheetHead .note{width:100%}
+  #adv summary{cursor:pointer;padding:10px 0 14px;font-size:14px;opacity:.8;list-style:none}
+  #adv summary::-webkit-details-marker{display:none}
+  #adv summary::before{content:'▸ ';}
+  #adv[open] summary::before{content:'▾ ';}
+  .row>label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.55;margin-bottom:8px}
+  .seg{display:flex;background:rgba(255,255,255,.06);border-radius:12px;padding:3px}
+  .seg button{flex:1;border:0;background:none;padding:9px 0;border-radius:9px;font-size:14px;opacity:.7}
+  .seg button.on{background:rgba(255,255,255,.14);opacity:1}
+  .sizeWrap{display:flex;align-items:center;gap:12px}
+  input[type=range]{flex:1;accent-color:#d9c39a}
+  #sizeVal,#retVal,#zoomVal{font-size:13px;opacity:.7;min-width:42px;text-align:right}
+  #retVal{min-width:78px}
+  #pals{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .shiftSw{width:30px!important;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+  .shiftSw .ring{position:absolute;inset:4px;border-radius:50%;background:conic-gradient(#ff5a5a,#ffd23f,#7be15d,#3ec7ff,#a35bff,#ff5a5a);opacity:.25;-webkit-mask:radial-gradient(circle,transparent 52%,#000 56%);mask:radial-gradient(circle,transparent 52%,#000 56%)}
+  .shiftSw.on .ring{opacity:1;animation:shiftSpin 6s linear infinite}
+  .shiftSw .arr{position:relative;font-size:15px;line-height:1;color:rgba(255,255,255,.55)}
+  .shiftSw.on .arr{color:#fff}
+  @keyframes shiftSpin{to{transform:rotate(360deg)}}
+  .sw{width:44px;height:30px;border-radius:9px;border:2px solid transparent;padding:0;position:relative}
+  .sw.on{border-color:#fff}
+  .sw small{position:absolute;left:0;right:0;bottom:-16px;font-size:10px;opacity:.55}
+  #customWrap{position:relative;width:44px;height:30px}
+  #custom{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+  #palSpacer{height:12px}
+  #text{width:100%;box-sizing:border-box;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px;font-size:18px;color:#fff;outline:none}
+  #fontChips{display:flex;flex-wrap:wrap;gap:6px}
+  #fontChips button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 11px;font-size:13px}
+  #retChips button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 11px;font-size:13px}
+  #retChips button.on{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+  #fontChips button.on{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+  #text:focus{border-color:rgba(217,195,154,.6)}
+  .note{font-size:12px;opacity:.5;margin-top:6px;display:block}
+  .wide{width:100%;margin-top:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);border-radius:12px;padding:10px;font-size:14px}
+  .wide.go{background:#d9c39a;color:#1b1712;border:0;font-weight:600}
+  #tmr{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 14px);text-align:center;font-size:22px;font-variant-numeric:tabular-nums;letter-spacing:.06em;opacity:0;transition:opacity .4s;z-index:3;pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+  #draw{position:fixed;inset:0;z-index:6;background:#121114;display:none;touch-action:none}
+  #dc{touch-action:none}
+  #dRect{position:absolute;border:1px dashed rgba(255,255,255,.28);pointer-events:none}
+  #dbar{position:absolute;top:calc(env(safe-area-inset-top) + 10px);left:0;right:0;display:flex;gap:8px;justify-content:center;z-index:2}
+  #dbar button{background:rgba(232,220,198,.12);border:1px solid rgba(232,220,198,.2);border-radius:999px;padding:8px 14px;font-size:14px;color:#ece3d3}
+  #dbar button.on{background:rgba(255,255,255,.3)}
+  #dbar #dDone{background:#d9c39a;color:#1b1712;border:0;font-weight:600}
+  #dHint{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 18px);left:0;right:0;text-align:center;font-size:12px;opacity:.5;pointer-events:none}
+  .bottom{display:flex;gap:10px;align-items:center}
+  #sndTog{flex:1;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:12px;padding:10px;font-size:14px}
+  #done{background:#d9c39a;color:#1b1712;border:0;border-radius:999px;padding:8px 18px;font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<canvas id="k"></canvas>
+
+<div id="bar">
+  <button id="shakeBtn">Ravista</button>
+  <button id="gear" aria-label="Asetukset">⚙︎</button>
+</div>
+<div id="pad"><i></i><span>kallistus</span></div>
+<div id="status"></div>
+<div id="tmr"></div>
+<div id="dim"></div>
+
+<div id="sheet">
+  <div id="sheetHead"><h2>Asetukset</h2><button id="helpBtn" aria-label="Ohjeet">?</button><div class="seg" id="langSeg"><button data-l="en">English</button><button data-l="fi">Suomi</button></div><button id="done">Valmis</button><div id="presets"></div></div>
+  <div class="row two">
+    <div><label>Ääni</label><div class="seg" id="sndSeg"><button data-v="1">Päällä</button><button data-v="0">Pois</button></div></div>
+    <div><label>Värinä</label><div class="seg" id="vibSeg"><button data-v="1">Päällä</button><button data-v="0">Pois</button></div></div>
+  </div>
+  <div class="row">
+    <label>Liikeääni</label>
+    <div class="seg" id="moveSeg"><button data-m="crackle">Napina</button><button data-m="hiss">Suhina</button><button data-m="off">Pois</button></div>
+    <span class="note">Ääni, joka kuuluu kun kuutiot liikkuvat. Muut äänet pysyvät ennallaan.</span>
+  </div>
+  <details id="adv"><summary>Lisäasetukset <span id="proTag">PRO</span></summary>
+  <div class="row" id="textRow">
+    <label>Kuvio</label>
+    <div class="seg" id="srcSeg" style="margin-bottom:8px"><button data-s="clock">Kello</button><button data-s="text">Teksti</button><button data-s="draw">Piirros</button><button data-s="empty">Tyhjä</button></div>
+    <div class="seg" id="invSeg" style="margin-bottom:8px"><button data-i="0">Kuvio kuutioina</button><button data-i="1">Kuvio aukkona</button></div>
+    <div id="clockBox" style="display:none;margin-bottom:8px"><label class="sub">Kellonajan vaihtumistapa</label><div class="seg" id="cmSeg"><button data-c="all">Kaikki vaihtuu</button><button data-c="digit">Numero vaihtuu</button><button data-c="drip">Numero valuu</button></div><span class="note" id="cmNote"></span><div id="dripBox" style="margin-top:8px"><div class="sizeWrap"><input type="range" id="dripSec" min="1" max="60" step="1"><span id="dripVal"></span></div><span class="note">Vaihdon kesto. Uusi numero on ehjä täsmälleen minuutin vaihtuessa.</span></div></div>
+    <input id="text" maxlength="40" placeholder="esim. ❤️, A tai HEI" autocomplete="off" autocapitalize="characters">
+    <div id="drawBox" style="display:none"><button class="wide" id="drawBtn">Piirrä kuvio</button></div>
+    <span class="note">Teksti vaihtuu sana kerrallaan, jos siinä on välilyöntejä. Tyhjä = siisti ruudukko. Emoji tuo omat värinsä.</span>
+  </div>
+  <div class="row" id="fontRow">
+    <label>Fontti</label>
+    <div id="fontChips"></div>
+    <span class="note" id="fontNote"></span>
+  </div>
+  <div class="row">
+    <label>Väri</label>
+    <div id="pals"></div>
+    <div id="palSpacer"></div>
+    <span class="note" id="palNote"></span>
+    <button class="wide" id="photoBtn" style="display:none">Vaihda kuva</button><input type="file" id="photoFile" accept="image/*" style="display:none">
+  </div>
+  <div class="row">
+    <label id="sizeLbl">Jyvän koko</label>
+    <div class="sizeWrap"><input type="range" id="size"><span id="sizeVal"></span></div>
+    <span class="note" id="sizeNote"></span>
+  </div>
+  <div class="row" id="retRow">
+    <label>Kuutioiden palautuminen</label>
+    <div class="seg" id="retSeg"><button data-r="1">Päällä</button><button data-r="0">Pois</button></div>
+    <div class="sizeWrap" style="margin-top:8px"><input type="range" id="ret" min="1" max="60" step="1"><span id="retVal"></span></div>
+    <div id="retChips" style="display:flex;gap:6px;margin-top:8px"><button data-v="0.2">0,2 s</button><button data-v="0.4">0,4 s</button><button data-v="0.6">0,6 s</button><button data-v="0.8">0,8 s</button></div>
+    <span class="note">Kuutiot palaavat paikoilleen tämän ajan kuluessa.</span>
+  </div>
+  <div class="row" id="gravRow">
+    <label>Painovoima</label>
+    <div class="seg" id="gravSeg"><button data-g="0">Pois</button><button data-g="1">Päällä</button></div>
+    <span class="note">Päällä kuutiot liukuvat puhelimen kallistuksen mukana.</span>
+  </div>
+  <div class="row" id="reactRow">
+    <label>Reagointi tärinään ja napautuksiin</label>
+    <div class="seg" id="reactSeg"><button data-r="1">Päällä</button><button data-r="0">Pois</button></div>
+    <span class="note">Kuutiot hyppäävät ravistuksesta ja napautuksesta, vaikka painovoima olisi pois.</span>
+  </div>
+  <div class="row" id="fingerRow">
+    <label>Kosketuksen vaikutus</label>
+    <div class="seg" id="magSeg"><button data-g="0">Työntää pois</button><button data-g="1">Vetää puoleensa</button><button data-g="sink">Tippuu</button></div>
+    <span class="note">Tippuu: kosketetut kuutiot putoavat kauas ja palaavat palautumisajan kuluessa.</span>
+  </div>
+  <div class="row" id="notesRow">
+    <label>Sävelet</label>
+    <div class="seg" id="notesSeg"><button data-n="0">Naksahdus</button><button data-n="1">Kellonsoitto</button></div>
+    <div id="voiceChips"></div>
+    <span class="note">Jokainen väri soi eri sävelellä, kun kuutiot törmäävät. Valitse soitin.</span>
+  </div>
+  <div class="row" id="nightRow">
+    <label>Yötila — yökello</label>
+    <div class="seg" id="nightSeg"><button data-t="0">Pois</button><button data-t="1">Päällä</button></div>
+    <div class="sizeWrap" style="margin-top:8px"><input type="range" id="nightDim" min="30" max="95" step="5"><span id="nightVal"></span></div>
+    <span class="note">Himmentää ruudun ja pitää sen päällä. Napauta ruutua, niin painikkeet näkyvät hetken. Ei ääniä eikä tärinää.</span>
+  </div>
+  <div class="bottom" style="display:none">
+    <button id="sndTog">Ääni päällä</button>
+  </div>
+  </details>
+</div>
+
+<div id="pro"><div id="proCard"><h2 id="proTitle">Fidget time Pro</h2><p id="proText"></p><button id="proBuy"></button><div id="proMsg"></div><button id="proRestore"></button><button id="proLater"></button></div></div>
+<div id="help"><div id="helpIn"><div id="helpHead"><h2 id="helpTitle"></h2><button id="helpClose"></button></div><div id="helpBody"></div></div></div>
+
+<div id="draw">
+  <canvas id="dc"></canvas>
+  <div id="dRect"></div>
+  <div id="dbar"><button id="dErase">Pyyhi</button><button id="dClear">Tyhjennä</button><button id="dDone">Valmis</button></div>
+  <div id="dHint">Piirrä sormella. Kuutiot palaavat aina tähän kuvioon.</div>
+</div>
+
+<div id="start">
+  <h1 aria-label="Fidget time" style="line-height:0"><canvas id="logo"></canvas></h1>
+  <p>Pyyhkäise pikseleitä</p>
+</div>
+
+<script>
+addEventListener('error', e => console.error('nontimer error: ' + e.message + ' @' + e.lineno + ':' + e.colno));
+addEventListener('unhandledrejection', e => console.error('nontimer rejection: ' + (e.reason && e.reason.stack || e.reason)));
+(() => {   // nimi pikselifontilla, neon-kuutioina
+  const G = {
+    f:['00110','01000','01000','11110','01000','01000','01000','00000'],
+    i:['00100','00000','01100','00100','00100','00100','01110','00000'],
+    d:['00001','00001','01111','10001','10001','10001','01111','00000'],
+    g:['00000','00000','01111','10001','10001','01111','00001','01110'],
+    e:['00000','00000','01110','10001','11111','10000','01111','00000'],
+    t:['00100','00100','11111','00100','00100','00100','00011','00000'],
+    m:['00000','00000','11010','10101','10101','10101','10101','00000'],
+    ' ':['000','000','000','000','000','000','000','000'],
+  };
+  const word = 'fidget time', C = ['#ff4fa3','#ffd23f','#3ee0ff','#b6ff3b','#a35bff'];
+  const offs = []; let W = 0; for (const ch of word) { offs.push(W); W += G[ch][0].length + 1; } W -= 1;
+  const cv = document.getElementById('logo'), px = Math.max(4, Math.min(7, Math.floor(Math.min(innerWidth*0.86, 360)/W))), H = 8, dpr = devicePixelRatio || 1;
+  cv.width = W*px*dpr; cv.height = H*px*dpr; cv.style.width = W*px + 'px'; cv.style.height = H*px + 'px';
+  const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  [...word].forEach((ch, k) => G[ch].forEach((row, r) => [...row].forEach((b, c) => {
+    if (b !== '1') return;
+    const x = (offs[k] + c)*px, y = r*px, col = C[(Math.random()*C.length)|0];
+    g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x+1, y+1, px-1, px-1);
+    g.fillStyle = col; g.fillRect(x, y, px-1, px-1);
+  })));
+})();
+
+(() => {
+  const $ = id => document.getElementById(id);
+
+  // ================= Asetukset =================
+  const PALETTES = {
+    hiekka: ['#d9c39a','#c9a96e','#b8935a','#e6d3ad','#c0a06c'],
+    meri:   ['#2f7fc1','#3a95d6','#5fb3e8','#2a6aa8','#8fd0f2'],
+    kivi:   ['#8a8f96','#a3a7ad','#6f747b','#bfc2c6','#5d6168'],
+    neon:   ['#ff4fa3','#36e3ff','#b6ff3b','#ffd23f','#9b5cff'],
+    metsa:  ['#4f7d3a','#6b9b4a','#3d6330','#93b86b','#a8925a'],
+    laava:  ['#ff5a1f','#ff8c2a','#e8361c','#ffc04d','#9e2a12'],
+    pastelli:['#f6b8c8','#b8d8f6','#c8f0c0','#f8e6a8','#d8c4f4'],
+  };
+  const PAL_NAMES = {liuku:'Liuku',hiekka:'Hiekka',meri:'Meri',kivi:'Kivi',neon:'Neon',metsa:'Metsä',laava:'Laava',pastelli:'Pastelli',oma:'Oma'};
+  const BGS = {sand:'#1b1712', water:'#0c131b', cubes:'#15141a'};
+  const DEFAULTS = {
+    mode:'sand',
+    size:{sand:3, water:3, cubes:12},
+    pal:{sand:'hiekka', water:'meri', cubes:'neon'},
+    custom:{sand:'#d9c39a', water:'#3a95d6', cubes:'#ff4fa3'},
+    text:'', sound:true, area:'full', invert:true, retSec:0.8, zoom:16, clock:true, font:'pieni',
+    voice:'bell', src:'clock', retOn:true, gravity:false, react:true, clockMode:'digit', dripSec:5, magnet:true, colorShift:true, sinkOn:false, sinkSec:10, edgeOut:false, edgeSec:10, vibe:true, moveSnd:'crackle', art:null, preset:'x', notes:false, night:false, nightDim:75, draw:null, photo:null
+  };
+  const clone = o => JSON.parse(JSON.stringify(o));
+  let S = (() => {
+    try {
+      const s = JSON.parse(localStorage.getItem('hiekkalaatikko-v2'));
+      if (s && s.size) return {...clone(DEFAULTS), ...s,
+        size:{...DEFAULTS.size, ...s.size}, pal:{...DEFAULTS.pal, ...s.pal}, custom:{...DEFAULTS.custom, ...s.custom}};
+    } catch(_) {}
+    return clone(DEFAULTS);
+  })();
+  S.mode = 'cubes';
+  if (S.lang !== 'fi' && S.lang !== 'en') S.lang = /^fi\b/i.test(navigator.language || '') ? 'fi' : 'en';
+  if (!S.src) S.src = S.clock ? 'clock' : 'text';
+  S.clock = S.src === 'clock';
+  if (S.src === 'photo') { S.src = 'text'; S.clock = false; if (S.photo) S.pal.cubes = 'kuva'; }
+  if (S.retSec === 0) { S.retOn = false; S.retSec = 10; }
+  var presetsReady = false;
+  const PK = ['art','size','pal','custom','text','invert','retSec','retOn','zoom','clock','font','src','gravity','react','clockMode','dripSec','magnet','notes','voice','night','nightDim','colorShift','sinkOn','sinkSec','edgeOut','edgeSec'];
+  const cp = v => v === undefined ? null : JSON.parse(JSON.stringify(v));   // puuttuva arvo ei kaada kopiointia
+  const snap = () => { const o = {}; for (const k of PK) o[k] = cp(S[k]); return o; };
+  const save = () => { wakeUp(); if (S.presets && S.preset) S.presets[S.preset] = snap(); try { localStorage.setItem('hiekkalaatikko-v2', JSON.stringify(S)); } catch(_) {} };
+
+  const clamp = v => v < 0 ? 0 : v > 255 ? 255 : v|0;
+  const hexRgb = h => { h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; };
+  const pack = (r,g,b) => ((255<<24)|(clamp(b)<<16)|(clamp(g)<<8)|clamp(r))>>>0;
+  const variants = c => [1,.82,1.15,.68,1.3].map(f => c.map(v => clamp(v*f + (f>1?10:0))));
+  function paletteRgb(mode) {
+    const p = S.pal[mode];
+    if (p === 'kuva') return PALETTES.neon.map(hexRgb);
+    if (p === 'liuku') return [fadeRgb(0), fadeRgb(0.5), fadeRgb(-0.5)];
+    if (p === 'oma' || !PALETTES[p]) return variants(hexRgb(S.custom[mode]));
+    return PALETTES[p].map(hexRgb);
+  }
+
+  // liukuva väri: sävy liukuu minuutissa satunnaiseen uuteen sävyyn niin hitaasti, ettei sitä juuri huomaa
+  const FADE = {h0: Math.random()*360, h1: 0, t0: Date.now()}; FADE.h1 = FADE.h0 + 90 + Math.random()*180;
+  function fadeHue() {
+    let t = (Date.now() - FADE.t0)/60000;
+    while (t >= 1) { FADE.h0 = FADE.h1 % 360; FADE.h1 = FADE.h0 + (Math.random() < .5 ? -1 : 1)*(60 + Math.random()*150); FADE.t0 += 60000; t -= 1; }
+    const e = t*t*(3-2*t); return ((FADE.h0 + (FADE.h1-FADE.h0)*e) % 360 + 360) % 360;
+  }
+  function hslRgb(h, s, l) {
+    const a = s*Math.min(l, 1-l), f = n => { const k = (n + h/30) % 12; return Math.round(255*(l - a*Math.max(-1, Math.min(k-3, 9-k, 1)))); };
+    return [f(0), f(8), f(4)];
+  }
+  function fadeRgb(j) { return hslRgb((fadeHue() + j*14 + 360) % 360, 0.72, 0.56 + j*0.08); }
+
+  // ================= Painovoima & tila =================
+  let gx = 0, gy = 1, tgx = 0, tgy = 1;
+  let sensorOK = false, padActive = false, lastAct = 0;
+  const keys = {};
+  let photoImg = null;   // pienennetty valokuva (canvas tai kuva)
+  // taide-esiasetusten kuvat (tekijänoikeusvapaat teokset, pienennettynä sovelluksen mukana)
+  const ART = {pearl: 'art/pearl.jpg'}, artImg = {};
+  for (const k in ART) { const im = new Image(); im.onload = () => { artImg[k] = im; if (S.art === k && isCubes() && S.pal.cubes === 'kuva') rehome(); if (presetsReady) buildPresets(); }; im.src = ART[k]; }
+  const colorImg = () => S.art ? (artImg[S.art] || null) : photoImg;
+
+  // ================= Näyttö päällä (yötila) =================
+  let wake = null;
+  async function requestWake() {
+    try { if (navigator.wakeLock && !wake) { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } } catch(_) {}
+  }
+  function releaseWake() { if (!S.night && wake) { try { wake.release(); } catch(_) {} wake = null; } }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.night) requestWake(); });
+
+  // ================= Pikselimoottori (hiekka, vesi) =================
+  const cv = $('c'), ctx = cv.getContext('2d');
+  let pW, pH, grid, N = 1, px, py, fx, fy, vx, vy, col, colHi, mv, ord, key, img, buf, pBG, liquid = false;
+  let pImpacts = 0, pMoving = 0;
+
+  function pixInit() {
+    liquid = S.mode === 'water';
+    const cell = S.size[S.mode];
+    pW = Math.max(40, Math.floor(innerWidth / cell));
+    pH = Math.max(40, Math.floor(innerHeight / cell));
+    cv.width = pW; cv.height = pH;
+    img = ctx.createImageData(pW, pH);
+    buf = new Uint32Array(img.data.buffer);
+    pBG = pack(...hexRgb(BGS[S.mode]));
+    grid = new Int32Array(pW*pH);
+    for (let x=0;x<pW;x++){ grid[x]=-1; grid[(pH-1)*pW+x]=-1; }
+    for (let y=0;y<pH;y++){ grid[y*pW]=-1; grid[y*pW+pW-1]=-1; }
+    N = Math.floor((pW-2)*(pH-2)*(liquid ? 0.3 : 0.22));
+    px = new Int16Array(N); py = new Int16Array(N);
+    fx = new Float32Array(N); fy = new Float32Array(N);
+    vx = new Float32Array(N); vy = new Float32Array(N);
+    col = new Uint32Array(N); colHi = new Uint32Array(N); mv = new Uint8Array(N);
+    key = new Float32Array(N); ord = new Uint32Array(N);
+    let i = 0;
+    while (i < N) {
+      const x = 1 + (Math.random()*(pW-2)|0), y = 1 + (Math.random()*(pH-2)|0);
+      if (grid[y*pW+x] !== 0) continue;
+      grid[y*pW+x] = i+1; px[i]=x; py[i]=y;
+      vx[i] = (Math.random()-.5)*.3; vy[i] = Math.random()*.3;
+      ord[i] = i; i++;
+    }
+    pixRecolor();
+  }
+  function pixRecolor() {
+    const pal = paletteRgb(S.mode), J = liquid ? 8 : 11;
+    for (let i=0;i<N;i++) {
+      const b = pal[Math.random()*pal.length|0], j = (Math.random()*2-1)*J;
+      col[i] = pack(b[0]+j, b[1]+j, b[2]+j*.8);
+      colHi[i] = pack(b[0]*1.18+24+j, b[1]*1.18+24+j, b[2]*1.12+24+j);
+    }
+  }
+  function tryMove(i, dx, dy) {
+    const x = px[i]+dx, y = py[i]+dy, n = y*pW+x;
+    if (grid[n] !== 0) return false;
+    grid[py[i]*pW+px[i]] = 0; grid[n] = i+1; px[i] = x; py[i] = y;
+    return true;
+  }
+  function pixMagnet() {
+    const fx = down.x/innerWidth*pW, fy = down.y/innerHeight*pH, R = 16 + Math.min(30, (performance.now()-down.t0)/60), R2 = R*R;
+    for (let i=0;i<N;i++) {
+      const dx = fx-px[i], dy = fy-py[i], d2 = dx*dx+dy*dy;
+      if (d2 > R2 || d2 < 2.25) continue;
+      const d = Math.sqrt(d2), f = (1-d/R)*0.35;
+      vx[i] += dx/d*f; vy[i] += dy/d*f;
+    }
+  }
+  function pixStep() {
+    if (S.magnet && down) pixMagnet();
+    const gmag = Math.hypot(gx, gy);
+    const G = liquid ? 0.16 : 0.13, DAMP = liquid ? 0.99 : 0.985, VMAX = 3.2;
+    const ax = gx*G, ay = gy*G;
+    const slide = liquid ? (gmag > 0.03 ? 1 : 0) : Math.min(1, gmag*1.6);
+    let qx = -gy, qy = gx; const qm = Math.hypot(qx,qy) || 1; qx /= qm; qy /= qm;
+    for (let i=0;i<N;i++) key[i] = px[i]*gx + py[i]*gy;
+    ord.sort((a,b) => key[b]-key[a]);
+    pImpacts = 0; pMoving = 0;
+
+    for (let k=0;k<N;k++) {
+      const i = ord[k];
+      let nvx = (vx[i]+ax)*DAMP, nvy = (vy[i]+ay)*DAMP;
+      const sp = Math.hypot(nvx, nvy);
+      if (sp > VMAX) { nvx *= VMAX/sp; nvy *= VMAX/sp; }
+      vx[i] = nvx; vy[i] = nvy;
+      let ffx = fx[i] + nvx, ffy = fy[i] + nvy, guard = 0, moved = false, collided = false;
+
+      while ((ffx >= 1 || ffx <= -1 || ffy >= 1 || ffy <= -1) && guard++ < 6) {
+        const sx = ffx >= 1 ? 1 : ffx <= -1 ? -1 : 0;
+        const sy = ffy >= 1 ? 1 : ffy <= -1 ? -1 : 0;
+        if (tryMove(i, sx, sy)) { ffx -= sx; ffy -= sy; moved = true; continue; }
+        let ok = false;
+        if (Math.random() < slide || sp > 0.6) {
+          let a1x, a1y, a2x, a2y;
+          if (sx && sy) { a1x=sx; a1y=0; a2x=0; a2y=sy; }
+          else if (sx) { a1x=sx; a1y=1; a2x=sx; a2y=-1; }
+          else { a1x=1; a1y=sy; a2x=-1; a2y=sy; }
+          if (Math.random() < .5) { let t=a1x; a1x=a2x; a2x=t; t=a1y; a1y=a2y; a2y=t; }
+          if (tryMove(i, a1x, a1y)) { ffx -= a1x; ffy -= a1y; ok = true; }
+          else if (tryMove(i, a2x, a2y)) { ffx -= a2x; ffy -= a2y; ok = true; }
+        }
+        if (ok) { vx[i] *= .86; vy[i] *= .86; moved = true; continue; }
+        if (sp > 1.15) pImpacts++;
+        vx[i] *= .25; vy[i] *= .25; ffx = 0; ffy = 0; collided = true;
+        break;
+      }
+      // vesi: valuu sivuille kunnes pinta tasoittuu
+      if (liquid && collided && slide && Math.random() < .75) {
+        const sg = Math.random() < .5 ? 1 : -1;
+        const lx = Math.round(qx*1.42*sg), ly = Math.round(qy*1.42*sg);
+        if (lx || ly) {
+          let d = 0; while (d < 3 && tryMove(i, lx, ly)) d++;
+          if (d) { vx[i] += lx*.15; vy[i] += ly*.15; }
+        }
+      }
+      fx[i] = ffx; fy[i] = ffy;
+      mv[i] = moved ? 1 : 0;
+      if (moved) pMoving++;
+    }
+  }
+  const SPARK = pack(225,240,255);
+  function pixRender() {
+    buf.fill(pBG);
+    if (liquid) {
+      for (let i=0;i<N;i++) buf[py[i]*pW+px[i]] = Math.random() < .0015 ? SPARK : (mv[i] ? colHi[i] : col[i]);
+    } else {
+      for (let i=0;i<N;i++) buf[py[i]*pW+px[i]] = col[i];
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  function pixTap(cx, cy, power) {
+    const R = liquid ? 14 : 16, R2 = R*R;
+    const gm = Math.hypot(gx,gy) || 1, ux = gx/gm, uy = gy/gm;
+    for (let i=0;i<N;i++) {
+      const dx = px[i]-cx, dy = py[i]-cy, d2 = dx*dx+dy*dy;
+      if (d2 > R2) continue;
+      const d = Math.sqrt(d2) || 1, f = (1-d/R)*(liquid ? 3 : 2.6)*power;
+      vx[i] += dx/d*f*.7 - ux*f + (Math.random()-.5)*.6;
+      vy[i] += dy/d*f*.7 - uy*f + (Math.random()-.5)*.6;
+    }
+  }
+  function pixShake(power) {
+    const gm = Math.hypot(gx,gy) || 1, ux = gx/gm, uy = gy/gm;
+    for (let i=0;i<N;i++) {
+      const f = (1.2 + Math.random()*2.2)*power;
+      vx[i] += (Math.random()-.5)*f*1.6 - ux*f*.9;
+      vy[i] += (Math.random()-.5)*f*1.6 - uy*f*.9;
+    }
+  }
+  function pixStir(x, y, mx, my) {
+    for (let i=0;i<N;i++) {
+      const dx = px[i]-x, dy = py[i]-y;
+      if (dx*dx+dy*dy < 64) { vx[i] += mx*.35; vy[i] += my*.35; }
+    }
+  }
+
+  // ================= Kuutiomoottori =================
+  const kcv = $('k'), kc = kcv.getContext('2d');
+  let dpr = 1, kW = 0, kH = 0, KS = 16, kN = 0;
+  let kx, ky, kvx, kvy, kz, kvz, ka, kav, hx, hy, slotX, slotY, ktop, kside, krgb, arr, head, nextI, cellOf, order, floorH, ox_, oy_;
+  let rOn, rsx, rsy, ra0, rt0, rdur, kno, kin, dist, kcell, kdrop, kzs, kzd, kzz, khide, kpr, pdx, pdy, rvx, rvy, rox, roy, kmag, mox, moy, lastTilt = 0, magDone = false, photoColActive = false;
+  let gw = 1, gh = 1, wasCalm = false, textMode = false, emojiMode = false, gridCols = 0;
+  const nq = []; function noteHit(i, v) { if (S.notes && nq.length < 10) nq.push([kno[i], v]); }
+  let kMove = 0, kImpacts = 0, kArrivals = 0, ghosts = [], lastClock = '';
+  const ZCAM = 420; let ZMAX = 315, wallHit = 0;  // perspektiivi: kamera 420 yksikön korkeudella
+
+  // Bittikarttafontit kelloa varten
+  const SEG = {0:'abcdef',1:'bc',2:'abged',3:'abgcd',4:'fgbc',5:'afgcd',6:'afgedc',7:'abc',8:'abcdefg',9:'abcdfg'};
+  function segGlyph(segs) {   // 5×9 seitsemän segmentin numero
+    const g = Array.from({length:9}, () => [0,0,0,0,0]);
+    const H = (r) => { for (let c=1;c<=3;c++) g[r][c] = 1; }, V = (c, r0) => { for (let r=r0;r<r0+3;r++) g[r][c] = 1; };
+    if (segs.includes('a')) H(0); if (segs.includes('g')) H(4); if (segs.includes('d')) H(8);
+    if (segs.includes('f')) V(0,1); if (segs.includes('b')) V(4,1); if (segs.includes('e')) V(0,5); if (segs.includes('c')) V(4,5);
+    return g.map(r => r.join(''));
+  }
+  const BITMAP = {
+    pikseli: {
+      '0':['01110','10001','10011','10101','11001','10001','01110'], '1':['00100','01100','00100','00100','00100','00100','01110'],
+      '2':['01110','10001','00001','00010','00100','01000','11111'], '3':['11111','00010','00100','00010','00001','10001','01110'],
+      '4':['00010','00110','01010','10010','11111','00010','00010'], '5':['11111','10000','11110','00001','00001','10001','01110'],
+      '6':['00110','01000','10000','11110','10001','10001','01110'], '7':['11111','00001','00010','00100','01000','01000','01000'],
+      '8':['01110','10001','10001','01110','10001','10001','01110'], '9':['01110','10001','10001','01111','00001','00010','01100'],
+      ':':['0','0','1','0','1','0','0'],
+    },
+    pieni: {
+      '0':['111','101','101','101','111'], '1':['010','110','010','010','111'], '2':['111','001','111','100','111'],
+      '3':['111','001','111','001','111'], '4':['101','101','111','001','001'], '5':['111','100','111','001','111'],
+      '6':['111','100','111','101','111'], '7':['111','001','010','010','010'], '8':['111','101','111','101','111'],
+      '9':['111','101','111','001','111'], ':':['0','1','0','1','0'],
+    },
+    segmentti: Object.assign(Object.fromEntries(Object.entries(SEG).map(([k,v]) => [k, segGlyph(v)])),
+      {':':['0','0','1','0','0','0','1','0','0']}),
+  };
+  const CANVAS_FONTS = {
+    sans:'700 {s}px system-ui,-apple-system,"Segoe UI",sans-serif',
+    serif:'700 {s}px Georgia,"Times New Roman",serif',
+    mono:'700 {s}px ui-monospace,Menlo,Consolas,monospace',
+    ohut:'300 {s}px system-ui,-apple-system,"Helvetica Neue",sans-serif',
+    pyorea:'800 {s}px ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold",system-ui,sans-serif',
+  };
+  const FONT_NAMES = {pikseli:'Pikseli', pieni:'Pieni', segmentti:'Segmentti', sans:'Sans', serif:'Serif', mono:'Mono', ohut:'Ohut', pyorea:'Pyöreä'};
+  const EMOJI_FB = ',"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"';
+  const pad2 = n => String(n).padStart(2, '0');
+  let clockOff = 0;
+  function clockStr() { const d = new Date(Date.now() + clockOff); return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+  const clockLines = () => { const t = clockStr(); return kW > kH ? [t] : [t.slice(0,2), t.slice(3)]; };  // vaaka: rivissä, pysty: päällekkäin
+
+  function bitmapMask(lines, B, cols, rows) {
+    const H = B['0'].length;
+    const glyph = str => { const out = Array(H).fill(''); [...str].forEach((ch, k) => { const g = B[ch] || B['0']; for (let r=0;r<H;r++) out[r] += (k ? '0' : '') + g[r]; }); return out; };
+    const parts = lines.map(glyph), W = Math.max(...parts.map(p => p[0].length));
+    const gap = Math.max(1, Math.round(H*0.3));
+    let L = [];
+    parts.forEach((p, k) => {
+      if (k) for (let g=0; g<gap; g++) L.push('0'.repeat(W));
+      const padL = Math.floor((W - p[0].length)/2);
+      p.forEach(row => L.push('0'.repeat(padL) + row + '0'.repeat(W - row.length - padL)));
+    });
+    let sc = Math.min(cols*0.76/W, rows*0.72/L.length);
+    if (sc >= 1 && sc - Math.floor(sc) < 0.25) sc = Math.floor(sc);   // lähes kokonaisluku: tasaiset viivat
+    sc = Math.max(1, sc);
+    const Wc = Math.round(W*sc), Hc = Math.round(L.length*sc);
+    const c0 = Math.floor((cols - Wc)/2), r0 = Math.floor((rows - Hc)/2);
+    const on = new Uint8Array(cols*rows);
+    for (let rr=0; rr<Hc; rr++) for (let cc=0; cc<Wc; cc++) {
+      const r = Math.min(L.length-1, Math.floor((rr+.5)/sc)), c = Math.min(W-1, Math.floor((cc+.5)/sc));
+      if (L[r][c] !== '1') continue;
+      const R = r0+rr, C = c0+cc;
+      if (R >= 0 && R < rows && C >= 0 && C < cols) on[R*cols+C] = 1;
+    }
+    return on;
+  }
+  function canvasMask(lines, fontKey, cols, rows) {
+    const oc = document.createElement('canvas'); oc.width = cols; oc.height = rows;
+    const o = oc.getContext('2d', {willReadFrequently:true});
+    const tpl = CANVAS_FONTS[fontKey] || CANVAS_FONTS.sans;
+    const font = s => tpl.replace('{s}', s).replace(/(serif|monospace|sans-serif)$/, '$1' + EMOJI_FB);
+    o.font = font(rows);
+    const maxW = Math.max(...lines.map(l => o.measureText(l).width)) || rows;
+    const fs = Math.max(4, Math.floor(Math.min(rows*0.85/lines.length, rows*cols*0.9/maxW)));
+    o.font = font(fs); o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#fff';
+    const lh = fs*1.02, y0 = rows/2 - (lines.length-1)*lh/2 + fs*0.04;
+    lines.forEach((l, k) => o.fillText(l, cols/2, y0 + k*lh));
+    const d = o.getImageData(0, 0, cols, rows).data, on = new Uint8Array(cols*rows);
+    for (let i=0;i<cols*rows;i++) if (d[i*4+3] > 110) on[i] = 1;
+    return {on, d};
+  }
+
+  // sana kerrallaan: välilyönnein erotetut sanat näytetään vuorotellen
+  let wordIdx = 0, wordT = 0;
+  const WORD_MS = 3200, WORD_TRANS = 1300;
+  const textWords = () => (S.text || '').trim().split(/\s+/).filter(Boolean);
+  function buildPoints() {
+    const pts = [];
+    const ws = textWords(), text = ws.length > 1 ? ws[wordIdx % ws.length] : (S.text || '').trim();
+    const cols = Math.max(3, Math.floor(kW/KS));
+    const rows = Math.max(3, Math.floor(kH/KS));
+    const ox = (kW - cols*KS)/2, oy = (kH - rows*KS)/2;
+    textMode = false; emojiMode = false; gridCols = 0; photoColActive = false;
+    let on = null, d = null, isEmoji = false, noCenter = false, pd = null;
+    const fk = S.font || 'pikseli', B = BITMAP[fk];
+    const photoImg = colorImg();
+    if (S.pal.cubes === 'kuva' && photoImg) {   // värit kuvasta: jokainen ruutu saa värin kuvan vastaavasta kohdasta
+      const oc = document.createElement('canvas'); oc.width = cols; oc.height = rows;
+      const o = oc.getContext('2d', {willReadFrequently:true});
+      const iw = photoImg.width, ih = photoImg.height, sc = Math.max(cols/iw, rows/ih), sw = cols/sc, sh = rows/sc;
+      o.drawImage(photoImg, (iw-sw)/2, (ih-sh)/2, sw, sh, 0, 0, cols, rows);
+      pd = o.getImageData(0, 0, cols, rows).data;
+    }
+    const photoRgb = (r, c) => { const q = (r*cols+c)*4; return [pd[q], pd[q+1], pd[q+2]]; };
+    if (S.clock) on = B ? bitmapMask(clockLines(), B, cols, rows) : canvasMask(clockLines(), fk, cols, rows).on;
+    else if (S.src === 'draw' && S.draw) {
+      const D = S.draw; on = new Uint8Array(cols*rows); noCenter = true;
+      for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+        const sx = Math.min(D.w-1, Math.floor((c+.5)/cols*D.w)), sy = Math.min(D.h-1, Math.floor((r+.5)/rows*D.h));
+        on[r*cols+c] = D.bits.charCodeAt(sy*D.w+sx) === 49 ? 1 : 0;
+      }
+    }
+    else if (S.src === 'text' && text) {
+      try { isEmoji = /\p{Extended_Pictographic}/u.test(text); } catch(_) {}
+      const m = canvasMask([text], B ? 'sans' : fk, cols, rows); on = m.on; d = m.d;   // pikselifontit vain numeroille
+    }
+    if (on) {
+      let minC = cols, maxC = -1, minR = rows, maxR = -1;
+      for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) if (on[r*cols+c]) {
+        if (c<minC) minC=c; if (c>maxC) maxC=c; if (r<minR) minR=r; if (r>maxR) maxR=r;
+      }
+      if (maxC >= 0) {
+        textMode = true;
+        const sc = noCenter ? 0 : Math.round(((cols-1-maxC) - minC)/2), sr = noCenter ? 0 : Math.round(((rows-1-maxR) - minR)/2);
+        emojiMode = isEmoji && !S.invert && !!d;
+        const usePhoto = !!pd && !emojiMode;
+        for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+          const c0 = c - sc, r0 = r - sr;
+          const inText = c0 >= 0 && c0 < cols && r0 >= 0 && r0 < rows && on[r0*cols+c0] === 1;
+          if (inText !== !S.invert) continue;
+          const p = (r0*cols+c0)*4;
+          pts.push({x: ox + (c+.5)*KS, y: oy + (r+.5)*KS, cell: r*cols+c, rgb: emojiMode ? [d[p], d[p+1], d[p+2]] : (usePhoto ? photoRgb(r, c) : null)});
+        }
+        if (pts.length) { if (usePhoto) { emojiMode = true; photoColActive = true; } return pts; }
+        textMode = false; emojiMode = false;
+      }
+    }
+    for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) pts.push({x: ox + (c+.5)*KS, y: oy + (r+.5)*KS, cell: r*cols+c, rgb: pd ? photoRgb(r, c) : null});
+    if (pd) { textMode = true; emojiMode = true; photoColActive = true; }   // kuvavärit: jokainen kuutio palaa omalle paikalleen
+    else gridCols = cols;
+    return pts;
+  }
+
+  function allocCubes(n, cap) {
+    cap = cap || n; kN = n;
+    kx = new Float32Array(cap); ky = new Float32Array(cap); kvx = new Float32Array(cap); kvy = new Float32Array(cap);
+    kz = new Float32Array(cap); kvz = new Float32Array(cap); ka = new Float32Array(cap); kav = new Float32Array(cap);
+    hx = new Float32Array(cap); hy = new Float32Array(cap); slotX = new Float32Array(cap); slotY = new Float32Array(cap);
+    arr = new Uint8Array(cap); floorH = new Float32Array(cap); ox_ = new Float32Array(cap); oy_ = new Float32Array(cap);
+    nextI = new Int32Array(cap).fill(-1); cellOf = new Int32Array(cap);
+    if (head) head.fill(-1);   // vanhat naapurilistat pois: muuten haku voi kiertää kehää ja appi jäätyy
+    rOn = new Uint8Array(cap); rsx = new Float32Array(cap); rsy = new Float32Array(cap); ra0 = new Float32Array(cap);
+    rt0 = new Float64Array(cap); rdur = new Float32Array(cap);
+    ktop = new Array(cap); kside = new Array(cap); krgb = new Array(cap); kno = new Uint8Array(cap); kin = new Uint8Array(cap); dist = new Float64Array(cap);
+    kcell = new Int32Array(cap); kdrop = new Float64Array(cap); kzs = new Float64Array(cap); kzd = new Float32Array(cap); kzz = new Float32Array(cap); khide = new Uint8Array(cap); kpr = new Float32Array(cap); pdx = new Float32Array(cap); pdy = new Float32Array(cap); rvx = new Float32Array(cap); rvy = new Float32Array(cap); rox = new Float32Array(cap); roy = new Float32Array(cap); kmag = new Uint8Array(cap); mox = new Float32Array(cap); moy = new Float32Array(cap);
+    order = Array.from({length:n}, (_, i) => i);
+  }
+  function cubeInit(scatter) {
+    DR.on = false; DR.ev = [];
+    dpr = Math.min(2, devicePixelRatio || 1);
+    kW = innerWidth; kH = innerHeight;
+    kcv.width = Math.round(kW*dpr); kcv.height = Math.round(kH*dpr);
+    KS = S.size.cubes;
+    gw = Math.ceil(kW/KS)+1; gh = Math.ceil(kH/KS)+1; head = new Int32Array(gw*gh).fill(-1);
+    lastClock = clockStr(); ghosts = [];
+    const pts = buildPoints();
+    allocCubes(pts.length, pts.length + capExtra());
+    for (let i=0;i<kN;i++) {
+      hx[i] = slotX[i] = pts[i].x; hy[i] = slotY[i] = pts[i].y; kcell[i] = pts[i].cell;
+      krgb[i] = pts[i].rgb;
+      if (scatter) {
+        kx[i] = KS + Math.random()*(kW-2*KS); ky[i] = KS + Math.random()*(kH-2*KS);
+        ka[i] = Math.random()*Math.PI; kz[i] = Math.random()*30;
+      } else { kx[i] = hx[i]; ky[i] = hy[i]; arr[i] = 1; }
+    }
+    wasCalm = false;
+    cubeRecolor();
+  }
+  function hueOf(r, g, b) {
+    const mx = Math.max(r,g,b), mn = Math.min(r,g,b), d = mx - mn; if (!d) return 0;
+    let h = mx === r ? ((g-b)/d) % 6 : mx === g ? (b-r)/d + 2 : (r-g)/d + 4; h *= 60; return h < 0 ? h + 360 : h;
+  }
+  const hsh = n => { n = Math.imul(n ^ (n >>> 15), 0x2c1b3c6d); n = Math.imul(n ^ (n >>> 12), 0x297a2d39); return (n ^ (n >>> 15)) >>> 0; };
+  const shiftOn = () => S.colorShift && S.pal.cubes !== 'kuva' && S.pal.cubes !== 'liuku' && !emojiMode;
+  function colorCube(i, pal) {
+    if (shiftOn()) {   // väri vaihtuu: sävy kiertää väriympyrää pitkin, minuutissa kolmasosa kierrosta (esim. punaisesta vihreään)
+      const c0 = kcell[i] + 11, A = pal[hsh(c0*31) % pal.length], ph = (hsh(c0) % 1000)/1000;
+      const r = A[0]/255, g = A[1]/255, bb = A[2]/255, mx = Math.max(r, g, bb), mn = Math.min(r, g, bb), l = (mx + mn)/2, d = mx - mn;
+      let h = 0; if (d > 0) h = mx === r ? ((g - bb)/d + 6) % 6 : mx === g ? (bb - r)/d + 2 : (r - g)/d + 4;
+      const sat = Math.max(0.6, d > 0 ? d/(1 - Math.abs(2*l - 1)) : 0), lig = Math.min(0.68, Math.max(0.42, l));
+      const hue = (h*60 + (Date.now()/60000)*120 + ph*40) % 360;
+      const t = hslRgb(hue, Math.min(1, sat), lig), j = (hsh(c0*7) % 13) - 6;
+      t[0] = clamp(t[0] + j); t[1] = clamp(t[1] + j); t[2] = clamp(t[2] + j);
+      kno[i] = Math.floor(hueOf(t[0], t[1], t[2])/36) % 10;
+      ktop[i] = `rgb(${t[0]|0},${t[1]|0},${t[2]|0})`; kside[i] = `rgb(${t[0]*.5|0},${t[1]*.5|0},${t[2]*.5|0})`;
+      return;
+    }
+    const c = (emojiMode && krgb[i]) ? krgb[i] : S.pal.cubes === 'liuku' ? fadeRgb(((((kcell[i]+7)*2654435761)>>>0) % 1000)/500 - 1) : pal[Math.random()*pal.length|0];
+    const j = (emojiMode || S.pal.cubes === 'liuku') ? 0 : (Math.random()*2-1)*10;
+    const t = [clamp(c[0]+j), clamp(c[1]+j), clamp(c[2]+j)];
+    kno[i] = Math.floor(hueOf(t[0], t[1], t[2])/36) % 10;   // väri → sävel
+    ktop[i] = `rgb(${t[0]},${t[1]},${t[2]})`;
+    kside[i] = `rgb(${t[0]*.5|0},${t[1]*.5|0},${t[2]*.5|0})`;
+  }
+  function cubeRecolor() { const pal = paletteRgb('cubes'); for (let i=0;i<kN;i++) colorCube(i, pal); }
+
+  const DR = {on:false, ev:[]}, DROPMS = 800;
+  let transDur = 0;
+  var idleN = 0, kBusy = true;
+  function wakeUp() { idleN = 0; }   // kellon vaihdon kesto (ms): vaihto valmistuu minuutin vaihtuessa
+  const capExtra = () => Math.ceil((kW/KS)*(kH/KS)*0.6) + 60;
+  function shuffle(a) { for (let i=a.length-1;i>0;i--) { const j = Math.random()*(i+1)|0; [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  // uudet kodit kuutioille: srcOf[j] = vanha kuutio uuteen paikkaan j (tai -1 = uusi kuutio)
+  function applyHomes(pts, srcOf, recolorAll) {
+    const old = {kx, ky, kvx, kvy, kz, kvz, ka, kav, ktop, kside, krgb, dist, kno, kcell, rOn, rsx, rsy, ra0, rt0, rdur, arr, kmag, mox, moy, kzs, kzd, kzz, khide, rvx, rvy, rox, roy}, oldN = kN;
+    const used = new Uint8Array(oldN);
+    allocCubes(pts.length, pts.length + capExtra());
+    const pal = paletteRgb('cubes');
+    for (let j=0;j<kN;j++) {
+      const p = pts[j], s = srcOf[j];
+      hx[j] = slotX[j] = p.x; hy[j] = slotY[j] = p.y; kcell[j] = p.cell; krgb[j] = p.rgb;
+      if (s >= 0) {
+        used[s] = 1;
+        kx[j] = old.kx[s]; ky[j] = old.ky[s]; kvx[j] = old.kvx[s]; kvy[j] = old.kvy[s];
+        kz[j] = old.kz[s]; kvz[j] = old.kvz[s]; ka[j] = old.ka[s]; kav[j] = old.kav[s];
+        ktop[j] = old.ktop[s]; kside[j] = old.kside[s]; dist[j] = old.dist[s]; kno[j] = old.kno[s];
+        kmag[j] = old.kmag[s]; mox[j] = old.mox[s]; moy[j] = old.moy[s]; kzs[j] = old.kzs[s]; kzd[j] = old.kzd[s]; kzz[j] = old.kzz[s]; khide[j] = old.khide[s];
+        if (old.kcell[s] === p.cell) {   // sama koti: paluu jatkuu keskeytyksettä
+          rOn[j] = old.rOn[s]; rsx[j] = old.rsx[s]; rsy[j] = old.rsy[s]; ra0[j] = old.ra0[s]; rt0[j] = old.rt0[s]; rdur[j] = old.rdur[s]; arr[j] = old.arr[s]; rvx[j] = old.rvx[s]; rvy[j] = old.rvy[s]; rox[j] = old.rox[s]; roy[j] = old.roy[s];
+        } else {
+          if (emojiMode && !recolorAll) colorCube(j, pal);
+          if (transDur) { rOn[j] = 1; rsx[j] = kx[j]; rsy[j] = ky[j]; ra0[j] = ka[j]; rt0[j] = performance.now() + Math.random()*transDur*0.3; rdur[j] = transDur*(0.6 + 0.1*Math.random()); arr[j] = 0; rvx[j] = 0; rvy[j] = 0; rox[j] = 0; roy[j] = 0; }
+        }
+      } else if (transDur) {   // kellon vaihto: uusi kuutio putoaa ruudun yläreunasta, porrastetusti ennen minuutin vaihtumista
+        ka[j] = Math.floor(Math.random()*4)*Math.PI/2; colorCube(j, pal);
+        startDrop(j, p, Math.random()*Math.max(0, transDur - DROPMS)*0.9);
+      } else {   // uusi kuutio laskeutuu läheltä katsojaa
+        const z0 = ZMAX*0.75;
+        kx[j] = p.x; ky[j] = p.y; kz[j] = z0; ka[j] = Math.random()*Math.PI; colorCube(j, pal);
+        { const T = transDur || (S.retOn === false ? 600 : (S.retSec || 10)*1000); kzz[j] = z0; kzs[j] = performance.now() + Math.random()*T*0.3; kzd[j] = transDur ? T*(0.6 + 0.1*Math.random()) : T*(0.75 + 0.5*Math.random()); kin[j] = 1; }
+      }
+    }
+    for (let s=0;s<oldN;s++) if (!used[s])   // ylimääräiset lentävät pois kohti katsojaa
+      { const T = transDur || (S.retOn === false ? 600 : (S.retSec || 10)*1000); ghosts.push({slow:true, t0:performance.now() + Math.random()*T*0.3, dur:transDur ? T*(0.6 + 0.1*Math.random()) : T*(0.75 + 0.5*Math.random()), z0:Math.max(old.kz[s], 1), x:old.kx[s], y:old.ky[s], z:Math.max(old.kz[s], 1), a:old.ka[s], top:old.ktop[s], side:old.kside[s]}); }
+    if (recolorAll) cubeRecolor();
+    lastClock = clockStr(); wasCalm = false;
+  }
+  // kaikki kuutiot saavat uudet paikat sekoitetussa järjestyksessä
+  function rehome() {
+    DR.on = false; DR.ev = [];
+    const wasEmoji = emojiMode;
+    const pts = buildPoints();
+    const perm = shuffle(Array.from({length:pts.length}, (_, i) => i));
+    const srcOf = new Int32Array(pts.length).fill(-1);
+    for (let i=0;i<Math.min(kN, pts.length);i++) srcOf[perm[i]] = i;
+    applyHomes(pts, srcOf, emojiMode || wasEmoji);
+  }
+  // minuutin vaihtuessa: 'all' = kaikki, 'digit' = vain vaihtuvat ruudut, 'drip' = vaihtuvat putoavat yksi kerrallaan
+  function clockChange(dripDur) {
+    wakeUp();
+    transDur = dripDur || 0;
+    try { clockChange_(dripDur); } finally { transDur = 0; }
+  }
+  // seuraava sana: vain vaihtuvat ruudut liikkuvat (kuten kellon numero)
+  function wordChange() {
+    wakeUp(); wordIdx++; transDur = WORD_TRANS;
+    try { clockChange_(WORD_TRANS, 'digit'); } finally { transDur = 0; }
+  }
+  function clockChange_(dripDur, modeOverride) {
+    const mode = modeOverride || S.clockMode || 'digit';
+    if (mode === 'all') { rehome(); return; }
+    dripFinish();
+    const pts = buildPoints();
+    if (!textMode) { rehome(); return; }
+    const cellJ = new Map(); pts.forEach((p, j) => cellJ.set(p.cell, j));
+    if (mode === 'digit') {
+      const srcOf = new Int32Array(pts.length).fill(-1), leaving = [];
+      for (let i=0;i<kN;i++) { const j = cellJ.get(kcell[i]); if (j !== undefined && srcOf[j] === -1) srcOf[j] = i; else leaving.push(i); }
+      const entering = []; for (let j=0;j<pts.length;j++) if (srcOf[j] === -1) entering.push(j);
+      shuffle(leaving); shuffle(entering);
+      for (let k=0;k<Math.min(leaving.length, entering.length);k++) srcOf[entering[k]] = leaving[k];
+      applyHomes(pts, srcOf, false);
+    } else {
+      const oldCells = new Set(), out = [];
+      for (let i=0;i<kN;i++) { oldCells.add(kcell[i]); if (!cellJ.has(kcell[i])) out.push(kcell[i]); }
+      const now = performance.now(), dur = dripDur || 52000; DR.ev = [];
+      const evs = [];
+      for (const c of out) evs.push({out:true, cell:c});
+      for (const p of pts) if (!oldCells.has(p.cell)) evs.push({p});
+      shuffle(evs);
+      const gapT = evs.length ? dur/evs.length : 0;   // tasainen tahti: ensimmäinen vaihto heti minuutin vaihtuessa
+      evs.forEach((ev, k) => { ev.t = now + 60 + k*gapT + (k ? (Math.random()-.5)*gapT*0.6 : 0); });
+      DR.ev = evs.sort((a, b) => a.t - b.t); DR.on = DR.ev.length > 0;
+    }
+  }
+  function dripExec(ev) {
+    if (ev.out) { for (let i=0;i<kN;i++) if (kcell[i] === ev.cell) { dropCube(i); break; } }
+    else addCube(ev.p);
+  }
+  function dripTick(now) {
+    while (DR.ev.length && DR.ev[0].t <= now) dripExec(DR.ev.shift());
+    if (!DR.ev.length) DR.on = false;
+  }
+  function dripFinish() { const e = DR.ev; DR.ev = []; DR.on = false; for (const ev of e) dripExec(ev); }
+  // kuutio putoaa ruudun yläreunasta kotiinsa (viive ms: odottaa piilossa)
+  function startDrop(i, p, delay) {
+    const top = KS*0.5;
+    kx[i] = p.x; ky[i] = top; kvx[i] = 0; kvy[i] = 0; kz[i] = 0; kvz[i] = 0; kav[i] = 0;
+    arr[i] = 0; rOn[i] = 0; rsx[i] = p.x; rsy[i] = top; kin[i] = 1; kmag[i] = 0; dist[i] = 0; floorH[i] = 0; ox_[i] = p.x; oy_[i] = top;
+    kzs[i] = 0; khide[i] = delay > 0 ? 1 : 0; kdrop[i] = performance.now() + (delay || 0);
+  }
+  function addCube(p) {   // uusi kuutio tippuu ruudun yläreunasta paikalleen
+    if (kN >= kx.length) return;
+    const i = kN++, q = Math.PI/2;
+    hx[i] = slotX[i] = p.x; hy[i] = slotY[i] = p.y; kcell[i] = p.cell; krgb[i] = p.rgb;
+    ka[i] = Math.floor(Math.random()*4)*q; startDrop(i, p, 0); colorCube(i, paletteRgb('cubes'));
+    order = Array.from({length:kN}, (_, k) => k);
+  }
+
+  // tavallisessa ruudukossa kuutiot asettuvat lähimpään järjestykseen (rivi kerrallaan)
+  function assignSlots() {
+    if (textMode || !gridCols) return;
+    const idx = Array.from({length:kN}, (_, i) => i).sort((a,b) => ky[a]-ky[b]);
+    for (let r=0; r*gridCols < kN; r++) {
+      const chunk = idx.slice(r*gridCols, (r+1)*gridCols).sort((a,b) => kx[a]-kx[b]);
+      chunk.forEach((i, c) => { const s = r*gridCols + c; hx[i] = slotX[s]; hy[i] = slotY[s]; });
+    }
+  }
+  // hidas lähtö ja hidas pysähdys, ei ylitystä
+  function ease(t) { return t*t*t*(t*(t*6 - 15) + 10); }   // smootherstep: pehmeä lähtö ja pysähdys, rauhallinen keskiosa
+  function cubeStep() {
+    const gm = S.gravity ? Math.hypot(gx,gy) : 0, now = performance.now();
+    magDone = false;
+    ZMAX = ZCAM*(1 - 1/16);   // lento lähelle katsojaa: suurin koko 16× (kiinteä)
+    const T = S.retOn === false ? 0 : (S.retSec || 10)*1000;   // palautumisaika, pois = ei palaudu
+    const flat = gm < 0.14; if (!flat) lastTilt = now;
+    const flatOK = T > 0 && flat && now - lastTilt > 350;
+    if (flatOK && !wasCalm) assignSlots();
+    wasCalm = flatOK;
+    const A = gm >= 0.05 ? 0.42 : 0;
+    const ax = gx*A, ay = gy*A;
+    kImpacts = 0; kArrivals = 0; wallHit = 0;
+    const q = Math.PI/2; let freeN = 0;
+    for (let i=0;i<kN;i++) {
+      if (kmag[i]) {   // sormeen lukkiutunut: ei pyöri eikä liiku muuten kuin sormen mukana
+        kin[i] = 1; rOn[i] = 0; arr[i] = 0; kvx[i] = 0; kvy[i] = 0; kvz[i] = 0; kz[i] = 0; kav[i] = 0; dist[i] = now;
+        const ta0 = Math.round(ka[i]/q)*q; ka[i] += (ta0-ka[i])*0.2;
+        continue;
+      }
+      if (kzs[i]) {   // hidas saapuminen katsojan luota
+        kin[i] = 1; rOn[i] = 0; kx[i] = hx[i]; ky[i] = hy[i]; kvx[i] = 0; kvy[i] = 0; kvz[i] = 0; kav[i] = 0;
+        const t = Math.max(0, Math.min(1, (now - kzs[i]) / kzd[i]));
+        if (khide[i] && now >= kzs[i]) khide[i] = 0;
+        kz[i] = khide[i] ? ZMAX : kzz[i]*(1 - ease(t));
+        if (t >= 1) { kzs[i] = 0; kz[i] = 0; arr[i] = 1; kArrivals++; kImpacts++; }
+        continue;
+      }
+      if (kdrop[i]) {   // putoava uusi kuutio (kellon vaihto): odottaa piilossa, putoaa sitten yläreunasta
+        kin[i] = 1; rOn[i] = 0;
+        if (now < kdrop[i]) { khide[i] = 1; kx[i] = hx[i]; ky[i] = -KS*4; continue; }   // odottaa ruudun yläpuolella, ei törmäile
+        khide[i] = 0;
+        const t = Math.min(1, (now - kdrop[i]) / DROPMS), e = t*t;
+        kx[i] = hx[i]; ky[i] = rsy[i] + (hy[i]-rsy[i])*e; kvx[i] = 0; kvy[i] = 0; kz[i] = 0; kvz[i] = 0;
+        if (t >= 1) { kdrop[i] = 0; arr[i] = 1; kArrivals++; kImpacts++; }
+        continue;
+      }
+      // palautuminen on kuutiokohtaista: vain kosketut kuutiot jäävät pois paluusta
+      const home = flatOK && now - dist[i] > 350;
+      const fl = home ? 0 : floorH[i];
+      if (kz[i] > fl || kvz[i] > 0) {
+        kvz[i] -= 0.7; kz[i] += kvz[i];
+        if (kz[i] > ZMAX) { kz[i] = ZMAX; if (kvz[i] > 0) kvz[i] = -kvz[i]*0.2; }
+        if (kz[i] <= fl) { kz[i] = fl; if (kvz[i] < -4) kImpacts++; kvz[i] = kvz[i] < -2.5 ? -kvz[i]*0.32 : 0; }
+      } else if (kz[i] < fl) kz[i] = fl;
+      const air = kz[i] > fl + 0.5;
+
+      // jokainen kuutio heilahtaa omaan tahtiinsa kotiin aikataulussa T
+      if (home && !air) {
+        kin[i] = 1;
+        if (!rOn[i]) {
+          rOn[i] = 1; rsx[i] = kx[i]; rsy[i] = ky[i]; ra0[i] = ka[i]; rt0[i] = now + 80 + Math.random()*220;  // lyhyt hetki ennen lähtöä
+          rvx[i] = kvx[i]; rvy[i] = kvy[i]; rox[i] = 0; roy[i] = 0;   // liike jatkuu ja hiipuu pehmeästi paluun alle
+          rdur[i] = T*(0.75 + 0.5*Math.random());
+          arr[i] = Math.abs(hx[i]-kx[i]) + Math.abs(hy[i]-ky[i]) < 0.5 ? 1 : 0;
+        }
+        const t = Math.max(0, Math.min(1, (now - rt0[i]) / rdur[i])), e = ease(t);
+        rox[i] += rvx[i]; roy[i] += rvy[i]; rvx[i] *= 0.9; rvy[i] *= 0.9; kav[i] *= 0.9; ra0[i] += kav[i];
+        const bx = rsx[i] + rox[i], by = rsy[i] + roy[i];
+        const nx = bx + (hx[i]-bx)*e, ny = by + (hy[i]-by)*e;
+        kvx[i] = nx - kx[i]; kvy[i] = ny - ky[i]; kx[i] = nx; ky[i] = ny;
+        const ta = Math.round(ra0[i]/q)*q; ka[i] = ra0[i] + (ta - ra0[i])*e;
+        if (t >= 1 && !arr[i]) { arr[i] = 1; kArrivals++; }
+        continue;
+      }
+      kin[i] = 0; rOn[i] = 0; freeN++;
+      let vxx = (kvx[i] + ax)*(air ? 0.995 : 0.968), vyy = (kvy[i] + ay)*(air ? 0.995 : 0.968);
+      const sp = Math.hypot(vxx, vyy);
+      if (sp > 14) { vxx *= 14/sp; vyy *= 14/sp; }
+      kvx[i] = vxx; kvy[i] = vyy; ox_[i] = kx[i]; oy_[i] = ky[i]; kx[i] += vxx; ky[i] += vyy;
+      kav[i] *= air ? 0.99 : 0.92; ka[i] += kav[i];
+      if (!air && sp < 0.6) { const ta = Math.round(ka[i]/q)*q; ka[i] += (ta-ka[i])*0.06; }
+      const dx = hx[i]-kx[i], dy = hy[i]-ky[i];
+      if (arr[i] && dx*dx+dy*dy > KS*KS) arr[i] = 0;
+    }
+    floorH.fill(0);
+    if (freeN > 0 || down) {
+      for (let it=0; it<colIter(); it++) { fingerPush(); cubeCollide(1, gm); cubeWalls(true); }
+      cubeWalls(false);
+      // sijaintipohjainen ratkaisu: nopeus = todellinen siirtymä (pitää kasat tiiviinä)
+      for (let i=0;i<kN;i++) if (!kin[i]) { kvx[i] = (kx[i]-ox_[i])*0.995; kvy[i] = (ky[i]-oy_[i])*0.995; }
+    }
+    kBusy = DR.on || ghosts.length > 0 || (S.gravity && gm >= 0.05);
+    if (!kBusy) for (let i=0;i<kN;i++) {
+      if (kmag[i] || kdrop[i] || kzs[i] || kz[i] > 0.01 || kpr[i] > 0 || Math.abs(kvx[i]) + Math.abs(kvy[i]) + Math.abs(kvz[i]) + Math.abs(kav[i]) > 0.01 || (rOn[i] && now < rt0[i] + rdur[i])) { kBusy = true; break; }
+    }
+    kMove = 0;   // liikuteltujen kuutioiden yhteisliike → värinä ja ääni
+    for (let i=0;i<kN;i++) if (now - dist[i] < 600 && !kzs[i] && !kdrop[i]) { const v = Math.abs(kvx[i]) + Math.abs(kvy[i]) + Math.abs(kvz[i])*0.3; if (v > 0.4) kMove += v; }
+    for (const g of ghosts) {
+      if (g.fall) { g.vx += g.fx*0.55; g.vy += g.fy*0.55; g.x += g.vx; g.y += g.vy; g.a += g.av; }
+      else if (g.sink) { const p = Math.min(1, (now - g.t0)/g.dur); g.z = g.z0 + (g.zTo - g.z0)*p*p; g.al = 1 - p*p; g.done = p >= 1; }
+      else if (g.slow) { const p = Math.max(0, Math.min(1, (now - g.t0)/g.dur)); g.z = g.z0 + (ZCAM*0.94 - g.z0)*ease(p); g.done = p >= 1; }
+      else { g.vz += 0.5; g.z += g.vz; }
+    }
+    ghosts = ghosts.filter(g => g.fall ? (g.x > -80 && g.x < kW+80 && g.y > -80 && g.y < kH+80) : ((g.slow || g.sink) ? !g.done : g.z < ZCAM*0.93));
+  }
+  // katoaminen: kosketuksesta kuutio putoaa kauas, reunalta se häviää; palaa yksi kerrallaan asetetun ajan sisällä
+  // saman kosketuksen aikana sormen reitti on katkaisu, vaikka kuutio ehtisi jo palata (muuten kehä ei koskaan sulkeudu)
+  const sinkCut = new Set();
+  // pts: kohdat, joista kuutiot tippuvat (oletus: sormien nykyiset kohdat)
+  function sinkAt(pts) {
+    const R2 = (KS*1.35)*(KS*1.35);
+    let n = 0;
+    for (const f of (pts || fingers)) for (let i=0;i<kN;i++) { if (kzs[i] || kdrop[i]) continue; const dx = kx[i]-f.x, dy = ky[i]-f.y; if (dx*dx+dy*dy < R2) { vanish(i, 'touch'); sinkCut.add(kcell[i]); n++; } }
+    if (n) islandDrop();
+  }
+  // irralliset saarekkeet: jos pudotetut kuutiot katkaisevat yhteyden, irronnut kuutiokenttä tippuu kokonaan.
+  // Verrataan alkuperäiseen yhtenäiseen alueeseen: sen suurin jäljelle jäänyt osa pysyy, muut osat tippuvat.
+  function islandDrop() {
+    const cols = Math.max(3, Math.floor(kW/KS)), at = new Map();
+    for (let i=0;i<kN;i++) at.set(kcell[i], i);
+    const label = (ok) => {
+      const lab = new Int32Array(kN).fill(-1); let id = 0;
+      for (let s0=0; s0<kN; s0++) {
+        if (lab[s0] >= 0 || !ok(s0)) continue;
+        const st = [s0]; lab[s0] = id;
+        while (st.length) {
+          const i = st.pop(), c = kcell[i], r = Math.floor(c/cols), q = c - r*cols;
+          for (const nc of [q > 0 ? c-1 : -1, q < cols-1 ? c+1 : -1, c-cols, c+cols]) {
+            if (nc < 0) continue; const j = at.get(nc);
+            if (j !== undefined && lab[j] < 0 && ok(j)) { lab[j] = id; st.push(j); }
+          }
+        }
+        id++;
+      }
+      return lab;
+    };
+    const orig = label(() => true), cur = label(i => !kzs[i] && !kdrop[i] && !sinkCut.has(kcell[i]));
+    // ankkuri: ruudun reunaan ulottuva osa pysyy, irti jäänyt keskiosa tippuu aina.
+    // Jos alkuperäinen alue ei kosketa reunaa (esim. kellon numero), suurin jäljelle jäänyt osa pysyy.
+    const rows = Math.max(3, Math.floor(kH/KS));
+    const onEdge = i => { const c = kcell[i], r = Math.floor(c/cols), q = c - r*cols; return r === 0 || q === 0 || r === rows-1 || q === cols-1; };
+    const origEdge = new Set(), curEdge = new Set();
+    for (let i=0;i<kN;i++) if (onEdge(i)) { origEdge.add(orig[i]); if (cur[i] >= 0) curEdge.add(cur[i]); }
+    const size = new Map(), best = new Map();
+    for (let i=0;i<kN;i++) if (cur[i] >= 0) size.set(cur[i], (size.get(cur[i]) || 0) + 1);
+    for (let i=0;i<kN;i++) if (cur[i] >= 0) { const o = orig[i], b = best.get(o); if (b === undefined || size.get(cur[i]) > size.get(b)) best.set(o, cur[i]); }
+    for (let i=0;i<kN;i++) {
+      if (cur[i] < 0) continue;
+      const keep = origEdge.has(orig[i]) ? curEdge.has(cur[i]) : best.get(orig[i]) === cur[i];
+      if (!keep) vanish(i, 'touch');
+    }
+  }
+  function vanish(i, kind) {
+    const now = performance.now();
+    if (kzs[i] || kdrop[i]) return;
+    ghosts.push({sink:true, t0:now, dur: kind === 'touch' ? 700 : 260, z0:kz[i], zTo: kind === 'touch' ? -ZCAM*5 : -ZCAM*0.8, x:kx[i], y:ky[i], z:kz[i], a:ka[i], top:ktop[i], side:kside[i], al:1});
+    const sec = S.retSec || 10;   // tippuneet palaavat kuutioiden palautumisajan kuluessa
+    kmag[i] = 0; rOn[i] = 0; arr[i] = 0; kvx[i] = 0; kvy[i] = 0; kvz[i] = 0; kav[i] = 0;
+    kx[i] = hx[i]; ky[i] = hy[i]; kin[i] = 1; khide[i] = 1; kz[i] = ZMAX;
+    kzs[i] = now + 250 + Math.random()*Math.max(0, sec*1000 - 1000);
+    kzz[i] = -ZCAM*3;   // palaa nousemalla syvyydestä: pienenä alhaalta, kasvaa paikalleen
+    kzd[i] = 1000;
+  }
+  // ajastin: kuutio putoaa pois (viimeinen kuutio vaihdetaan tilalle)
+  function dropCube(i) {
+    const gm = S.gravity ? Math.hypot(gx, gy) : 0, fx_ = gm > 0.3 ? gx/gm : 0, fy_ = gm > 0.3 ? gy/gm : 1;
+    ghosts.push({fall:true, x:kx[i], y:ky[i], z:kz[i], a:ka[i], av:(Math.random()-.5)*.14, top:ktop[i], side:kside[i],
+      vx:kvx[i]*.4 + (Math.random()-.5)*.9, vy:kvy[i]*.4, fx:fx_, fy:fy_});
+    const L = kN - 1;
+    if (i !== L) {
+      for (const A of [kx,ky,kvx,kvy,kz,kvz,ka,kav,hx,hy,slotX,slotY,arr,floorH,ox_,oy_,rOn,rsx,rsy,ra0,rt0,rdur,kno,kin,dist,kcell,kdrop,kzs,kzd,kzz,khide,kpr,rvx,rvy,rox,roy,kmag,mox,moy]) A[i] = A[L];
+      ktop[i] = ktop[L]; kside[i] = kside[L]; krgb[i] = krgb[L];
+    }
+    kN = L; order = Array.from({length:kN}, (_, k) => k);
+  }
+  // magneetti: sormen luo tulleet ja sormeen (tai sormeen kiinni jääneisiin) koskettavat kuutiot lukkiutuvat sormeen
+  function lockCube(i, f) { kmag[i] = f.slot; mox[i] = kx[i]-f.x; moy[i] = ky[i]-f.y; kvx[i] = 0; kvy[i] = 0; }
+  function magnetPass(tn) {
+    const bySlot = {}; for (const f of fingers) if (f.eng) bySlot[f.slot] = f;
+    for (let i=0;i<kN;i++) if (kmag[i]) { const f = bySlot[kmag[i]]; if (!f) { kmag[i] = 0; continue; } kx[i] = f.x + mox[i]; ky[i] = f.y + moy[i]; dist[i] = tn; }
+    if (magDone) return;
+    magDone = true;
+    const link2 = (KS*1.08)*(KS*1.08), R12 = (KS*8)*(KS*8);
+    // ketjulukitus: kosketus jo kiinni olevaan kuutioon
+    for (let i=0;i<kN;i++) {
+      if (kmag[i] || kz[i] > KS*0.5) continue;
+      let cxi = kx[i]/KS|0, cyi = ky[i]/KS|0;
+      if (cxi < 0) cxi = 0; else if (cxi >= gw) cxi = gw-1;
+      if (cyi < 0) cyi = 0; else if (cyi >= gh) cyi = gh-1;
+      let hit = 0;
+      for (let oy=-1; oy<=1 && !hit; oy++) {
+        const yy = cyi+oy; if (yy < 0 || yy >= gh) continue;
+        for (let ox=-1; ox<=1 && !hit; ox++) {
+          const xx = cxi+ox; if (xx < 0 || xx >= gw) continue;
+          let j = head[yy*gw+xx];
+          while (j !== -1) {
+            if (j < kN && kmag[j]) { const dx = kx[j]-kx[i], dy = ky[j]-ky[i]; if (dx*dx+dy*dy < link2) { hit = kmag[j]; break; } }
+            j = nextI[j];
+          }
+        }
+      }
+      const hf = hit && bySlot[hit];
+      if (hf && (kx[i]-hf.x)*(kx[i]-hf.x) + (ky[i]-hf.y)*(ky[i]-hf.y) < (KS*2.4)*(KS*2.4)) lockCube(i, hf);
+    }
+    // vetovoima: lähellä vahva, kauempana heikompi; sormen kohdalla kiinni
+    for (let i=0;i<kN;i++) {
+      if (kmag[i]) continue;
+      let nf = null, nd = Infinity;
+      for (const f of fingers) { if (!f.eng) continue; const q = (f.x-kx[i])*(f.x-kx[i]) + (f.y-ky[i])*(f.y-ky[i]); if (q < nd) { nd = q; nf = f; } }
+      const dx = nf.x-kx[i], dy = nf.y-ky[i], d2 = nd;
+      if (d2 < R12) dist[i] = tn;
+      const lockR = KS*0.95 + Math.min(8, Math.hypot(kvx[i], kvy[i]));
+      if (d2 < lockR*lockR && kz[i] <= KS*0.5) { lockCube(i, nf); continue; }
+      if (kin[i]) continue;
+      const d = Math.sqrt(d2), RR = KS*3.2, u = 1 - d/RR, pull = u > 0 ? Math.min(d - KS*0.5, KS*0.12*u*u) : 0;
+      if (pull > 0) {
+        kx[i] += dx/d*pull; ky[i] += dy/d*pull;
+        if (d2 < R12) { kx[i] -= (kx[i]-ox_[i])*0.08; ky[i] -= (ky[i]-oy_[i])*0.08; }   // vaimennus: ei kiertoliikettä
+      }
+    }
+  }
+  // sormi: liike pyyhkii kuutioita, paikallaan pidetty sormi puristaa ne hitaasti pois
+  function fingerPush() {
+    if (!down) return;
+    const tn = performance.now();
+    if (S.sinkOn) { sinkAt(); return; }   // kosketus pudottaa heti, ei työnnä
+    if (S.magnet) { if (fingers.some(f => !f.noMag && f.eng)) magnetPass(tn); return; }   // täräyttävä sormi ei kerää kuutioita
+    for (const f of fingers) {
+    if (!f.eng) continue;
+    const held = tn - f.t0;
+    const R = KS*(0.9 + Math.min(3.2, held/450)), R2 = R*R, k = 0.12;
+    for (let i=0;i<kN;i++) {
+      if (kz[i] > KS) continue;
+      const dx = kx[i]-f.x, dy = ky[i]-f.y, d2 = dx*dx+dy*dy;
+      if (d2 >= R2) continue;
+      dist[i] = tn;
+      const d = Math.sqrt(d2) || 0.01, push = (R-d)*k;
+      kx[i] += dx/d*push; ky[i] += dy/d*push;
+      if (d2 < 0.0001) { kx[i] += (Math.random()-.5); ky[i] += (Math.random()-.5); }
+    }
+    }
+  }
+  function cubeWalls(quiet) {
+    const r = KS*0.45, maxX = kW-r, maxY = kH-r;
+    if (false && performance.now() - lastUser < 2500) for (let i=0;i<kN;i++) { if (!kzs[i] && !kdrop[i] && !kin[i] && (kx[i] < r || kx[i] > maxX || ky[i] < r || ky[i] > maxY) && Math.abs(kx[i]-hx[i]) + Math.abs(ky[i]-hy[i]) > KS*0.6) vanish(i, 'edge'); }
+    if (quiet) { for (let i=0;i<kN;i++) { if (kx[i] < r) kx[i] = r; else if (kx[i] > maxX) kx[i] = maxX; if (ky[i] < r) ky[i] = r; else if (ky[i] > maxY) ky[i] = maxY; } return; }
+    for (let i=0;i<kN;i++) {
+      if (kx[i] < r || kx[i] > maxX) { const v = Math.abs(kvx[i]); if (v > 6) wallHit += v - 6; }
+      if (ky[i] < r || ky[i] > maxY) { const v = Math.abs(kvy[i]); if (v > 6) wallHit += v - 6; }
+      if (kx[i] < r) { kx[i] = r; if (kvx[i] < -3) { kImpacts++; noteHit(i, -kvx[i]); } kav[i] += kvy[i]*.01; kvx[i] = -kvx[i]*.3; }
+      else if (kx[i] > maxX) { kx[i] = maxX; if (kvx[i] > 3) { kImpacts++; noteHit(i, kvx[i]); } kav[i] -= kvy[i]*.01; kvx[i] = -kvx[i]*.3; }
+      if (ky[i] < r) { ky[i] = r; if (kvy[i] < -3) { kImpacts++; noteHit(i, -kvy[i]); } kav[i] -= kvx[i]*.01; kvy[i] = -kvy[i]*.3; }
+      else if (ky[i] > maxY) { ky[i] = maxY; if (kvy[i] > 3) { kImpacts++; noteHit(i, kvy[i]); } kav[i] += kvx[i]*.01; kvy[i] = -kvy[i]*.3; }
+    }
+  }
+  function cubeCollide(strength, gm) {
+    head.fill(-1);
+    for (let i=0;i<kN;i++) {
+      let cxi = kx[i]/KS|0, cyi = ky[i]/KS|0;
+      if (cxi < 0) cxi = 0; else if (cxi >= gw) cxi = gw-1;
+      if (cyi < 0) cyi = 0; else if (cyi >= gh) cyi = gh-1;
+      const c = cyi*gw + cxi; cellOf[i] = c; nextI[i] = head[c]; head[c] = i;
+    }
+    const minD = KS*0.92, minD2 = minD*minD, zLim = KS*0.7, LAYER = KS*0.75, sup2 = (KS*0.8)*(KS*0.8);
+    const climbD2 = (KS*0.72)*(KS*0.72), canClimb = gm > 0.2 && strength > 0.5;
+    for (let i=0;i<kN;i++) {
+      const cxi = cellOf[i] % gw, cyi = cellOf[i]/gw|0;
+      for (let oy=-1; oy<=1; oy++) {
+        const yy = cyi+oy; if (yy < 0 || yy >= gh) continue;
+        for (let ox=-1; ox<=1; ox++) {
+          const xx = cxi+ox; if (xx < 0 || xx >= gw) continue;
+          let j = head[yy*gw+xx];
+          while (j !== -1) {
+            if (j > i && !(kin[i] && kin[j])) {
+              const dx = kx[j]-kx[i], dy = ky[j]-ky[i], d2 = dx*dx+dy*dy;
+              const dz = kz[j]-kz[i];
+              // pinoutuminen: ahtaassa kasassa kuutio nousee toisen päälle
+              if (canClimb && d2 < climbD2 && Math.abs(dz) < zLim && Math.random() < .2) {
+                const top = Math.random() < .5 ? i : j, bot = top === i ? j : i;
+                if (kz[bot] < KS*0.5 && kz[top] < KS*0.5) { kz[top] = kz[bot] + LAYER; kvz[top] = 0; kav[top] += (Math.random()-.5)*.08; }
+              }
+              // alla oleva kuutio kannattelee päällä olevaa
+              if (d2 < sup2) {
+                const dz2 = kz[j]-kz[i];
+                if (dz2 > KS*0.4 && kz[i] < KS*0.5) { const h = kz[i] + LAYER; if (h > floorH[j]) floorH[j] = h; }
+                else if (-dz2 > KS*0.4 && kz[j] < KS*0.5) { const h = kz[j] + LAYER; if (h > floorH[i]) floorH[i] = h; }
+              }
+              if (d2 < minD2 && Math.abs(kz[i]-kz[j]) < zLim) {
+                let d = Math.sqrt(d2), nx, ny;
+                if (d < 1e-4) { const a = Math.random()*6.283; nx = Math.cos(a); ny = Math.sin(a); d = 0; }
+                else { nx = dx/d; ny = dy/d; }
+                const ov = (minD-d)*0.5*strength;
+                const wi = kin[i] ? 0 : (kin[j] ? 2 : 1), wj = kin[j] ? 0 : (kin[i] ? 2 : 1);   // paluussa olevat kuutiot eivät väisty
+                kx[i] -= nx*ov*wi; ky[i] -= ny*ov*wi; kx[j] += nx*ov*wj; ky[j] += ny*ov*wj;
+                const rv = (kvx[j]-kvx[i])*nx + (kvy[j]-kvy[i])*ny;
+                if (rv < 0) {
+                  if (-rv > 3) { kImpacts++; noteHit(i, -rv); noteHit(j, -rv); }
+                  const t = (Math.random()-.5)*0.02*(-rv); kav[i] += t; kav[j] -= t;
+                }
+              }
+            }
+            j = nextI[j];
+          }
+        }
+      }
+    }
+  }
+  // valmiit varjovärit (ei uutta merkkijonoa joka kuutiolle joka ruudulla)
+  const SHA = Array.from({length:41}, (_, k) => `rgba(0,0,0,${(k/40*0.3).toFixed(3)})`);
+  const AX = 0.004;   // kulma lähes 0/90/180/270°: piirretään ilman kiertoa (nopeampi ja terävämpi)
+  let kIdent = true;
+  function identT() { if (!kIdent) { kc.setTransform(dpr,0,0,dpr,0,0); kIdent = true; } }
+  function arect(X, Y, co, si, u, v, w, h) {   // paikallinen suorakulmio → maailman suorakulmio, kun kierto on 90°:n monikerta
+    const x1 = co*u - si*v, y1 = si*u + co*v, x2 = co*(u+w) - si*(v+h), y2 = si*(u+w) + co*(v+h);
+    kc.fillRect(X + (x1 < x2 ? x1 : x2), Y + (y1 < y2 ? y1 : y2), x2 > x1 ? x2-x1 : x1-x2, y2 > y1 ? y2-y1 : y1-y2);
+  }
+  let kAir = false, rFrame = 0;
+  function cubeRender() {
+    kc.setTransform(dpr,0,0,dpr,0,0); kIdent = true;
+    kc.fillStyle = BGS.cubes; kc.fillRect(0,0,kW,kH);
+    let anyAir = false;
+    for (let i=0;i<kN;i++) if (kz[i] > 0.5 || kz[i] < -0.5) { anyAir = true; break; }   // myös syvyydestä nousevat piirretään oikeassa järjestyksessä
+    kAir = anyAir;
+    if (anyAir) order.sort((a,b) => kz[a]-kz[b]);
+    const GX = S.gravity ? gx : 0, GY = S.gravity ? gy : 0, depth = KS*0.16, wdx = depth*(0.5 + GX*0.9), wdy = depth*(0.5 + GY*0.9);
+    const cx0 = kW/2, cy0 = kH/2;
+    // varjot maahan
+    for (let n=0;n<kN;n++) {
+      const i = order[n]; if (khide[i]) continue;
+      const z = kz[i], s = KS*0.84, h = s/2, a = ka[i], co = Math.cos(a), si = Math.sin(a);
+      const sh = 1.5 + Math.min(z, 60)*0.2, swx = sh + GX*2, swy = sh + GY*2;
+      kc.fillStyle = SHA[Math.max(0, Math.min(40, Math.round((1 - z/ZCAM)*40)))];
+      if (Math.abs(si) < AX || Math.abs(co) < AX) { identT(); kc.fillRect(kx[i] - h + swx, ky[i] - h + swy, s, s); continue; }
+      kc.setTransform(dpr*co, dpr*si, -dpr*si, dpr*co, dpr*kx[i], dpr*ky[i]); kIdent = false;
+      kc.fillRect(-h + swx*co + swy*si, -h - swx*si + swy*co, s, s);
+    }
+    // kuutiot perspektiivissä: korkealla oleva on lähempänä katsojaa → isompi ja kauempana keskeltä
+    const PR = 114;   // 3 cm   // sormen painauma: kuutiot kutistuvat ja painuvat hieman kohti kosketuskohtaa
+    for (let i=0;i<kN;i++) {
+      let t = 0, px_ = 0, py_ = 0;
+      for (const f of fingers) { const dx = f.x-kx[i], dy = f.y-ky[i], d2 = dx*dx+dy*dy; if (d2 < PR*PR) { const v = 1 - Math.sqrt(d2)/PR; if (v > t) { t = v; px_ = dx; py_ = dy; } } }
+      kpr[i] += (t*t*(3-2*t) - kpr[i])*0.25;
+      if (kpr[i] > 0.01) { pdx[i] = px_*0.08*kpr[i]; pdy[i] = py_*0.08*kpr[i]; } else { kpr[i] = 0; pdx[i] = 0; pdy[i] = 0; }
+    }
+    for (let n=0;n<kN;n++) {
+      const i = order[n]; if (khide[i]) continue;
+      const z = kz[i], p = ZCAM/(ZCAM - z), s = KS*0.84*p*(1 - 0.18*kpr[i]), h = s/2, a = ka[i], co = Math.cos(a), si = Math.sin(a);
+      const X = cx0 + (kx[i]+pdx[i]-cx0)*p, Y = cy0 + (ky[i]+pdy[i]-cy0)*p;
+      if (Math.abs(si) < AX || Math.abs(co) < AX) {   // nopea polku: sama kuva ilman kiertomatriisia
+        identT();
+        const ox = wdx*p, oy = wdy*p, x0 = X - h, y0 = Y - h;
+        kc.fillStyle = kside[i];
+        kc.fillRect(x0 + ox, y0 + oy, s, s);
+        kc.fillRect(x0 + ox*.5, y0 + oy*.5, s, s);
+        kc.fillStyle = ktop[i]; kc.fillRect(x0, y0, s, s);
+        kc.fillStyle = 'rgba(255,255,255,.22)';
+        arect(X, Y, co, si, -h, -h, s, s*.13); arect(X, Y, co, si, -h, -h+s*.13, s*.13, s*.87);
+        continue;
+      }
+      kc.setTransform(dpr*co, dpr*si, -dpr*si, dpr*co, dpr*X, dpr*Y); kIdent = false;
+      const dlx = (wdx*co + wdy*si)*p, dly = (-wdx*si + wdy*co)*p;
+      kc.fillStyle = kside[i];
+      kc.fillRect(-h+dlx, -h+dly, s, s);
+      kc.fillRect(-h+dlx*.5, -h+dly*.5, s, s);
+      kc.fillStyle = ktop[i]; kc.fillRect(-h, -h, s, s);
+      kc.fillStyle = 'rgba(255,255,255,.22)';
+      kc.fillRect(-h, -h, s, s*.13); kc.fillRect(-h, -h+s*.13, s*.13, s*.87);
+    }
+    for (const g of ghosts) {
+      const p = ZCAM/(ZCAM - g.z), s = KS*0.84*p, h = s/2, co = Math.cos(g.a), si = Math.sin(g.a);
+      kc.globalAlpha = g.sink ? Math.max(0, g.al) : g.fall ? 1 : Math.max(0, Math.min(1, 1 - g.z/(ZCAM*0.93)));
+      kc.setTransform(dpr*co, dpr*si, -dpr*si, dpr*co, dpr*(cx0 + (g.x-cx0)*p), dpr*(cy0 + (g.y-cy0)*p)); kIdent = false;
+      kc.fillStyle = g.side; kc.fillRect(-h + depth*p*.5, -h + depth*p*.5, s, s);
+      kc.fillStyle = g.top; kc.fillRect(-h, -h, s, s);
+      kc.globalAlpha = 1;
+    }
+  }
+  function cubeTap(x, y, power) {
+    if (S.magnet && power < 2) return;
+    const R = KS*4, R2 = R*R, tn = performance.now();
+    for (let i=0;i<kN;i++) {
+      const dx = kx[i]-x, dy = ky[i]-y, d2 = dx*dx+dy*dy;
+      if (d2 > R2) continue;
+      dist[i] = tn;
+      const d = Math.sqrt(d2) || 1, f = (1-d/R)*power;
+      kvz[i] += Math.sqrt(1.4*ZMAX)*(0.3 + 0.45*f); kvx[i] += dx/d*f*3.2; kvy[i] += dy/d*f*3.2;
+      kav[i] += (Math.random()-.5)*0.25*f; arr[i] = 0;
+    }
+  }
+  function cubeShake(power) {
+    const tn = performance.now();
+    for (let i=0;i<kN;i++) {
+      dist[i] = tn;
+      kvz[i] += Math.sqrt(1.4*ZMAX)*(0.25 + 0.75*Math.random()**2)*Math.min(1.05, 0.45 + 0.35*power);
+      kvx[i] += (Math.random()-.5)*7*power; kvy[i] += (Math.random()-.5)*7*power;
+      kav[i] += (Math.random()-.5)*0.4*power; arr[i] = 0;
+    }
+  }
+  function cubeStir(x, y, mx, my) {
+    if (S.magnet) return;
+    const R2 = KS*KS*4, tn = performance.now();
+    for (let i=0;i<kN;i++) {
+      const dx = kx[i]-x, dy = ky[i]-y;
+      if (dx*dx+dy*dy < R2) { dist[i] = tn; kvx[i] += mx*.45; kvy[i] += my*.45; kav[i] += (Math.random()-.5)*.05; }
+    }
+  }
+
+  // ================= Tilan vaihto =================
+  const isCubes = () => S.mode === 'cubes';
+  function applyMode(scatter) {
+    document.body.style.background = BGS[S.mode];
+    if (isCubes()) { cv.style.display = 'none'; kcv.style.display = 'block'; cubeInit(scatter); }
+    else { kcv.style.display = 'none'; cv.style.display = 'block'; pixInit(); }
+    if (!sensorOK && !padActive) {
+      if (isCubes()) { tgx = 0; tgy = 0; }
+      else if (Math.hypot(tgx, tgy) < 0.2) { tgx = 0; tgy = 1; }
+      updateKnob();
+    }
+    setAudioMode(); applyGrav();
+  }
+
+  // ================= Vuorovaikutus =================
+  function tap(e) {
+    lastAct = performance.now();
+    if (isCubes()) { cubeTap(e.clientX, e.clientY, 1); clack(.7); buzz(12); }
+    else {
+      const [x,y] = toCell(e); if (!S.magnet) pixTap(x, y, 1);
+      if (liquid) plop(.6); else tone(190+Math.random()*50, .5, .09, 'triangle', 900);
+      buzz(14);
+    }
+  }
+  function shake(power=1) {
+    wakeUp(); lastUser = performance.now();
+    if (S.night && power < 5 && !nightCtl) return;
+    lastAct = performance.now();
+    if (isCubes()) cubeShake(power); else pixShake(power);
+    buzz([30,40,30]);
+    if (!isCubes()) shakeAmp = Math.min(16, shakeAmp + 6*power);
+    if (isCubes()) clack(1); else if (liquid) plop(1); else tone(160, .8, .12, 'triangle', 800);
+  }
+  // useampi napautus: täräyttää vain 4 cm säteellä kosketuskohdasta (puhelimen ravistus täräyttää edelleen kaiken)
+  function tapShake(x, y, power) {
+    wakeUp(); lastUser = lastAct = performance.now();
+    for (const f of fingers) f.noMag = true;
+    if (!isCubes()) { shake(power); return; }
+    const R = 4*38, R2 = R*R, tn = performance.now(); let n = 0;
+    for (let i=0;i<kN;i++) {
+      const dx = kx[i]-x, dy = ky[i]-y, d2 = dx*dx+dy*dy;
+      if (d2 > R2) continue;
+      const f = 0.45 + 0.55*(1 - Math.sqrt(d2)/R);   // keskellä voimakkain, reunalla pehmeämpi
+      dist[i] = tn; n++;
+      kvz[i] += Math.sqrt(1.4*ZMAX)*(0.25 + 0.75*Math.random()**2)*Math.min(1.05, 0.45 + 0.35*power)*f;
+      kvx[i] += (Math.random()-.5)*7*power*f; kvy[i] += (Math.random()-.5)*7*power*f;
+      kav[i] += (Math.random()-.5)*0.4*power*f; arr[i] = 0;
+    }
+    if (n) { buzz([30,40,30]); clack(1); }
+  }
+  function toCell(e) { return [e.clientX/innerWidth*pW, e.clientY/innerHeight*pH]; }
+
+  let down = null, lastTap = 0;
+  let nightCtl = false, nightT;
+  function nightShow() { nightCtl = true; document.body.classList.add('ctl'); clearTimeout(nightT); nightT = setTimeout(() => { nightCtl = false; document.body.classList.remove('ctl'); }, 5000); }
+  function applyGrav() { document.body.classList.toggle('nograv', isCubes() && !S.gravity); }
+  function applyNight() {
+    document.body.classList.toggle('night', !!S.night); if (!S.night) { document.body.classList.remove('ctl'); nightCtl = false; }
+    $('dim').style.opacity = S.night ? (S.nightDim/100).toFixed(2) : 0;
+    if (S.night) requestWake(); else releaseWake();
+    if (NH && NH.keepAwake) NH.keepAwake({on: !!S.night}).catch(() => {});   // natiivi: ruutu ei sammu yötilassa
+  }
+  var lastUser = -1e9;
+  let fingers = [], fSlot = 0, lastTapX = -999, lastTapY = -999;
+  window.__dbg = () => { const o = {}; for (let i=0;i<kN;i++) if (kmag[i]) o[kmag[i]] = (o[kmag[i]]||0)+1; let h = 0; for (let i=0;i<kN;i++) if (khide[i]) h++; let dsp = 0; for (let i=0;i<kN;i++) dsp += Math.abs(kx[i]-hx[i]) + Math.abs(ky[i]-hy[i]); return {fingers: fingers.map(f => [f.id, f.eng, Math.round(f.path)]), locked: o, idle: idleN, hidden: h, disp: Math.round(dsp)}; };
+  // kevyt hipaisu vain painaa kuutioita; vasta lujempi kosketus tai selvä liike liikuttaa niitä.
+  // Paino arvioidaan kosketuksen koosta (sormenpää litistyy) ja 3D Touch -paineesta, liike kuljetusta matkasta ja nopeudesta.
+  let szMin = 0, szMax = 0;
+  function pressOf(e) {
+    if (e.pointerType === 'mouse') return 1;
+    if (e.pressure > 0 && e.pressure !== 0.5 && e.pressure !== 1) return e.pressure > 0.3 ? 1 : 0;   // 3D Touch
+    const sz = Math.max(e.width || 0, e.height || 0);
+    if (sz > 1) {
+      if (!szMin || sz < szMin) szMin = sz; if (sz > szMax) szMax = sz;
+      if (szMax > szMin*1.15 && sz >= szMin*1.3) return 1;   // laite kertoo kosketuksen koon ja sormi on litistynyt
+    }
+    return 0;
+  }
+  function engage(f, e) {
+    if (f.eng) return;
+    if (pressOf(e) || f.path > 40 || (f.path > 15 && Math.hypot(f.vx, f.vy) > 0.5)) f.eng = true;
+  }
+  function onDown(e) {
+    if (S.night && !nightCtl) { nightShow(); return; }
+    if (S.night) nightShow();
+    fSlot = fSlot % 250 + 1;
+    const nowD = performance.now(), burst = nowD - lastTap < 90 || fingers.length > 0;   // kämmen = monta kosketusta kerralla
+    lastUser = nowD;
+    fingers.push({x:e.clientX, y:e.clientY, id:e.pointerId, t0:nowD, slot:fSlot, vx:0, vy:0, lt:nowD, path:0, eng: !!pressOf(e)});
+    down = fingers[0];
+    if (burst) { lastTap = nowD; lastAct = nowD; return; }
+    const now = performance.now();
+    if (S.sinkOn && isCubes()) { sinkAt(); lastAct = now; }
+    else if (S.react === false) { lastAct = now; }
+    else if (now - lastTap < 280 && Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY) < 60) tapShake(e.clientX, e.clientY, .8); else if (fingers[fingers.length-1].eng) tap(e);
+    lastTapX = e.clientX; lastTapY = e.clientY;
+    lastTap = now;
+  }
+  function onMove(e) {
+    const f = fingers.find(q => q.id === e.pointerId); if (!f) return;
+    lastUser = performance.now();
+    const mx = e.clientX-f.x, my = e.clientY-f.y, tm = performance.now(), dt = Math.max(8, tm - f.lt);
+    f.vx = f.vx*0.5 + (mx/dt)*0.5; f.vy = f.vy*0.5 + (my/dt)*0.5; f.lt = tm;   // px/ms
+    if (S.sinkOn && isCubes()) {   // tippuu: koko sormen reitti, ei vain ruudunpäivityksen kohdat (nopea veto ei jätä aukkoja)
+      const L = Math.hypot(mx, my), st = Math.max(1, Math.ceil(L/(KS*0.6))), pts = [];
+      for (let q=1; q<=st; q++) pts.push({x: f.x + mx*q/st, y: f.y + my*q/st});
+      sinkAt(pts);
+    }
+    f.x = e.clientX; f.y = e.clientY; f.path += Math.hypot(mx, my);
+    engage(f, e);
+    if (!f.eng) { lastAct = performance.now(); return; }   // hipaisu: vain painauma
+    if (!f.kicked && S.react !== false) edgeKick(f);
+    if (Math.hypot(mx, my) > 3) f.t0 = performance.now() - 150;  // liikkuva sormi = pieni painauma
+    lastAct = performance.now();
+    if (isCubes()) cubeStir(e.clientX, e.clientY, mx, my);
+    else if (!S.magnet) { const [x,y] = toCell(e); pixStir(x, y, mx/innerWidth*pW, my/innerHeight*pH); }
+  }
+  const onUp = e => {
+    const f = fingers.find(q => q.id === e.pointerId); if (!f) return;
+    if (kmag) { const tn = performance.now(); for (let i=0;i<kN;i++) if (kmag[i] === f.slot) { kmag[i] = 0; dist[i] = tn; kvx[i] = 0; kvy[i] = 0; } }
+    fingers = fingers.filter(q => q !== f); down = fingers[0] || null;
+    if (!fingers.length) { hapContinuous(0); sinkCut.clear(); }   // sormi pois → värinä loppuu heti, katkaisureitti nollautuu
+    const sp = Math.hypot(f.vx, f.vy);
+    if (f.eng && sp > 0.7 && performance.now() - f.lt < 90 && S.react !== false) { if (!f.kicked) edgeKick(f); flick(f.x, f.y, f.vx/sp, f.vy/sp, sp); }
+  };
+  // kova pyyhkäisy reunaan: 2 cm päässä reunasta olevat kuutiot tärähtävät ja lennähtävät hieman
+  function edgeKick(f) {
+    if (!isCubes() || !kN) return;
+    const E = 28, cm = 38, W = innerWidth, H = innerHeight;
+    let nx = 0, ny = 0, v = 0;   // n = reunan suunta
+    if (f.x < E && -f.vx > v) { v = -f.vx; nx = -1; ny = 0; }
+    if (f.x > W-E && f.vx > v) { v = f.vx; nx = 1; ny = 0; }
+    if (f.y < E && -f.vy > v) { v = -f.vy; nx = 0; ny = -1; }
+    if (f.y > H-E && f.vy > v) { v = f.vy; nx = 0; ny = 1; }
+    if (v < 1.1) return;   // vain kova pyyhkäisy
+    f.kicked = true;
+    const P = Math.min(1.6, (v - 0.6)/1.2), Z = 2*cm, tn = performance.now(); let n = 0;
+    // osumakohta reunalla ja sormen sivuttaissuunta reunan suuntaisesti
+    const tx = ny, ty = -nx, sp = Math.hypot(f.vx, f.vy) || 1, r = (f.vx*tx + f.vy*ty)/sp;   // r: -1..1, 0 = suoraan reunaan
+    const hx0 = f.x, hy0 = f.y, L = 4*cm*(1 + Math.abs(r));
+    for (let i=0;i<kN;i++) {
+      const de = nx < 0 ? kx[i] : nx > 0 ? kW-kx[i] : ny < 0 ? ky[i] : kH-ky[i];
+      if (de > Z) continue;
+      const sAl = (kx[i]-hx0)*tx + (ky[i]-hy0)*ty;   // etäisyys osumakohdasta reunaa pitkin (etumerkillinen)
+      const ahead = sAl*r >= 0, side = ahead ? 1 : Math.max(0, 1 - 2.2*Math.abs(r));
+      const along = Math.max(0, 1 - Math.abs(sAl)/L), dep = 1 - de/Z;
+      const w = along*along*side*(0.25 + 0.75*dep*dep);
+      let g;
+      if (w > 0 && Math.random() <= w*1.4) g = 0.35 + 0.65*w;   // kauempana harvempi tärähtää
+      else {   // koko reuna värähtää hieman: edessä lähes kaikki, takana harvemmat
+        if (v > 2.2) g = (ahead ? 0.24 : 0.18)*(0.5 + 0.5*dep);   // tosi kova pyyhkäisy: koko reuna tärähtää
+        else {
+          if (Math.random() > (ahead ? 0.85 : 0.35)*(0.4 + 0.6*dep)) continue;
+          g = (ahead ? 0.22 : 0.12)*(0.5 + 0.5*dep);
+        }
+      }
+      kmag[i] = 0; kin[i] = 0; rOn[i] = 0; kzs[i] = 0; arr[i] = 0; dist[i] = tn + 250;
+      kvx[i] += (-nx*4 + tx*r*3 + (Math.random()-.5)*2.5)*P*g; kvy[i] += (-ny*4 + ty*r*3 + (Math.random()-.5)*2.5)*P*g;
+      kvz[i] += Math.sqrt(1.4*ZMAX)*(0.12 + 0.3*Math.random())*P*g; kav[i] += (Math.random()-.5)*0.4*P*g; n++;
+    }
+    if (n) { clack(Math.min(1, 0.4 + P*0.4)); buzz([20, 30, 20]); }
+  }
+  // pyyhkäisy: 1,2 cm säteellä olevat ja niihin kiinni olevat kuutiot lennähtävät pyyhkäisyn suuntaan
+  function flick(x, y, ux, uy, sp) {
+    if (!isCubes() || !kN) return;
+    const cm = 38, R = 1.2*cm, R2 = R*R, Rmax2 = 0, link2 = (KS*1.08)*(KS*1.08), tn = performance.now();
+    const hit = new Uint8Array(kN), q = [];
+    for (let i=0;i<kN;i++) { const dx = kx[i]-x, dy = ky[i]-y; if (dx*dx+dy*dy < R2) { hit[i] = 1; q.push(i); } }
+    for (let h=0; h<q.length; h++) {   // kiinni olevat ketjuna (enintään 6 cm päähän)
+      const i = q[h];
+      let cxi = kx[i]/KS|0, cyi = ky[i]/KS|0;
+      for (let oy=-1; oy<=1; oy++) { const yy = cyi+oy; if (yy < 0 || yy >= gh) continue;
+        for (let ox=-1; ox<=1; ox++) { const xx = cxi+ox; if (xx < 0 || xx >= gw) continue;
+          let j = head[yy*gw+xx];
+          while (j !== -1) {
+            if (j < kN && !hit[j]) { const dx = kx[j]-kx[i], dy = ky[j]-ky[i], ex = kx[j]-x, ey = ky[j]-y;
+              if (dx*dx+dy*dy < link2 && ex*ex+ey*ey < Rmax2) { hit[j] = 1; q.push(j); } }
+            j = nextI[j];
+          }
+        } }
+    }
+    const V = Math.min(14, 6 + sp*6);
+    for (const i of q) {
+      const d = Math.hypot(kx[i]-x, ky[i]-y), f = Math.max(0.5, 1 - d/(2*cm));
+      kmag[i] = 0; kin[i] = 0; rOn[i] = 0; kzs[i] = 0; arr[i] = 0; dist[i] = tn + 400;
+      kvx[i] = ux*V*f + (Math.random()-.5)*2.5; kvy[i] = uy*V*f + (Math.random()-.5)*2.5;
+      kvz[i] = Math.sqrt(1.4*ZMAX)*(0.15 + 0.35*f*Math.random()); kav[i] += (Math.random()-.5)*0.5;
+    }
+    if (q.length) { clack(Math.min(1, q.length/30)); buzz(18); }
+  }
+  for (const el of [cv, kcv]) {
+    el.addEventListener('pointerdown', onDown);
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+    el.addEventListener('pointercancel', onUp);
+  }
+
+  const ARROWS = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+  addEventListener('keydown', e => {
+    if (e.target && e.target.tagName === 'INPUT') return;
+    keys[e.key] = true;
+    if (e.key === ' ') { shake(); e.preventDefault(); }
+  });
+  addEventListener('keyup', e => {
+    keys[e.key] = false;
+    if (ARROWS.includes(e.key) && !ARROWS.some(k => keys[k]) && isCubes() && !sensorOK) { tgx = 0; tgy = 0; updateKnob(); }
+  });
+  function keyTilt() {
+    if (sensorOK || padActive) return;
+    const kx_ = (keys.ArrowRight?1:0)-(keys.ArrowLeft?1:0), ky_ = (keys.ArrowDown?1:0)-(keys.ArrowUp?1:0);
+    if (kx_ || ky_) { const m = Math.hypot(kx_, ky_); tgx = kx_/m; tgy = ky_/m; lastAct = performance.now(); updateKnob(); }
+  }
+
+  // Kallistusympyrä (kun anturia ei ole)
+  const pad = $('pad'), knob = pad.querySelector('i');
+  function padSet(e) {
+    const r = pad.getBoundingClientRect();
+    let dx = (e.clientX - (r.left + r.width/2)) / (r.width/2);
+    let dy = (e.clientY - (r.top + r.height/2)) / (r.height/2);
+    const m = Math.hypot(dx,dy); if (m > 1) { dx /= m; dy /= m; }
+    tgx = dx; tgy = dy; lastAct = performance.now(); updateKnob();
+  }
+  function updateKnob() { knob.style.left = (33 + tgx*33) + 'px'; knob.style.top = (33 + tgy*33) + 'px'; }
+  pad.addEventListener('pointerdown', e => { padActive = true; pad.setPointerCapture(e.pointerId); padSet(e); });
+  pad.addEventListener('pointermove', e => { if (padActive) padSet(e); });
+  pad.addEventListener('pointerup', () => {
+    padActive = false;
+    if (isCubes()) { tgx = 0; tgy = 0; updateKnob(); }  // kuutiot: irti = puhelin tasossa
+  });
+
+  // ================= Anturit =================
+  const screenAngle = () => (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  function onOrient(e) {
+    if (e.beta == null || e.gamma == null) return;
+    if (!sensorOK) { sensorOK = true; pad.style.display = 'none'; }
+    const rad = Math.PI/180;
+    const x = Math.sin(e.gamma*rad), y = Math.sin(e.beta*rad);
+    const a = screenAngle()*rad, c = Math.cos(a), s = Math.sin(a);
+    tgx = x*c + y*s; tgy = -x*s + y*c;
+    if (Math.hypot(tgx, tgy) > 0.14) lastAct = performance.now();
+  }
+  let lastShake = 0;
+  function onMotion(e) {
+    const a = e.acceleration; let m = 0;
+    if (a && a.x != null) m = Math.hypot(a.x, a.y, a.z);
+    else if (e.accelerationIncludingGravity) { const g = e.accelerationIncludingGravity; m = Math.abs(Math.hypot(g.x,g.y,g.z) - 9.81); }
+    const now = performance.now();
+    if (m > 2.5) lastAct = now;
+    if (m > 13 && !S.night && S.react !== false && now - lastShake > 160) { lastShake = now; shake(Math.min(2.2, m/15)); }
+  }
+  async function enableSensors() {
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) await DeviceOrientationEvent.requestPermission();
+      if (typeof DeviceMotionEvent !== 'undefined' && DeviceMotionEvent.requestPermission) await DeviceMotionEvent.requestPermission();
+    } catch(_) {}
+    addEventListener('deviceorientation', onOrient);
+    addEventListener('devicemotion', onMotion);
+    setTimeout(() => {
+      if (!sensorOK) { pad.style.display = 'block'; updateKnob(); }
+    }, 1200);
+  }
+
+  // ================= Haptiikka & ääni =================
+  // Natiivi haptiikka (Capacitor + Core Haptics -lisäosa "NontimerHaptics"). Selaimessa käytetään navigator.vibratea.
+  const CAP = window.Capacitor;
+  const NH = (CAP && CAP.isNativePlatform && CAP.isNativePlatform())
+    ? (CAP.registerPlugin ? CAP.registerPlugin('NontimerHaptics') : (CAP.Plugins && CAP.Plugins.NontimerHaptics)) : null;
+  // värinä vain kun sormi on ruudulla (ei palaavien kuutioiden, ravistuksen tai pyyhkäisyn jälkeen)
+  const HAP_SCALE = 0.7;   // hieman miedompi värinä
+  const hapOK = force => S.vibe !== false && !(S.night && !alarmOK) && (force || fingers.length > 0);
+  const canVibrate = !!NH || 'vibrate' in navigator;
+  let lastBuzz = 0, lastClack = 0, shakeAmp = 0, hapLevel = 0, hapSent = 0;
+  let lastNH = -1e9;
+  function buzz(p, force) {
+    if (!canVibrate || !hapOK(force)) return;
+    lastBuzz = performance.now();
+    if (NH) {   // kesto (ms) → isku: pidempi = voimakkaampi
+      if (lastBuzz - lastNH < 45) return;   // enintään ~22 iskua sekunnissa: kevyempi akulle
+      lastNH = lastBuzz;
+      const ms = Array.isArray(p) ? p.reduce((a, b, k) => k % 2 ? a : a + b, 0) : p;
+      NH.impact({intensity: Math.min(1, 0.3 + ms/45)*HAP_SCALE, sharpness: ms > 25 ? 0.35 : 0.65}).catch(() => {});
+      return;
+    }
+    try { navigator.vibrate(p); } catch(_) {}
+  }
+  // jatkuva värinä natiivina: voimakkuus 0..1 seuraa kuutioiden liikettä
+  function hapContinuous(level) {
+    if (!NH) return;
+    if (!hapOK()) level = 0;
+    const t = performance.now();
+    if (Math.abs(level - hapLevel) < 0.04 && t - hapSent < 250) return;
+    if (level === 0 && hapLevel === 0) return;
+    hapLevel = level; hapSent = t;
+    NH.continuous({intensity: level*HAP_SCALE, sharpness: 0.25 + level*0.5}).catch(() => {});
+  }
+
+  let actx = null, noiseGain = null, bp = null, hp = null, nbuf = null;
+  function initAudio() {
+    if (actx) return;
+    try {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const len = actx.sampleRate*2, b = actx.createBuffer(1, len, actx.sampleRate), d = b.getChannelData(0);
+      for (let i=0;i<len;i++) d[i] = Math.random()*2-1;
+      nbuf = b;
+    } catch(_) { actx = null; }
+  }
+  // jatkuva suhina luodaan vasta kun sitä tarvitaan (pyörivä kohinalähde kuluttaa akkua turhaan)
+  function ensureHiss() {
+    if (noiseGain || !actx || !nbuf) return;
+    const src = actx.createBufferSource(); src.buffer = nbuf; src.loop = true;
+    bp = actx.createBiquadFilter(); bp.type = 'bandpass';
+    hp = actx.createBiquadFilter(); hp.type = 'highpass';
+    noiseGain = actx.createGain(); noiseGain.gain.value = 0;
+    src.connect(bp).connect(hp).connect(noiseGain).connect(actx.destination);
+    src.start();
+    setAudioMode();
+  }
+  function setAudioMode() {
+    if (!bp) return;
+    if (S.mode === 'water') { bp.frequency.value = 520; bp.Q.value = 1.4; hp.frequency.value = 120; }
+    else { bp.frequency.value = 2600; bp.Q.value = .7; hp.frequency.value = 900; }
+  }
+  function tone(freq, level, dur, type='triangle', lp=1200) {
+    if (!actx || !S.sound || (S.night && !alarmOK)) return;
+    const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(), f = actx.createBiquadFilter();
+    o.type = type; o.frequency.value = freq; f.type = 'lowpass'; f.frequency.value = lp;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, 0.12*level), t+0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(f).connect(g).connect(actx.destination); o.start(t); o.stop(t+dur+0.02);
+  }
+  function plop(level) {
+    if (!actx || !S.sound) return;
+    const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(700 + Math.random()*200, t); o.frequency.exponentialRampToValueAtTime(260, t+0.12);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14*level, t+0.01); g.gain.exponentialRampToValueAtTime(0.0001, t+0.16);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t+0.18);
+  }
+  let voices = 0, alarmOK = false;
+  const SCALE = [0,2,4,7,9,12,14,16,19,21];   // pentatoninen, C-duuri
+  function bell(freq, level, kind) {
+    if (!actx || !S.sound || voices > 12 || (S.night && !alarmOK)) return;
+    kind = kind || 'bell';
+    const t = actx.currentTime, g = actx.createGain(); let dec = 1.1, nodes = [];
+    const osc = (type, f, vol) => { const o = actx.createOscillator(), og = actx.createGain(); o.type = type; o.frequency.value = f; og.gain.value = vol; o.connect(og); nodes.push(o); return og; };
+    if (kind === 'marimba') {            // puinen, nopea sammuminen
+      dec = .5; osc('sine', freq*.5, 1).connect(g); osc('sine', freq*.5*3.93, .3).connect(g);
+    } else if (kind === 'glass') {       // lasinen, pitkä ja puhdas
+      dec = 1.8; osc('sine', freq*1.5, 1).connect(g); osc('sine', freq*1.5*2.0, .12).connect(g);
+    } else if (kind === 'pluck') {       // näppäilty kieli
+      dec = .8; const f = actx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.setValueAtTime(freq*7, t); f.frequency.exponentialRampToValueAtTime(freq*1.2, t+.5);
+      osc('triangle', freq, 1).connect(f); osc('sawtooth', freq*1.003, .25).connect(f); f.connect(g);
+    } else if (kind === 'synth') {       // pehmeä syntikka
+      dec = .35; const f = actx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = freq*4;
+      osc('square', freq*.5, .5).connect(f); osc('sine', freq, .6).connect(f); f.connect(g);
+    } else {                             // kello / kolikko
+      osc('sine', freq, 1).connect(g); osc('sine', freq*2.76, .25).connect(g);
+    }
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0003, level), t+0.006); g.gain.exponentialRampToValueAtTime(0.0001, t+dec);
+    g.connect(actx.destination);
+    for (const o of nodes) { o.start(t); o.stop(t+dec+0.05); }
+    voices++; setTimeout(() => { voices--; }, dec*1000+50);
+  }
+  const VOICES_EN = {bell:'Bell', marimba:'Marimba', glass:'Glass', pluck:'Pluck', synth:'Synth'};
+  const VOICES = {bell:'Kello', marimba:'Marimba', glass:'Lasi', pluck:'Näppäys', synth:'Syntikka'};
+  const noteFreq = n => 523.25*Math.pow(2, SCALE[n % 10]/12);
+  const clack = l => tone(1050 + Math.random()*500, .55*l, .045, 'triangle', 3200);
+  const softTick = l => tone(1700 + Math.random()*400, .22*l, .03, 'sine', 4000);
+  // napina: lyhyitä kohinanäpsäyksiä, joiden tiheys kasvaa liikkeen mukana (korvaa jatkuvan suhinan)
+  let crkLive = 0;
+  function crackle(level) {
+    if (!actx || !nbuf || crkLive > 24) return;
+    const t = actx.currentTime + Math.random()*0.016, dur = 0.003 + Math.random()*0.006;
+    const s = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+    s.buffer = nbuf; f.type = 'bandpass'; f.frequency.value = 1400 + Math.random()*3600; f.Q.value = 2.5 + Math.random()*3;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, level*(0.5 + Math.random())), t + 0.0008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f).connect(g).connect(actx.destination);
+    s.start(t, Math.random()*1.9, dur + 0.01);
+    crkLive++; s.onended = () => { crkLive--; };
+  }
+  const moveSnd = () => S.moveSnd || 'crackle';
+
+  function feel() {
+    const now = performance.now();
+    if (isCubes()) {
+      const mv = kMove/(KS*24);   // liikkeen voimakkuus
+      const ms = moveSnd(), moveOn = S.sound && !S.night && mv > 0.12;
+      if (moveOn && ms === 'hiss') ensureHiss();
+      if (noiseGain) noiseGain.gain.setTargetAtTime(moveOn && ms === 'hiss' ? Math.min(.3, .02 + mv*.07) : 0, actx.currentTime, .05);
+      if (bp && mv > 0.12 && ms === 'hiss') bp.frequency.setTargetAtTime(1800 + Math.min(2400, mv*500), actx.currentTime, .08);
+      if (moveOn && ms === 'crackle') {   // näpsäyksiä ~ 6…60 sekunnissa liikkeen mukaan
+        const n = Math.min(60, 6 + mv*9)/60, cnt = Math.floor(n) + (Math.random() < n % 1 ? 1 : 0);
+        for (let q=0;q<cnt;q++) crackle(Math.min(.22, .05 + mv*.03));
+      }
+      if (NH) hapContinuous(mv > 0.12 ? Math.min(1, 0.15 + mv*0.22) : 0);
+      else if (mv > 0.15 && now - lastBuzz > Math.max(60, 140 - mv*25)) buzz(Math.min(40, 3 + mv*9 | 0));
+      if (wallHit) shakeAmp = Math.min(16, shakeAmp + wallHit*0.05);  // tärähdys vain kovista osumista reunoihin
+      if (S.night) { nq.length = 0; return; }
+      if (S.notes && nq.length) {
+        if (now - lastClack > 35) { lastClack = now; nq.sort((a,b) => b[1]-a[1]); for (let q=0;q<Math.min(3,nq.length);q++) bell(noteFreq(nq[q][0]), Math.min(.16, .035 + nq[q][1]*.012), S.voice); if (now - lastBuzz > 50) buzz(Math.min(14, 4 + nq.length*2)); }
+        nq.length = 0;
+      }
+      else if (kImpacts && !S.notes && now - lastClack > 40) { lastClack = now; clack(Math.min(1, .25 + kImpacts/10)); if (now - lastBuzz > 50) buzz(Math.min(18, 5 + kImpacts*2)); }
+      else if (kArrivals && now - lastClack > 45) { lastClack = now; softTick(Math.min(1, .35 + kArrivals/6)); if (now - lastBuzz > 60) buzz(4); }
+      return;
+    }
+    const amt = pMoving / N;
+    if (noiseGain) noiseGain.gain.setTargetAtTime(S.sound && !S.night && moveSnd() === 'hiss' ? Math.min(liquid ? .3 : .22, amt*(liquid ? 1.2 : .9)) : 0, actx.currentTime, .06);
+    if (pImpacts > 30) shakeAmp = Math.min(3, shakeAmp + pImpacts*0.004);
+    if (pImpacts > 30 && now - lastBuzz > 70) buzz(Math.min(22, 4 + pImpacts/25|0));
+    else if (amt > 0.02 && now - lastBuzz > 110) buzz(Math.min(8, 2 + amt*40|0));
+  }
+
+  // ================= Käyttöliittymä =================
+  const statusEl = $('status'); let flashT;
+  function flash(t) { statusEl.textContent = t; statusEl.style.opacity = .75; clearTimeout(flashT); flashT = setTimeout(() => statusEl.style.opacity = 0, 4000); }
+
+  const isTouch = matchMedia('(pointer: coarse)').matches;
+
+  {   // aloitus: napautus mihin tahansa aloitusruudulla (ääni ja liikeanturit tarvitsevat kosketuksen)
+    let started = false;
+    $('start').addEventListener('click', () => { if (started) return; started = true; initAudio(); enableSensors(); $('start').classList.add('hide'); });
+  }
+  $('shakeBtn').addEventListener('click', () => shake());
+
+  const sheet = $('sheet');
+  $('gear').addEventListener('click', () => { refreshSheet(); sheet.classList.add('open'); });
+  $('done').addEventListener('click', () => sheet.classList.remove('open'));
+  {   // pyyhkäisy alas sulkee asetukset
+    let sy = null, dy = 0;
+    sheet.addEventListener('touchstart', e => { if (sheet.scrollTop <= 0 || e.target.closest('#sheetHead')) { sy = e.touches[0].clientY; dy = 0; } else sy = null; }, {passive:true});
+    sheet.addEventListener('touchmove', e => {
+      if (sy === null) return; dy = e.touches[0].clientY - sy;
+      if (dy > 0 && (sheet.scrollTop <= 0 || e.target.closest('#sheetHead'))) { sheet.style.transition = 'none'; sheet.style.transform = `translateY(${dy}px)`; if (e.cancelable) e.preventDefault(); }
+    }, {passive:false});
+    sheet.addEventListener('touchend', () => {
+      if (sy === null) return; sheet.style.transition = ''; sheet.style.transform = '';
+      if (dy > 70) sheet.classList.remove('open'); sy = null; dy = 0;
+    });
+  }
+
+  function refreshSheet() {
+    const m = S.mode;
+    const size = $('size');
+    $('sizeLbl').textContent = m === 'cubes' ? 'Kuution koko' : m === 'water' ? 'Pisaran koko' : 'Jyvän koko';
+    size.min = m === 'cubes' ? 12 : 2; size.max = m === 'cubes' ? 32 : 8; size.step = m === 'cubes' ? 2 : 1;
+    size.value = S.size[m]; $('sizeVal').textContent = S.size[m] + ' px';
+    $('sizeNote').textContent = (m === 'cubes' && S.size.cubes < 12) ? 'Pienet kuutiot vaativat tehoa — jos pätkii, suurenna.' : '';
+    const pals = $('pals'); pals.innerHTML = '';
+    for (const name of Object.keys(PALETTES)) {
+      const b = document.createElement('button'); b.className = 'sw' + (S.pal[m] === name ? ' on' : '');
+      b.style.background = `linear-gradient(90deg,${PALETTES[name].join(',')})`;
+      b.innerHTML = `<small>${PAL_NAMES[name]}</small>`;
+      b.addEventListener('click', () => { S.pal[m] = name; save(); recolor(); refreshSheet(); });
+      pals.appendChild(b);
+    }
+    const wrap = document.createElement('div'); wrap.id = 'customWrap';
+    wrap.innerHTML = `<button class="sw${S.pal[m]==='oma'?' on':''}" style="background:${S.custom[m]};width:100%;height:100%"><small>Oma</small></button><input type="color" id="custom" value="${S.custom[m]}">`;
+    pals.appendChild(wrap);
+    wrap.querySelector('#custom').addEventListener('input', e => {
+      S.custom[m] = e.target.value; S.pal[m] = 'oma'; save(); recolor();
+      const sw = wrap.querySelector('.sw'); sw.style.background = e.target.value;
+      pals.querySelectorAll('.sw').forEach(x => x.classList.toggle('on', x === sw));
+    });
+    if (m === 'cubes') {   // liukuva väri
+      const lb = document.createElement('button'); lb.className = 'sw' + (S.pal.cubes === 'liuku' ? ' on' : '');
+      lb.style.background = 'linear-gradient(90deg,#ff5a8a,#ffb347,#9be15d,#3ec7ff,#a35bff)'; lb.innerHTML = '<small>Liuku</small>';
+      lb.addEventListener('click', () => { S.pal.cubes = 'liuku'; save(); recolor(); refreshSheet(); });
+      pals.appendChild(lb);
+    }
+    if (m === 'cubes') {   // kuva on yksi värivaihtoehto
+      {   // värin vaihto päälle/pois: pieni nappi kuvavalintojen vasemmalla puolella
+        const sb = document.createElement('button'); sb.className = 'sw shiftSw' + (S.colorShift ? ' on' : '');
+        const na = S.pal.cubes === 'kuva' || S.pal.cubes === 'liuku';
+        sb.title = S.lang === 'en' ? (S.colorShift ? 'Colour changes' : 'Colour stays') : (S.colorShift ? 'Väri vaihtuu' : 'Väri pysyy');
+        sb.innerHTML = `<span class="ring"></span><span class="arr">↻</span>`; sb.setAttribute('aria-label', sb.title);
+        if (na) sb.style.opacity = '.45';
+        sb.addEventListener('click', () => { S.colorShift = !S.colorShift; save(); recolor(); refreshSheet(); });
+        pals.appendChild(sb);
+      }
+      for (const k in ART) {   // taideteokset (Tyttö ja helmikorvakoru)
+        const ab = document.createElement('button'); ab.className = 'sw' + (S.pal.cubes === 'kuva' && S.art === k ? ' on' : '');
+        ab.style.background = `center/cover url(${ART[k]})`; ab.innerHTML = `<small>${S.lang === 'en' ? 'Pearl' : 'Helmi'}</small>`;
+        ab.addEventListener('click', () => { S.art = k; S.pal.cubes = 'kuva'; save(); if (isCubes()) rehome(); else recolor(); refreshSheet(); });
+        pals.appendChild(ab);
+      }
+      const kb = document.createElement('button'); kb.className = 'sw' + (S.pal.cubes === 'kuva' && !S.art ? ' on' : '');   // oma kuva / valokuva
+      kb.style.background = S.photo ? `center/cover url(${S.photo})` : 'rgba(255,255,255,.12)';
+      kb.innerHTML = `<small>${S.lang === 'en' ? 'Photo' : 'Kuva'}</small>`;
+      kb.addEventListener('click', () => { if (!S.photo) $('photoFile').click(); else { S.art = null; S.pal.cubes = 'kuva'; save(); if (isCubes()) rehome(); else recolor(); refreshSheet(); } });
+      pals.appendChild(kb);
+    }
+    const photoOn = m === 'cubes' && S.pal.cubes === 'kuva' && !S.art;
+    $('photoBtn').style.display = photoOn ? '' : 'none';
+    $('palNote').textContent = photoOn ? 'Kuutiot ottavat värinsä kuvasta. Kuva tallentuu pienennettynä tähän laitteeseen.' : ((m === 'cubes' && emojiMode) ? 'Emoji käyttää omia värejään — paletti näkyy muissa kuvioissa.' : '');
+    $('notesRow').style.display = m === 'cubes' ? '' : 'none';
+    document.querySelectorAll('#magSeg button').forEach(b => b.classList.toggle('on', b.dataset.g === (S.sinkOn ? 'sink' : S.magnet ? '1' : '0')));
+    document.querySelectorAll('#notesSeg button').forEach(b => b.classList.toggle('on', (b.dataset.n === '1') === !!S.notes));
+    document.querySelectorAll('#nightSeg button').forEach(b => b.classList.toggle('on', (b.dataset.t === '1') === !!S.night));
+    const vc = $('voiceChips'); vc.innerHTML = '';
+    for (const [k, name0] of Object.entries(VOICES)) {
+      const name = S.lang === 'en' ? VOICES_EN[k] : name0;
+      const bt = document.createElement('button'); bt.textContent = name; bt.className = (S.voice || 'bell') === k ? 'on' : '';
+      bt.addEventListener('click', () => { S.voice = k; S.notes = true; save(); initAudio(); if (actx && actx.state === 'suspended') actx.resume(); previewVoice(); refreshSheet(); });
+      vc.appendChild(bt);
+    }
+    $('nightDim').value = S.nightDim; $('nightVal').textContent = S.nightDim + ' %';
+    $('textRow').style.display = m === 'cubes' ? '' : 'none';
+    $('gravRow').style.display = m === 'cubes' ? '' : 'none';
+    document.querySelectorAll('#gravSeg button').forEach(b => b.classList.toggle('on', (b.dataset.g === '1') === !!S.gravity));
+    document.querySelectorAll('#reactSeg button').forEach(b => b.classList.toggle('on', (b.dataset.r === '1') === (S.react !== false)));
+    document.querySelectorAll('#retSeg button').forEach(b => b.classList.toggle('on', (b.dataset.r === '1') === (S.retOn !== false)));
+    $('ret').disabled = S.retOn === false; $('ret').style.opacity = S.retOn === false ? .35 : 1;
+    $('retRow').style.display = m === 'cubes' ? '' : 'none';
+    $('ret').value = S.retSec; $('retVal').textContent = retLabel(S.retSec);
+    document.querySelectorAll('#retChips button').forEach(b => b.classList.toggle('on', +b.dataset.v === S.retSec));
+    document.querySelectorAll('#invSeg button').forEach(b => b.classList.toggle('on', (b.dataset.i === '1') === !!S.invert));
+    $('text').value = S.text;
+    const src = S.src;
+    $('text').style.display = src === 'text' ? '' : 'none';
+    $('drawBox').style.display = src === 'draw' ? '' : 'none';
+    $('clockBox').style.display = src === 'clock' ? '' : 'none';
+    document.querySelectorAll('#cmSeg button').forEach(b => b.classList.toggle('on', b.dataset.c === (S.clockMode || 'digit')));
+    $('cmNote').textContent = {digit:'Vain vaihtuvaa numeroa esittävät kuutiot liikkuvat.', all:'Kaikki kuutiot sekoittuvat uusiin paikkoihin.', drip:'Vaihtuvat kuutiot putoavat pois yksi kerrallaan ja uudet tippuvat ylhäältä tilalle.'}[S.clockMode || 'digit'];
+     $('dripSec').value = S.dripSec || 60; $('dripVal').textContent = (S.dripSec || 60) + ' s';
+    $('invSeg').style.display = src === 'empty' ? 'none' : '';   // Tyhjä: pelkät kuutiot ilman kuviota
+    $('fontRow').style.display = (src === 'text' || src === 'clock') ? '' : 'none';
+    $('drawBtn').textContent = S.draw ? 'Muokkaa piirrosta' : 'Piirrä kuvio';
+    document.querySelectorAll('#srcSeg button').forEach(b => b.classList.toggle('on', b.dataset.s === src));
+    const fc = $('fontChips'); fc.innerHTML = '';
+    for (const [k, name] of Object.entries(FONT_NAMES)) {
+      const bt = document.createElement('button'); bt.textContent = name; bt.className = (S.font || 'pikseli') === k ? 'on' : '';
+      bt.addEventListener('click', () => { S.font = k; save(); if (isCubes()) rehome(); refreshSheet(); });
+      fc.appendChild(bt);
+    }
+    $('fontNote').textContent = (S.src === 'text' && BITMAP[S.font || 'pikseli']) ? 'Pikseli, Pieni ja Segmentti koskevat kelloa — tekstissä käytetään Sansia.' : '';
+    $('sndTog').textContent = S.sound ? 'Ääni päällä' : 'Ääni pois';
+    document.querySelectorAll('#sndSeg button').forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === !!S.sound));
+    document.querySelectorAll('#vibSeg button').forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === (S.vibe !== false)));
+    document.querySelectorAll('#langSeg button').forEach(b => b.classList.toggle('on', b.dataset.l === S.lang));
+    document.querySelectorAll('#moveSeg button').forEach(b => b.classList.toggle('on', b.dataset.m === moveSnd()));
+    if (presetsReady) buildPresets();
+  }
+  function retLabel(v) { v = +v; return v === 0 ? 'Ei palaudu' : String(v).replace('.', ',') + ' s'; }
+  function recolor() {
+    if (!isCubes()) { pixRecolor(); return; }
+    const want = S.pal.cubes === 'kuva' && !!colorImg();
+    if (want !== photoColActive) rehome(); else cubeRecolor();
+  }
+
+
+  document.querySelectorAll('#srcSeg button').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.s; if (S.src === v) return;
+    S.src = v; S.clock = v === 'clock'; save(); if (isCubes()) rehome(); refreshSheet();
+    if (v === 'draw' && !S.draw) openDraw();
+  }));
+  $('drawBtn').addEventListener('click', openDraw);
+  $('photoBtn').addEventListener('click', () => $('photoFile').click());
+  $('photoFile').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const url = URL.createObjectURL(f), im = new Image();
+    im.onload = () => {
+      const sc = Math.min(1, 160/Math.max(im.naturalWidth, im.naturalHeight));
+      const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.naturalWidth*sc)); c.height = Math.max(1, Math.round(im.naturalHeight*sc));
+      c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+      photoImg = c; S.art = null; try { S.photo = c.toDataURL('image/jpeg', .82); } catch(_) {}
+      S.pal.cubes = 'kuva'; save(); URL.revokeObjectURL(url);
+      if (isCubes()) rehome(); refreshSheet();
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); flash('Kuvaa ei voitu avata'); };
+    im.src = url; e.target.value = '';
+  });
+  document.querySelectorAll('#invSeg button').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.i === '1'; if (!!S.invert === v) return; S.invert = v; save(); rehome(); refreshSheet();
+  }));
+  document.querySelectorAll('#retSeg button').forEach(b => b.addEventListener('click', () => { S.retOn = b.dataset.r === '1'; save(); refreshSheet(); }));
+  document.querySelectorAll('#reactSeg button').forEach(b => b.addEventListener('click', () => { S.react = b.dataset.r === '1'; save(); refreshSheet(); }));
+  document.querySelectorAll('#gravSeg button').forEach(b => b.addEventListener('click', () => { S.gravity = b.dataset.g === '1'; save(); applyGrav(); refreshSheet(); }));
+  document.querySelectorAll('#cmSeg button').forEach(b => b.addEventListener('click', () => { S.clockMode = b.dataset.c; save(); dripFinish(); refreshSheet(); }));
+  function previewVoice() { [0,2,4].forEach((n, k) => setTimeout(() => bell(noteFreq(n), .1, S.voice), k*140)); }
+  document.querySelectorAll('#magSeg button').forEach(b => b.addEventListener('click', () => { S.sinkOn = b.dataset.g === 'sink'; S.magnet = b.dataset.g === '1'; save(); refreshSheet(); }));
+  document.querySelectorAll('#notesSeg button').forEach(b => b.addEventListener('click', () => {
+    S.notes = b.dataset.n === '1'; save(); refreshSheet(); initAudio(); if (actx && actx.state === 'suspended') actx.resume();
+    if (S.notes) previewVoice();
+  }));
+  document.querySelectorAll('#nightSeg button').forEach(b => b.addEventListener('click', () => { S.night = b.dataset.t === '1'; save(); applyNight(); refreshSheet(); if (S.night) flash('Yötila päällä — napauta ruutua nähdäksesi painikkeet'); }));
+  $('nightDim').addEventListener('input', e => { S.nightDim = +e.target.value; $('nightVal').textContent = S.nightDim + ' %'; save(); applyNight(); });
+  $('ret').addEventListener('input', e => { S.retSec = +e.target.value; $('retVal').textContent = retLabel(S.retSec); document.querySelectorAll('#retChips button').forEach(b => b.classList.remove('on')); save(); });
+  document.querySelectorAll('#retChips button').forEach(b => b.addEventListener('click', () => { S.retSec = +b.dataset.v; S.retOn = true; save(); refreshSheet(); }));
+  $('dripSec').addEventListener('input', e => { S.dripSec = +e.target.value; $('dripVal').textContent = S.dripSec + ' s'; save(); });
+  $('dripSec').addEventListener('change', () => { lastClock = ''; });
+  $('size').addEventListener('input', e => { $('sizeVal').textContent = e.target.value + ' px'; if (presetsReady && S.presets[S.preset]) { S.presets[S.preset].size.cubes = +e.target.value; buildPresets(); } $('sizeNote').textContent = (S.mode === 'cubes' && +e.target.value < 12) ? 'Pienet kuutiot vaativat tehoa — jos pätkii, suurenna.' : ''; });
+  $('size').addEventListener('change', e => { S.size[S.mode] = +e.target.value; save(); applyMode(true); });
+  let textT;
+  $('text').addEventListener('input', e => {
+    clearTimeout(textT);
+    textT = setTimeout(() => { S.text = e.target.value; wordIdx = 0; wordT = 0; save(); if (isCubes()) { rehome(); refreshSheet(); } }, 450);
+  });
+  $('text').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+  // ================= Kieli (suomi / englanti) =================
+  // Käyttöliittymä kirjoitetaan suomeksi; näkyvät tekstit käännetään sanakirjalla aina kun ne muuttuvat.
+  const EN = {
+    'Ravista':'Shake', 'Asetukset':'Settings', 'kallistus':'tilt', 'Valmis':'Done', 'Ääni':'Sound', 'Päällä':'On', 'Pois':'Off',
+    'Värinä':'Vibration', 'Liikeääni':'Motion sound', 'Napina':'Crackle', 'Suhina':'Hiss',
+    'Ääni, joka kuuluu kun kuutiot liikkuvat. Muut äänet pysyvät ennallaan.':'The sound you hear when cubes move. Other sounds stay as they are.',
+    'Lisäasetukset':'More settings', 'Kuvio':'Pattern', 'Teksti':'Text', 'Kello':'Clock', 'Piirros':'Drawing',
+    'Kuvio kuutioina':'Pattern as cubes', 'Kuvio aukkona':'Pattern as a hole', 'Kellonajan vaihtumistapa':'How the time changes',
+    'Vain numero':'Digit only', 'Kaikki':'All', 'Valuva':'Trickle', 'Kaikki vaihtuu':'All change', 'Numero vaihtuu':'Digit changes', 'Numero valuu':'Digit trickles',
+    'Vaihdon kesto. Uusi numero on ehjä täsmälleen minuutin vaihtuessa.':'Change duration. The new digit is complete exactly when the minute changes.',
+    'esim. ❤️, A tai HEI':'e.g. ❤️, A or HI', 'Piirrä kuvio':'Draw a pattern', 'Muokkaa piirrosta':'Edit drawing',
+    'Tyhjä = siisti ruudukko. Emoji tuo omat värinsä.':'Empty = tidy grid. An emoji brings its own colours.',
+    'Fontti':'Font', 'Jyvän koko':'Grain size', 'Kuution koko':'Cube size', 'Pisaran koko':'Drop size',
+    'Pienet kuutiot vaativat tehoa — jos pätkii, suurenna.':'Small cubes need power — if it stutters, make them bigger.',
+    'Väri':'Colour', 'Vaihda kuva':'Change photo', 'Väri pysyy':'Colour stays', 'Väri vaihtuu':'Colour changes', 'Väri vaihtuu: sävyt kiertävät väriympyrää – minuutissa kolmasosa kierrosta, esim. punaisesta vihreään.':'Colour changes: hues travel round the colour wheel – a third of a turn per minute, e.g. red to green.',
+    'Kuutiot ottavat värinsä kuvasta. Kuva tallentuu pienennettynä tähän laitteeseen.':'The cubes take their colours from the photo. The photo is saved, scaled down, on this device.',
+    'Emoji käyttää omia värejään — paletti näkyy muissa kuvioissa.':'An emoji uses its own colours — the palette shows in other patterns.',
+    'Liuku':'Glide', 'Hiekka':'Sand', 'Meri':'Sea', 'Kivi':'Stone', 'Metsä':'Forest', 'Laava':'Lava', 'Pastelli':'Pastel', 'Oma':'Custom', 'Kuva':'Photo',
+    'Kuutioiden palautuminen':'Cube return', 'Kuutiot palaavat paikoilleen tämän ajan kuluessa.':'The cubes return to their places within this time.', 'Ei palaudu':'No return',
+    'Painovoima':'Gravity', 'Päällä kuutiot liukuvat puhelimen kallistuksen mukana.':'When on, the cubes slide as you tilt the phone.',
+    'Tippuu kosketuksella':'Sinks on touch', 'Tippuu':'Sinks',
+    'Tippuu: kosketetut kuutiot putoavat kauas ja palaavat palautumisajan kuluessa.':'Sinks: touched cubes fall far away and come back within the return time.',
+    'Kosketetut kuutiot putoavat kauas ja palaavat yksi kerrallaan tämän ajan sisällä.':'Touched cubes fall far away and come back one by one within this time.',
+    'Ulos laidalta':'Out over the edge',
+    'Reunaan osuvat kuutiot katoavat ja nousevat syvyydestä takaisin tämän ajan sisällä.':'Cubes that hit the edge vanish and rise back from the depths within this time.',
+    'Reagointi tärinään ja napautuksiin':'React to shakes and taps',
+    'Kuutiot hyppäävät ravistuksesta ja napautuksesta, vaikka painovoima olisi pois.':'The cubes jump when you shake or tap, even with gravity off.',
+    'Sormi':'Finger', 'Kosketuksen vaikutus':'Touch effect', 'Tyhjä':'Empty', 'Helmi':'Pearl',
+    'Teksti vaihtuu sana kerrallaan, jos siinä on välilyöntejä. Tyhjä = siisti ruudukko. Emoji tuo omat värinsä.':'Text with spaces changes one word at a time. Empty = tidy grid. An emoji brings its own colours.', 'Työntää pois':'Pushes away', 'Vetää puoleensa':'Attracts',
+    'Magneetti: kuutiot ja hiekka kerääntyvät sormen alle.':'Magnet: the cubes gather under your finger.',
+    'Sävelet':'Notes', 'Naksahdus':'Click', 'Kellonsoitto':'Chimes',
+    'Jokainen väri soi eri sävelellä, kun kuutiot törmäävät. Valitse soitin.':'Each colour plays its own note when cubes collide. Choose an instrument.',
+    'Yötila — yökello':'Night mode — night clock',
+    'Himmentää ruudun ja pitää sen päällä. Napauta ruutua, niin painikkeet näkyvät hetken. Ei ääniä eikä tärinää.':'Dims the screen and keeps it on. Tap the screen to show the buttons for a moment. No sounds or vibration.',
+    'Ääni päällä':'Sound on', 'Ääni pois':'Sound off', 'Pyyhi':'Erase', 'Tyhjennä':'Clear',
+    'Piirrä sormella. Kuutiot palaavat aina tähän kuvioon.':'Draw with your finger. The cubes always return to this pattern.',
+    'Paina, vedä ja pyyhkäise reunaan.':'Press, drag and swipe to the edge.', 'Kun irrotat, kaikki asettuu.':'When you let go, everything settles.',
+    'Napauta ruutua':'Tap the screen', 'Pyyhkäise pikseleitä':'Swipe the pixels', 'Ohjeet':'Help',
+    'Kaksi sormea toimii yhtä aikaa. Kellonaika muodostuu kuutioista.':'Two fingers work at once. The time is made of cubes.',
+    'Tietokoneella: vedä hiirellä, välilyönti ravistaa.':'On a computer: drag with the mouse, the space bar shakes.',
+    'Vain vaihtuvaa numeroa esittävät kuutiot liikkuvat.':'Only the cubes of the changing digit move.',
+    'Kaikki kuutiot sekoittuvat uusiin paikkoihin.':'All cubes shuffle to new places.',
+    'Vaihtuvat kuutiot putoavat pois yksi kerrallaan ja uudet tippuvat ylhäältä tilalle.':'Changing cubes drop away one by one and new ones fall from the top.',
+    'Pikseli, Pieni ja Segmentti koskevat kelloa — tekstissä käytetään Sansia.':'Pixel, Small and Segment apply to the clock — text uses Sans.',
+    'Pikseli':'Pixel', 'Pieni':'Small', 'Segmentti':'Segment', 'Ohut':'Thin', 'Pyöreä':'Round',
+    'Yötila päällä — napauta ruutua nähdäksesi painikkeet':'Night mode on — tap the screen to see the buttons',
+    'Piirros oli tyhjä, kuvio ei muuttunut':'The drawing was empty, the pattern did not change', 'Kuvaa ei voitu avata':"Couldn't open the photo",
+    'Leikki':'Play', 'Rauha':'Calm', 'Yöpöytä':'Bedside', 'Moi':'HI!',
+  };
+  const FI_ = Object.fromEntries(Object.entries(EN).map(([f, e]) => [e, f]));
+  function trText(v) {
+    const k = v.trim(); if (!k) return v;
+    const r = S.lang === 'en' ? EN[k] : FI_[k];
+    return r ? v.replace(k, r) : v;
+  }
+  let trObs = null;
+  function translateAll() {
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {acceptNode: n => (n.parentElement && !n.parentElement.closest('script,style,#voiceChips,#help,#pro')) ? 1 : 2});
+    for (let n; (n = w.nextNode());) { const v = trText(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+    for (const el of document.querySelectorAll('[placeholder],[aria-label]')) for (const a of ['placeholder', 'aria-label']) {
+      const v = el.getAttribute(a); if (v) { const t = trText(v); if (t !== v) el.setAttribute(a, t); }
+    }
+    document.documentElement.lang = S.lang;
+    if (trObs) trObs.takeRecords();   // omat muutokset eivät käynnistä uutta kierrosta
+  }
+  trObs = new MutationObserver(translateAll);
+  trObs.observe(document.body, {subtree:true, childList:true, characterData:true});
+  document.querySelectorAll('#langSeg button').forEach(b => b.addEventListener('click', () => {
+    if (S.lang === b.dataset.l) return;
+    S.lang = b.dataset.l;
+    const h = helloFor(S.lang);   // MOI SINÄ ↔ HI YOU seuraa kieltä, jos tekstiä ei ole muutettu
+    if (S.presets && S.presets.sq && isHello(S.presets.sq.text)) S.presets.sq.text = h;
+    let re = false; if (isHello(S.text)) { S.text = h; re = S.src === 'text'; }
+    save(); refreshSheet(); buildPresets(); translateAll();
+    if (re && isCubes()) rehome();
+  }));
+
+  // ================= Pro (StoreKit) =================
+  // Ilmaiseksi: esiasetukset, ääni, värinä, liikeääni, kieli ja ohjeet. Lisäasetukset vaativat kertaoston.
+  // Selaimessa (artefakti) ei ole StoreKitiä, joten kaikki on auki. Hinta tulee aina StoreKitistä (displayPrice).
+  const PRO_ID = 'fi.embodyapps.nontimer.pro';
+  const STORE = (CAP && CAP.isNativePlatform && CAP.isNativePlatform() && CAP.registerPlugin) ? CAP.registerPlugin('NontimerStore') : null;
+  let isPro = !STORE, proPrice = '', proBusy = false;
+  function applyPro() {
+    document.body.classList.toggle('locked', !isPro);
+    if (!isPro) $('adv').open = false;
+  }
+  function proUI(msg) {
+    const en = S.lang === 'en';
+    $('proText').textContent = en
+      ? 'Unlock all settings: patterns, your own text and drawing, colours and photos, cube size, return, gravity, touch effect, notes and night mode. One-time purchase, no subscription.'
+      : 'Avaa kaikki asetukset: kuviot, oma teksti ja piirros, värit ja kuvat, kuution koko, palautuminen, painovoima, kosketuksen vaikutus, sävelet ja yötila. Kertaosto, ei tilausta.';
+    $('proBuy').textContent = proPrice ? (en ? 'Buy ' : 'Osta ') + proPrice : (en ? 'Price not available' : 'Hinta ei saatavilla');
+    $('proBuy').disabled = !proPrice || proBusy;
+    $('proRestore').textContent = en ? 'Restore purchases' : 'Palauta ostot';
+    $('proLater').textContent = en ? 'Not now' : 'Ei nyt';
+    $('proMsg').textContent = msg || '';
+  }
+  async function loadPrice() {
+    if (!STORE) return;
+    try { const r = await STORE.products({ids: [PRO_ID]}); const p = (r.products || []).find(x => x.id === PRO_ID); proPrice = p ? p.displayPrice : ''; } catch(_) {}
+    if ($('pro').classList.contains('open')) proUI();
+  }
+  async function checkPro() {
+    if (!STORE) return;
+    try { const r = await STORE.entitlements(); isPro = (r.ids || []).includes(PRO_ID); } catch(_) {}
+    applyPro();
+  }
+  function openPro() { proUI(); $('pro').classList.add('open'); if (!proPrice) loadPrice(); }
+  $('adv').querySelector('summary').addEventListener('click', e => { if (!isPro) { e.preventDefault(); openPro(); } });
+  $('proLater').addEventListener('click', () => $('pro').classList.remove('open'));
+  $('proBuy').addEventListener('click', async () => {
+    if (!STORE || proBusy) return;
+    proBusy = true; proUI();
+    let msg = '';
+    try {
+      const r = await STORE.purchase({id: PRO_ID});
+      if (r.purchased) { isPro = true; applyPro(); $('pro').classList.remove('open'); $('adv').open = true; }
+      else if (r.pending) msg = S.lang === 'en' ? 'Purchase is pending approval.' : 'Osto odottaa hyväksyntää.';
+      else if (!r.cancelled) msg = S.lang === 'en' ? 'Purchase failed.' : 'Osto ei onnistunut.';
+    } catch(_) { msg = S.lang === 'en' ? 'Purchase failed.' : 'Osto ei onnistunut.'; }
+    proBusy = false; if ($('pro').classList.contains('open')) proUI(msg);
+  });
+  $('proRestore').addEventListener('click', async () => {
+    if (!STORE || proBusy) return;
+    proBusy = true; proUI();
+    let ok = false;
+    try { const r = await STORE.restore(); ok = (r.ids || []).includes(PRO_ID); } catch(_) {}
+    proBusy = false;
+    if (ok) { isPro = true; applyPro(); $('pro').classList.remove('open'); $('adv').open = true; }
+    else proUI(S.lang === 'en' ? 'No purchase found for this Apple ID.' : 'Tällä Apple ID:llä ei löytynyt ostoa.');
+  });
+  if (STORE) { try { STORE.addListener('entitlementsChanged', checkPro); } catch(_) {} }
+  applyPro(); checkPro(); loadPrice();
+
+  // ================= Ohjeet (?-painike asetuksissa) =================
+  const HELP = {fi: "<h3>Näin käytät</h3><ul>\n<li><b>Pyyhkäise, paina ja vedä</b> kuutioita sormella. Kun irrotat, kaikki asettuu takaisin paikalleen.</li>\n<li><b>Kaksi sormea</b> toimii yhtä aikaa.</li>\n<li><b>Kaksoisnapautus</b> täräyttää kuutioita noin 4 cm säteellä sormesta.</li>\n<li><b>Ravista puhelinta</b> tai paina <b>Ravista</b>, niin kaikki kuutiot hyppäävät.</li>\n<li><b>Kova pyyhkäisy reunaan</b> heittää reunan kuutioita.</li>\n<li>Kello, teksti ja kuvat muodostuvat kuutioista. Asetukset löytyvät oikean yläkulman ⚙︎-painikkeesta.</li>\n<li>Tietokoneella: vedä hiirellä, välilyönti ravistaa ja nuolinäppäimet kallistavat.</li></ul>\n<h3>Esiasetukset</h3><p>Jokainen esiasetus muistaa omat asetuksensa. Kun muutat jotain, muutos tallentuu valittuun esiasetukseen.</p><ul>\n<li><b>Leikki</b> – siniset 12 px kuutiot, kello näkyy aukkona. Minuutin vaihtuessa vaihtuva numero muuttuu 15 sekunnissa. Sormi vetää kuutioita puoleensa.</li>\n<li><b>Rauha</b> – kello punaisina, isompina kuutioina. Rauhallinen paluu ja hidas vaihto.</li>\n<li><b>Moi</b> – teksti MOI SINÄ aukkona vaaleanpunaisissa kuutioissa, sana kerrallaan. Vaihda teksti omaksi tervehdykseksi.</li>\n<li><b>Helmi</b> – Vermeerin <i>Tyttö ja helmikorvakoru</i> kuutioina. Kosketetut kuutiot tippuvat syvyyteen.</li>\n<li><b>Yöpöytä</b> – himmeä yökello laavan väreissä. Näyttö pysyy päällä, ei ääniä eikä värinää.</li></ul>\n<h3>Asetukset</h3><ul>\n<li><b>Ääni</b> ja <b>Värinä</b> – kaikki äänet ja värinä päälle tai pois.</li>\n<li><b>Liikeääni</b> – ääni kuutioiden liikkuessa: Napina, Suhina tai Pois. Muut äänet pysyvät.</li>\n<li><b>Kuvio</b> – <b>Kello</b>, <b>Teksti</b>, <b>Piirros</b> (piirrä oma kuvio) tai <b>Tyhjä</b> (pelkät kuutiot). <b>Kuvio kuutioina</b> tai <b>aukkona</b> kääntää kuvion.</li>\n<li><b>Kellonajan vaihtumistapa</b> – Kaikki vaihtuu (kaikki sekoittuvat), Numero vaihtuu (vain vaihtuva numero liikkuu) tai Numero valuu (kuutiot putoavat yksi kerrallaan). Liukusäädin on vaihdon kesto; uusi aika on valmis täsmälleen minuutin vaihtuessa.</li>\n<li><b>Teksti</b> – enintään 40 merkkiä. Jos tekstissä on välilyöntejä, sanat vaihtuvat vuorotellen. Emoji tuo omat värinsä.</li>\n<li><b>Fontti</b> – Pikseli, Pieni ja Segmentti koskevat kelloa, muut myös tekstiä.</li>\n<li><b>Väri</b> – valmiit paletit, Liuku (sävy liukuu hitaasti), Oma väri tai Kuva (kuutiot saavat värinsä valokuvasta).</li>\n<li><b>Kuution koko</b> – pienemmät kuutiot = enemmän kuutioita ja enemmän laskentaa.</li>\n<li><b>Kuutioiden palautuminen</b> – kuinka nopeasti kuutiot palaavat paikoilleen. Pois = kuutiot jäävät siihen, mihin ne jätit.</li>\n<li><b>Painovoima</b> – kuutiot liukuvat puhelimen kallistuksen mukana.</li>\n<li><b>Reagointi tärinään ja napautuksiin</b> – ravistus ja napautukset saavat kuutiot hyppäämään.</li>\n<li><b>Kosketuksen vaikutus</b> – Työntää pois, Vetää puoleensa (kuutiot tarttuvat sormeen) tai Tippuu (kosketetut kuutiot putoavat syvyyteen ja palaavat palautumisajan kuluessa).</li>\n<li><b>Sävelet</b> – Naksahdus tai Kellonsoitto: jokainen väri soi omalla sävelellään törmätessä. Valitse soitin.</li>\n<li><b>Yötila</b> – himmentää ruudun ja pitää sen päällä. Napauta ruutua, niin painikkeet näkyvät hetken.</li>\n<li><b>English | Suomi</b> – sovelluksen kieli.</li></ul>\n<h3>Pro</h3><p>Esiasetukset, ääni, värinä ja kieli ovat ilmaisia. <b>Lisäasetukset</b> avautuvat kertaostolla (Pro). Osto palautuu samalla Apple ID:llä kohdasta Palauta ostot.</p>", en: "<h3>How to use</h3><ul>\n<li><b>Swipe, press and drag</b> the cubes with your finger. When you let go, everything settles back into place.</li>\n<li><b>Two fingers</b> work at once.</li>\n<li><b>Double-tap</b> to jolt the cubes within about 4 cm of your finger.</li>\n<li><b>Shake the phone</b> or press <b>Shake</b> to make every cube jump.</li>\n<li><b>A hard swipe to the edge</b> throws the cubes at the edge.</li>\n<li>The clock, text and pictures are made of cubes. Settings are behind the ⚙︎ button in the top right corner.</li>\n<li>On a computer: drag with the mouse, the space bar shakes and the arrow keys tilt.</li></ul>\n<h3>Presets</h3><p>Each preset remembers its own settings. When you change something, it is saved to the selected preset.</p><ul>\n<li><b>Play</b> – blue 12 px cubes with the clock as a hole. When the minute changes, the changing digit morphs over 15 seconds. Your finger attracts the cubes.</li>\n<li><b>Calm</b> – the clock in larger red cubes. A calm return and a slow change.</li>\n<li><b>HI!</b> – the text HI YOU as a hole in pink cubes, one word at a time. Change it to your own greeting.</li>\n<li><b>Pearl</b> – Vermeer's <i>Girl with a Pearl Earring</i> in cubes. Touched cubes sink into the depths.</li>\n<li><b>Bedside</b> – a dim night clock in lava colours. The screen stays on, no sounds or vibration.</li></ul>\n<h3>Settings</h3><ul>\n<li><b>Sound</b> and <b>Vibration</b> – all sounds and vibration on or off.</li>\n<li><b>Motion sound</b> – the sound while cubes move: Crackle, Hiss or Off. Other sounds stay.</li>\n<li><b>Pattern</b> – <b>Clock</b>, <b>Text</b>, <b>Drawing</b> (draw your own) or <b>Empty</b> (cubes only). <b>Pattern as cubes</b> or <b>as a hole</b> inverts it.</li>\n<li><b>How the time changes</b> – All change (everything shuffles), Digit changes (only the changing digit moves) or Digit trickles (cubes fall one by one). The slider sets the duration; the new time is complete exactly when the minute changes.</li>\n<li><b>Text</b> – up to 40 characters. Text with spaces changes one word at a time. An emoji brings its own colours.</li>\n<li><b>Font</b> – Pixel, Small and Segment apply to the clock, the others to text too.</li>\n<li><b>Colour</b> – ready palettes, Glide (the hue drifts slowly), Custom colour or Photo (the cubes take their colours from a photo).</li>\n<li><b>Cube size</b> – smaller cubes = more cubes and more work for the phone.</li>\n<li><b>Cube return</b> – how quickly the cubes return. Off = they stay where you leave them.</li>\n<li><b>Gravity</b> – the cubes slide as you tilt the phone.</li>\n<li><b>React to shakes and taps</b> – shaking and tapping make the cubes jump.</li>\n<li><b>Touch effect</b> – Pushes away, Attracts (cubes stick to your finger) or Sinks (touched cubes fall into the depths and come back within the return time).</li>\n<li><b>Notes</b> – Click or Chimes: each colour plays its own note when cubes collide. Choose an instrument.</li>\n<li><b>Night mode</b> – dims the screen and keeps it on. Tap the screen to show the buttons for a moment.</li>\n<li><b>English | Suomi</b> – the app language.</li></ul>\n<h3>Pro</h3><p>Presets, sound, vibration and language are free. <b>More settings</b> unlock with a one-time purchase (Pro). Restore it with the same Apple ID from Restore purchases.</p>"};
+  function renderHelp() {
+    const en = S.lang === 'en';
+    $('helpTitle').textContent = en ? 'Help' : 'Ohjeet';
+    $('helpClose').textContent = en ? 'Done' : 'Valmis';
+    $('helpBody').innerHTML = HELP[en ? 'en' : 'fi'];
+  }
+  $('helpBtn').addEventListener('click', () => { renderHelp(); $('help').scrollTop = 0; $('help').classList.add('open'); });
+  $('helpClose').addEventListener('click', () => $('help').classList.remove('open'));
+  // ================= Esiasetukset =================
+  // tervehdys puhelimen kielen mukaan: esiasetuksen nimi ja sen oletusteksti
+  // Moi-esiasetuksen oletusteksti (näkyy sana kerrallaan); vanhat oletukset tunnistetaan, jotta kielen vaihto ja päivitys koskevat vain muuttamatonta tekstiä
+  const helloFor = l => l === 'en' ? 'HI YOU' : 'MOI SINÄ', isHello = x => ['Moi', 'HI!', 'MOI SINÄ', 'HI YOU'].includes(x);
+  const HELLO = helloFor(S.lang);
+  const PRESETS = [   // järjestys = järjestys ruudulla vasemmalta oikealle (Yöpöytä aina oikeanpuoleisin)
+    // Leikki: 12 px, sininen, kello reikänä, minuutti valuu paikalleen 15 s
+    {k:'x',    name:'Leikki',  shape:'x',    v:{pal:'meri',  size:12, retSec:0.8, clockMode:'digit',  dripSec:15, magnet:true,  invert:true}},
+    // Rauha: edellinen käänteisenä, punainen, isommat kuutiot
+    {k:'o',    name:'Rauha',   shape:'o',    v:{pal:'oma', custom:'#e0393e', size:16, retSec:3, clockMode:'digit', dripSec:15, magnet:false, invert:false}},
+    // Moi / HI!: teksti aukkona vaaleanpunaisissa kuutioissa
+    {k:'sq',   name:'Moi',     shape:'sq',   v:{pal:'oma', custom:'#ff86c0', size:12, retSec:2, clockMode:'digit',  dripSec:20, magnet:true,  invert:true, text:HELLO}},
+    // Helmi: Tyttö ja helmikorvakoru (Vermeer), 12 px, ei painovoimaa (yhdessäkään esiasetuksessa ei ole painovoimaa oletuksena), kosketus: tippuu
+    {k:'art',  name:'Helmi',   shape:'full', v:{pal:'kuva', art:'pearl', size:12, retSec:2, clockMode:'digit', dripSec:5, magnet:false, invert:false, empty:true, gravity:false, sink:true}},
+    {k:'plus', name:'Yöpöytä', shape:'plus', v:{pal:'laava', size:14, retSec:6,   clockMode:'digit',  dripSec:60, magnet:false, invert:false}},
+  ];
+  function shapeMask(shape, n) {
+    const m = [], c = (n-1)/2;
+    for (let r=0;r<n;r++) for (let q=0;q<n;q++) {
+      let on = false;
+      if (shape === 'x') on = r === q || r + q === n-1;
+      else if (shape === 'o') on = Math.hypot(r-c, q-c) <= c + 0.35;
+      else if (shape === 'plus') on = Math.abs(r-c) < 1 || Math.abs(q-c) < 1;
+      else if (shape === 'full') on = true;
+      else on = r === 0 || q === 0 || r === n-1 || q === n-1;
+      if (on) m.push([q, r]);
+    }
+    return m;
+  }
+  const prevs = [];
+  function buildPresets() {
+    const box = $('presets'); box.innerHTML = ''; prevs.length = 0;
+    for (const P of PRESETS) {
+      const b = document.createElement('button'); b.dataset.k = P.k;
+      const cv2 = document.createElement('canvas'), dp = devicePixelRatio || 1; cv2.width = 56*dp; cv2.height = 56*dp;
+      b.appendChild(cv2); const sm = document.createElement('small'); sm.textContent = P.name; b.appendChild(sm);
+      b.addEventListener('click', () => applyPreset(P));
+      box.appendChild(b);
+      const ps = S.presets[P.k], sz = ps.size.cubes, pal = ps.pal.cubes;
+      const n = Math.max(4, Math.min(12, Math.round(84/sz))), cell = 52/n, pts = shapeMask(P.shape, n);
+      let colOf;
+      if (pal === 'liuku') colOf = () => null;
+      else if (pal === 'kuva' && (ps.art ? artImg[ps.art] : photoImg)) {
+        const pim = ps.art ? artImg[ps.art] : photoImg;   // taide-esiasetuksella oma kuva
+        const oc = document.createElement('canvas'); oc.width = n; oc.height = n; const o2 = oc.getContext('2d');
+        const iw = pim.width, ih = pim.height, m = Math.min(iw, ih); o2.drawImage(pim, (iw-m)/2, (ih-m)/2, m, m, 0, 0, n, n);
+        const d = o2.getImageData(0, 0, n, n).data; colOf = (q, r) => { const k = (r*n+q)*4; return `rgb(${d[k]},${d[k+1]},${d[k+2]})`; };
+      } else {
+        const rgb = (pal === 'oma' || !PALETTES[pal]) ? variants(hexRgb(ps.custom.cubes)) : PALETTES[pal].map(hexRgb);
+        colOf = () => { const c = rgb[Math.random()*rgb.length|0]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
+      }
+      prevs.push({P, ps, b, g: cv2.getContext('2d'), dp, n, cell, pts: pts.map(([q, r]) => ({q, r, col: colOf(q, r), j: Math.random()*2-1, t0:0, sx:0, sy:0}))});
+    }
+    markPreset();
+  }
+  function markPreset() { for (const p of prevs) p.b.classList.toggle('on', S.preset === p.P.k); }
+  // jokaisella esiasetuksella on omat asetuksensa (kaikki paitsi ääni ja värinä)
+  function presetDefault(P) {
+    const o = {}; for (const k of PK) o[k] = cp(DEFAULTS[k]);
+    const v = P.v;
+    o.pal.cubes = v.pal; o.size.cubes = v.size; o.retSec = v.retSec; o.retOn = true; o.clockMode = v.clockMode;
+    o.dripSec = v.dripSec; o.magnet = v.magnet; o.invert = v.invert; o.src = 'clock'; o.clock = true;
+    if (v.text) { o.src = 'text'; o.clock = false; o.text = v.text; }   // Moi/HI!: teksti, muissa kello
+    if (v.empty) { o.src = 'empty'; o.clock = false; o.text = ''; }   // Helmi: koko ruutu kuvan väreissä
+    if (v.custom) o.custom.cubes = v.custom;
+    o.art = v.art || null; if (v.gravity) o.gravity = true; if (v.sink) { o.sinkOn = true; o.magnet = false; }
+    if (P.k === 'plus') { o.night = true; o.nightDim = 75; }
+    return o;
+  }
+  if (!S.presets) { S.presets = {}; for (const P of PRESETS) S.presets[P.k] = P.k === S.preset ? snap() : presetDefault(P); }
+  for (const P of PRESETS) if (!S.presets[P.k]) S.presets[P.k] = presetDefault(P);
+  for (const k in S.presets) if (S.presets[k].size && S.presets[k].size.cubes < 12) S.presets[k].size.cubes = 12;
+  if (S.size.cubes < 12) S.size.cubes = 12;
+  if (!S.drip5) {   // kertaluonteinen päivitys: vanha oletus 10 s → uusi oletus 5 s (muut tallennetut arvot säilyvät)
+    if (S.dripSec === 10) S.dripSec = 5;
+    if (S.presets.x && S.presets.x.dripSec === 10) S.presets.x.dripSec = 5;
+    S.drip5 = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.presets3) {   // kertaluonteinen päivitys: esiasetukset Embody Apps -taulukon mukaisiksi (14.11.)
+    for (const P of PRESETS) if (P.k !== 'plus') S.presets[P.k] = presetDefault(P);
+    if (S.preset !== 'plus' && S.presets[S.preset]) { const v = JSON.parse(JSON.stringify(S.presets[S.preset])); for (const k of PK) if (v[k] !== undefined) S[k] = v[k]; }
+    S.presets3 = true; S.helloMig = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.moiYou) {   // kertaluonteinen päivitys: Moi-esiasetuksen oletusteksti MOI SINÄ / HI YOU
+    const h = helloFor(S.lang);
+    if (S.presets.sq && isHello(S.presets.sq.text)) S.presets.sq.text = h;
+    if (S.preset === 'sq' && isHello(S.text)) S.text = h;
+    S.moiYou = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.moiInv) {   // kertaluonteinen päivitys: Moi-esiasetus inversiona (teksti aukkona)
+    if (S.presets.sq) S.presets.sq.invert = true;
+    if (S.preset === 'sq') S.invert = true;
+    S.moiInv = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.helloMig) {   // kertaluonteinen päivitys: entinen Liuku-esiasetus näyttää nyt tekstin Moi/HI! kellon sijaan
+    const ps = S.presets.sq;
+    if (ps && ps.src === 'clock') { ps.src = 'text'; ps.clock = false; ps.text = HELLO; }
+    if (S.preset === 'sq' && S.src === 'clock') { S.src = 'text'; S.clock = false; S.text = HELLO; }
+    S.helloMig = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.clockMig) {   // kertaluonteinen: oletuksena Pieni-fontti ja Numero vaihtuu
+    for (const k in S.presets) if (S.presets[k]) { S.presets[k].clockMode = 'digit'; S.presets[k].font = 'pieni'; }
+    S.clockMode = 'digit'; S.font = 'pieni'; S.clockMig = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.shiftMig) {   // kertaluonteinen: väri vaihtuu oletuksena kaikissa (kuvissa se ei vaikuta)
+    for (const k in S.presets) if (S.presets[k]) S.presets[k].colorShift = true;
+    S.colorShift = true; S.shiftMig = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  if (!S.gravMig) {   // kertaluonteinen: yhdessäkään esiasetuksessa ei ole painovoimaa oletuksena
+    for (const k in S.presets) if (S.presets[k]) S.presets[k].gravity = false;
+    S.gravity = false; S.gravMig = true; try { localStorage.setItem("hiekkalaatikko-v2", JSON.stringify(S)); } catch(_) {}
+  }
+  presetsReady = true;
+  function applyPreset(P) {
+    if (isPro) $('adv').open = true;
+    if (S.preset === P.k) return;
+    S.presets[S.preset] = snap();
+    S.preset = P.k;
+    const v = JSON.parse(JSON.stringify(S.presets[P.k]));
+    for (const k of PK) if (v[k] !== undefined) S[k] = (typeof v[k] === 'object' && v[k] && !Array.isArray(v[k])) ? {...S[k], ...v[k]} : v[k];
+    save(); applyMode(true); applyNight(); refreshSheet(); lastClock = '';
+    if (S.night) flash('Yötila päällä — napauta ruutua nähdäksesi painikkeet');
+  }
+  // esikatselu: aktiivinen värillinen, muut harmaita; kuutio hyppää välillä ja palaa esiasetuksen tahdissa
+  function drawPrevs(t) {
+    if (!sheet.classList.contains('open')) return;
+    for (const p of prevs) {
+      const g = p.g, on = S.preset === p.P.k, T = Math.max(150, (p.ps.retOn === false ? 2 : p.ps.retSec)*1000);
+      g.setTransform(p.dp, 0, 0, p.dp, 0, 0); g.clearRect(0, 0, 56, 56);
+      if (Math.random() < 0.03) { const q = p.pts[Math.random()*p.pts.length|0]; q.sx = (Math.random()-.5)*p.cell*2.2; q.sy = (Math.random()-.5)*p.cell*2.2; q.t0 = t; }
+      const o = (56 - p.n*p.cell)/2;
+      for (const q of p.pts) {
+        let e = q.t0 ? Math.min(1, (t - q.t0)/T) : 1; e = e*e*e*(e*(e*6-15)+10);
+        const dx = q.sx*(1-e), dy = q.sy*(1-e);
+        g.fillStyle = on ? (q.col || `rgb(${fadeRgb(q.j).join(',')})`) : 'rgba(255,255,255,.16)';
+        g.fillRect(o + q.q*p.cell + dx + .5, o + q.r*p.cell + dy + .5, p.cell - 1.2, p.cell - 1.2);
+      }
+    }
+  }
+  (function pl(t) { drawPrevs(t); requestAnimationFrame(pl); })(performance.now());
+  buildPresets();
+  document.querySelectorAll('#sndSeg button').forEach(b => b.addEventListener('click', () => { S.sound = b.dataset.v === '1'; save(); initAudio(); if (actx) { if (S.sound) actx.resume(); else { if (noiseGain) noiseGain.gain.value = 0; actx.suspend(); } } refreshSheet(); }));
+  document.querySelectorAll('#vibSeg button').forEach(b => b.addEventListener('click', () => { S.vibe = b.dataset.v === '1'; save(); refreshSheet(); if (S.vibe) buzz(20, true); }));
+  document.querySelectorAll('#moveSeg button').forEach(b => b.addEventListener('click', () => {
+    S.moveSnd = b.dataset.m; save(); refreshSheet();
+    if (noiseGain && S.moveSnd !== 'hiss') noiseGain.gain.setTargetAtTime(0, actx.currentTime, .02);
+    if (S.moveSnd === 'crackle' && S.sound) { initAudio(); for (let q=0;q<5;q++) crackle(.12); }   // esikuuntelu
+  }));
+  $('sndTog').addEventListener('click', () => {
+    S.sound = !S.sound; save(); refreshSheet();
+    initAudio(); if (actx && actx.state === 'suspended') actx.resume();
+  });
+
+  // ================= Piirto =================
+  const dl = $('draw'), dc = $('dc'), dctx = dc.getContext('2d'), dRectEl = $('dRect');
+  let dErase = false, dRect = null, dPaint = false, dLast = null;
+  function openDraw() {
+    sheet.classList.remove('open');
+    const W = innerWidth, H = innerHeight, full = true, ks = S.size.cubes;
+    const rw = W*(full ? 1 : .86), rh = H*(full ? 1 : .5);
+    dRect = {x:(W-rw)/2, y:(H-rh)/2, w:rw, h:rh};
+    dc.width = W; dc.height = H;
+    Object.assign(dRectEl.style, {left:dRect.x+'px', top:dRect.y+'px', width:rw+'px', height:rh+'px'});
+    dl.style.backgroundImage = 'radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.6px)';
+    dl.style.backgroundSize = ks + 'px ' + ks + 'px'; dl.style.backgroundPosition = (dRect.x - ks/2) + 'px ' + (dRect.y - ks/2) + 'px';
+    dErase = false; $('dErase').classList.remove('on');
+    dctx.clearRect(0, 0, W, H);
+    if (S.draw) {   // aiempi piirros muokattavaksi
+      const D = S.draw, cw = dRect.w/D.w, ch = dRect.h/D.h; dctx.fillStyle = '#d9c39a';
+      for (let r=0;r<D.h;r++) for (let c=0;c<D.w;c++) if (D.bits.charCodeAt(r*D.w+c) === 49) dctx.fillRect(dRect.x + c*cw, dRect.y + r*ch, cw+.5, ch+.5);
+    }
+    dl.style.display = 'block';
+  }
+  function dPoint(e) { const r = dc.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function dStroke(a, b) {
+    dctx.globalCompositeOperation = dErase ? 'destination-out' : 'source-over';
+    dctx.strokeStyle = dctx.fillStyle = '#d9c39a'; dctx.lineCap = dctx.lineJoin = 'round'; dctx.lineWidth = S.size.cubes*1.9;
+    if (a) { dctx.beginPath(); dctx.moveTo(a[0], a[1]); dctx.lineTo(b[0], b[1]); dctx.stroke(); }
+    else { dctx.beginPath(); dctx.arc(b[0], b[1], dctx.lineWidth/2, 0, 6.2832); dctx.fill(); }
+  }
+  dc.addEventListener('pointerdown', e => { dPaint = true; dc.setPointerCapture(e.pointerId); dLast = dPoint(e); dStroke(null, dLast); });
+  dc.addEventListener('pointermove', e => { if (!dPaint) return; const p = dPoint(e); dStroke(dLast, p); dLast = p; });
+  const dEnd = () => { dPaint = false; };
+  dc.addEventListener('pointerup', dEnd); dc.addEventListener('pointercancel', dEnd);
+  $('dErase').addEventListener('click', () => { dErase = !dErase; $('dErase').classList.toggle('on', dErase); });
+  $('dClear').addEventListener('click', () => dctx.clearRect(0, 0, dc.width, dc.height));
+  $('dDone').addEventListener('click', () => {
+    const w = 64, h = Math.max(8, Math.round(64*dRect.h/dRect.w));
+    const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
+    const o = oc.getContext('2d', {willReadFrequently:true});
+    o.drawImage(dc, dRect.x, dRect.y, dRect.w, dRect.h, 0, 0, w, h);
+    const d = o.getImageData(0, 0, w, h).data; let bits = '', n = 0;
+    for (let i=0;i<w*h;i++) { const on = d[i*4+3] > 90; bits += on ? '1' : '0'; if (on) n++; }
+    dl.style.display = 'none';
+    if (n > 0) { S.draw = {w, h, bits}; S.src = 'draw'; S.clock = false; save(); if (isCubes()) rehome(); }
+    else flash('Piirros oli tyhjä, kuvio ei muuttunut');
+    refreshSheet(); sheet.classList.add('open');
+  });
+  if (S.photo) { const im = new Image(); im.onload = () => { photoImg = im; if (isCubes() && S.pal.cubes === 'kuva') rehome(); }; im.src = S.photo; }
+
+  let rw = innerWidth, rh = innerHeight;
+  addEventListener('resize', () => {
+    if (Math.abs(innerWidth-rw) > 40 || Math.abs(innerHeight-rh) > 120) { rw = innerWidth; rh = innerHeight; applyMode(false); }
+  });
+
+  // ================= Silmukka (kiinteä 60 Hz) =================
+  applyMode(true); applyNight();
+  let last = performance.now(), acc = 0, lastFade = 0, forceDraw = false;
+  function colIter() { return loadLvl === 0 ? 6 : loadLvl === 1 ? 4 : 3; }
+  // yksittäinen virhe ei saa pysäyttää silmukkaa (muuten appi näyttää jäätyneeltä)
+  let loopErrs = 0;
+  const PERF = {n:0, ms:0, max:0, t0:0};
+  // mukautuva kuorma: jos ruudut hidastuvat (esim. puhelin lämpenee), törmäyslaskentaa kevennetään
+  let frameEma = 16.7, frameT = 0, loadLvl = 0, loadT = 0;
+  function loop(t) {
+    const a = performance.now();
+    if (frameT && idleN <= 21) { const iv = Math.min(100, t - frameT); frameEma += (iv - frameEma)*0.05; }
+    frameT = t;
+    if (t - loadT > 1500) {   // tarkistus puolentoista sekunnin välein, viiveellä ettei heilu
+      if (frameEma > 19.5 && loadLvl < 2) { loadLvl++; loadT = t; }
+      else if (frameEma < 17.2 && loadLvl > 0) { loadLvl--; loadT = t; }
+    }
+    try { loopBody(t); }
+    catch (e) { if (loopErrs++ < 20) console.error('nontimer loop error: ' + (e && e.stack || e)); }
+    const d = performance.now() - a;
+    if (idleN <= 21) { PERF.n++; PERF.ms += d; if (d > PERF.max) PERF.max = d; }
+    if (t - PERF.t0 > 5000) { if (PERF.n) console.log(`nontimer perf: ${PERF.n} aktiivista ruutua, JS ${(PERF.ms/PERF.n).toFixed(1)} ms/ruutu, max ${PERF.max.toFixed(0)} ms, kuutioita ${kN}`); PERF.n = 0; PERF.ms = 0; PERF.max = 0; PERF.t0 = t; }
+    requestAnimationFrame(loop);
+  }
+  function loopBody(t) {
+    acc += Math.min(100, t - last); last = t;
+    keyTilt();
+    if (isCubes() && S.src === 'text' && textWords().length > 1 && !fingers.length) {   // sana kerrallaan
+      if (!wordT) wordT = t; else if (t - wordT > WORD_MS) { wordT = t; wordChange(); }
+    } else wordT = 0;
+    if (S.clock && isCubes()) {
+      {   // kaikki tavat: vaihto valmistuu täsmälleen minuutin vaihtuessa
+        const nowMs = Date.now(), msLeft = 60000 - (nowMs % 60000), D = (S.dripSec || 60)*1000;
+        const cur = clockStr(); clockOff = msLeft + 50; const nxt = clockStr(); clockOff = 0;
+        const target = msLeft <= D ? nxt : cur;
+        if (target !== lastClock) {
+          if (target === nxt) { clockOff = msLeft + 50; clockChange(Math.max(200, msLeft - (S.clockMode === 'drip' ? 1000 : 200))); clockOff = 0; }
+          else clockChange(400);
+          lastClock = target;
+        }
+      }
+    }
+    if (DR.on) dripTick(performance.now());
+    if ((S.pal.cubes === 'liuku' || shiftOn()) && isCubes() && !emojiMode && t - lastFade > 500) { lastFade = t; cubeRecolor(); forceDraw = true; }
+    // akun säästö: kun mikään ei liiku, ei lasketa eikä piirretä
+    if (fingers.length || DR.on) idleN = 0;
+    if (isCubes() && idleN > 20) { if (idleN === 21) { if (noiseGain) noiseGain.gain.setTargetAtTime(0, actx.currentTime, .03); hapContinuous(0); idleN++; } acc = 0; if (forceDraw) { forceDraw = false; cubeRender(); } return; }
+    let n = 0;
+    if (acc > 34) acc = 34;   // hidas ruutu: ei kasata rästiin laskentaa (se hidastaisi lisää ja lämmittäisi)
+    while (acc >= 16.67 && n < 2) {
+      gx += (tgx-gx)*0.12; gy += (tgy-gy)*0.12;
+      if (isCubes()) cubeStep(); else pixStep();
+      acc -= 16.67; n++;
+    }
+    if (n) {
+      // rauhallinen paluu (ei sormia, ei mitään ilmassa): piirretään joka toinen ruutu = 30 fps, laskenta jatkuu 60 Hz
+      const calm = isCubes() && !fingers.length && t - lastUser > 800 && !kAir && !DR.on && !ghosts.length;
+      if (calm && (rFrame++ & 1)) forceDraw = false;
+      else if (isCubes()) cubeRender(); else pixRender();
+      feel();
+      if (isCubes()) { if (kBusy) idleN = 0; else idleN++; }
+      // ruudun tärähdys: kolina pientä, kova ravistus isoa
+      const el = isCubes() ? kcv : cv;
+      shakeAmp *= 0.86;
+      el.style.transform = '';   // ruudun tärähdys pois
+    }
+  }
+  translateAll();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

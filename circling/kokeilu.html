@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ilmoittaudu – circling.fi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tyyli.css">
+<style>
+  /* Kokeilusivun omat lisäykset */
+  .sivu{display:block}
+  button.ilta{width:100%;font:inherit;text-align:left;cursor:pointer;background:#fff}
+  button.ilta[disabled]{cursor:default;opacity:.6}
+  .lomake{display:none;margin:-6px 0 8px;padding:22px;border:1px solid var(--turkoosi-reuna);border-top:0;border-radius:0 0 var(--pyoristys) var(--pyoristys);background:#fff}
+  .lomake.auki{display:block}
+  .lomake label{display:block;font-weight:600;font-size:.92rem;margin:12px 0 4px}
+  .lomake input,.lomake textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--turkoosi-reuna);border-radius:10px;background:#fff;color:var(--teksti)}
+  .lomake input:focus,.lomake textarea:focus{outline:2px solid var(--turkoosi);border-color:transparent}
+  .lomake textarea{min-height:80px;resize:vertical}
+  .lomake .pieni{font-size:.82rem;color:var(--harmaa);margin-top:10px}
+  .lomake button[type=submit]{margin-top:16px;border:0;cursor:pointer;font:inherit}
+  .lomake button[type=submit][disabled]{opacity:.6;cursor:wait}
+  .lomake label.valinta{display:flex;align-items:center;gap:10px;font-weight:400;margin-top:14px;cursor:pointer}
+  .lomake label.valinta input{width:18px;height:18px;margin:0;accent-color:var(--turkoosi)}
+  .ansa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .viesti{padding:14px 16px;border-radius:12px;margin-top:14px;font-weight:600}
+  .viesti.ok{background:var(--turkoosi-vaalea);color:var(--turkoosi-tumma)}
+  .viesti.virhe{background:#fbe4e6;color:#9b1c27}
+  .ilmo-ylos{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .esikatselu{background:var(--vastavari-vaalea);border-radius:12px;padding:10px 14px;font-size:.9rem;margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="index.html">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="17" fill="none" stroke="var(--turkoosi)" stroke-width="2.4"/>
+        <circle cx="20" cy="20" r="3.8" fill="var(--turkoosi)"/>
+      </svg>circling.fi</a>
+    <nav style="display:flex"><a href="index.html">← Etusivulle</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="sivu">
+    <h2 style="margin-top:0">Ilmoittaudu</h2>
+    <p>Valitse ilta, niin ilmoittautumislomake aukeaa. Saat vahvistuksen sähköpostiisi, ja päivää ennen iltaa lähetämme muistutuksen.</p>
+    <div id="esikatselu" class="esikatselu" hidden>Esikatselutila: illat ovat esimerkkejä, eikä lomake lähetä mitään. Oikeat illat näkyvät, kun sivu on julkaistu ja osoite on lisätty koodiin.</div>
+    <div id="illat"><p class="ei-iltoja">Haetaan iltoja…</p></div>
+    <p class="pieni" style="color:var(--harmaa);font-size:.88rem;margin-top:24px">Lipun voit ostaa <a href="https://holvi.com/shop/kehoyhteys/section/yhteyspiiri-circling/">Holvista</a>. Ilmoittautumistietoja käytetään vain iltojen järjestämiseen. <a href="index.html#tietosuoja">Tietosuoja</a></p>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>© circling.fi · info@circling.fi</p></div></footer>
+
+<script>
+/* ============================================================
+   LIITÄ TÄHÄN Apps Scriptin verkkosovelluksen osoite (päättyy /exec)
+   ============================================================ */
+const API = "https://script.google.com/macros/s/AKfycbzGG7caVjecci-FuFoGb_Ma7Yg5zoANHIwGbf28SNszYkrPQsdGZbqh54D73rpFZDE5ng/exec";
+
+const KUUT = ["tammi","helmi","maalis","huhti","touko","kesä","heinä","elo","syys","loka","marras","joulu"];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ESIMERKIT = [
+  {id:"e1",paiva:30,kuukausi:11,viikonpaiva:"ma",alku:"18.15",loppu:"21.15",otsikko:"Yhteyspiiri – circling-ilta",tyyppi:"tavallinen",paikka:"Galleria Sitruunapuu, Sammatintie 2, Helsinki",paikkoja:20,vapaana:12},
+  {id:"e2",paiva:14,kuukausi:12,viikonpaiva:"ma",alku:"18.15",loppu:"21.15",otsikko:"Circling – avoin ilta",tyyppi:"avoin",paikka:"Galleria Sitruunapuu, Sammatintie 2, Helsinki",paikkoja:20,vapaana:3},
+  {id:"e3",paiva:21,kuukausi:12,viikonpaiva:"ma",alku:"18.15",loppu:"21.15",otsikko:"Yhteyspiiri – pikkujoulut",tyyppi:"joulu",paikka:"Galleria Sitruunapuu, Sammatintie 2, Helsinki",paikkoja:20,vapaana:0}
+];
+let esikatselu = false;
+
+function kortti(e){
+  const luokka = e.tyyppi === "avoin" ? " avoin" : e.tyyppi === "joulu" ? " joulu" : "";
+  const taynna = e.vapaana === 0;
+  const tila = taynna ? "Täynnä" : (e.vapaana != null && e.vapaana <= 5 ? `${e.vapaana} paikkaa jäljellä` : "Ilmoittaudu");
+  return `<div class="ilmo">
+    <button class="ilta${luokka}" data-id="${esc(e.id)}" ${taynna ? "disabled" : ""} aria-expanded="false">
+      <div class="pvm"><div class="d">${e.paiva}</div><div class="m">${KUUT[e.kuukausi-1]}</div></div>
+      <div><h3>${esc(e.otsikko)}</h3><div class="meta">${esc(e.viikonpaiva)} klo ${esc(e.alku)}${e.loppu ? "–"+esc(e.loppu) : ""} · ${esc(e.paikka)}</div></div>
+      <span class="tila${taynna ? " taynna" : ""}">${esc(tila)}</span>
+    </button>
+    <form class="lomake" data-id="${esc(e.id)}" novalidate>
+      <label>Nimi (etunimi riittää)<input name="nimi" autocomplete="given-name" required maxlength="100"></label>
+      <label>Sähköposti (vapaaehtoinen)<input name="email" type="email" autocomplete="email" maxlength="200"></label>
+      <label>Viesti ohjaajille (vapaaehtoinen)<textarea name="viesti" maxlength="1000"></textarea></label>
+      <label class="valinta"><input type="checkbox" name="muistutus" checked> Lähetä minulle muistutus päivää ennen (vaatii sähköpostin)</label>
+      <div class="ansa" aria-hidden="true"><label>Älä täytä<input name="sivusto" tabindex="-1" autocomplete="off"></label></div>
+      <button type="submit" class="nappi">Ilmoittaudu iltaan</button>
+      <p class="pieni">Jos annat sähköpostin, saat vahvistuksen ja voit perua paikkasi viestin linkistä. Ilman sähköpostia peruutukset: WhatsApp tai info@circling.fi.</p>
+      <div class="tulos"></div>
+    </form>
+  </div>`;
+}
+
+const ILLAT = {};
+const pad = n => String(n).padStart(2,"0");
+function ajat(e){
+  const [ah,am] = e.alku.split(/[.:]/), [lh,lm] = (e.loppu || e.alku).split(/[.:]/);
+  const p = `${e.vuosi}${pad(e.kuukausi)}${pad(e.paiva)}`;
+  return {alku:`${p}T${pad(ah)}${pad(am||0)}00`, loppu:`${p}T${pad(lh)}${pad(lm||0)}00`};
+}
+function googleLinkki(e){
+  const t = ajat(e);
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(e.otsikko)+
+    "&dates="+t.alku+"/"+t.loppu+"&ctz=Europe/Helsinki&location="+encodeURIComponent(e.paikka);
+}
+function icsTiedosto(e){
+  const t = ajat(e), es = s => String(s).replace(/([,;\\])/g,"\\$1");
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//circling.fi//FI","BEGIN:VEVENT",
+    "UID:"+e.id+"@circling.fi","DTSTAMP:"+new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z",
+    "DTSTART;TZID=Europe/Helsinki:"+t.alku,"DTEND;TZID=Europe/Helsinki:"+t.loppu,
+    "SUMMARY:"+es(e.otsikko),"LOCATION:"+es(e.paikka),"END:VEVENT","END:VCALENDAR"].join("\r\n");
+  return URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+}
+function kalenteriNapit(e){
+  return `<div style="margin-top:12px"><a class="nappi" href="${googleLinkki(e)}" target="_blank" rel="noopener">Lisää Google-kalenteriin</a>
+    <a class="nappi2" href="${icsTiedosto(e)}" download="circling-ilta.ics">Apple / Outlook</a></div>`;
+}
+
+function piirra(illat){
+  illat.forEach(e => ILLAT[e.id] = e);
+  const el = document.getElementById("illat");
+  if(!illat.length){ el.innerHTML = '<p class="ei-iltoja">Uusia iltoja tulossa pian.</p>'; return; }
+  el.innerHTML = `<div class="illat">${illat.map(kortti).join("")}</div>`;
+  el.querySelectorAll("button.ilta").forEach(b => b.addEventListener("click", () => {
+    const f = b.nextElementSibling, auki = !f.classList.contains("auki");
+    el.querySelectorAll(".lomake.auki").forEach(x => { x.classList.remove("auki"); x.previousElementSibling.setAttribute("aria-expanded","false"); });
+    if(auki){ f.classList.add("auki"); b.setAttribute("aria-expanded","true"); f.querySelector("input").focus(); }
+  }));
+  el.querySelectorAll("form.lomake").forEach(f => f.addEventListener("submit", laheta));
+}
+
+async function laheta(ev){
+  ev.preventDefault();
+  const f = ev.target, tulos = f.querySelector(".tulos"), nappi = f.querySelector("button[type=submit]");
+  const data = Object.fromEntries(new FormData(f)); data.ilta = f.dataset.id; data.muistutus = f.muistutus.checked;
+  if(!data.nimi.trim()){ return nayta(tulos, false, "Kirjoita nimesi."); }
+  if(data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())){ return nayta(tulos, false, "Tarkista sähköpostiosoite."); }
+  nappi.disabled = true; nappi.textContent = "Lähetetään…"; tulos.innerHTML = "";
+  try{
+    let vastaus;
+    if(esikatselu){ await new Promise(r => setTimeout(r, 700)); vastaus = {ok:true}; }
+    else {
+      const r = await fetch(API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(data)});
+      vastaus = await r.json();
+    }
+    if(vastaus.ok){
+      f.querySelectorAll("label, button[type=submit], .pieni").forEach(x => x.style.display = "none");
+      nayta(tulos, true, vastaus.jo ? "Olet jo ilmoittautunut tähän iltaan. Tervetuloa!" : `Kiitos, ${data.nimi.trim().split(" ")[0]}! Ilmoittautuminen on vastaanotettu${data.email.trim() ? ", ja vahvistus on matkalla sähköpostiisi" : ""}.`);
+      if(ILLAT[data.ilta]) tulos.insertAdjacentHTML("beforeend", kalenteriNapit(ILLAT[data.ilta]));
+    } else {
+      nayta(tulos, false, vastaus.virhe || "Jokin meni pieleen. Yritä uudelleen.");
+      nappi.disabled = false; nappi.textContent = "Ilmoittaudu iltaan";
+    }
+  }catch(err){
+    nayta(tulos, false, "Yhteys ei toiminut. Yritä hetken päästä uudelleen tai kirjoita: info@circling.fi");
+    nappi.disabled = false; nappi.textContent = "Ilmoittaudu iltaan";
+  }
+}
+function nayta(el, ok, teksti){ el.innerHTML = `<div class="viesti ${ok ? "ok" : "virhe"}">${esc(teksti)}</div>`; }
+
+async function lataa(){
+  if(!API){ esikatselu = true; }
+  else {
+    try{
+      const r = await fetch(API);
+      const d = await r.json();
+      if(d.ok){ piirra(d.illat); return; }
+      throw new Error("vastaus");
+    }catch(e){
+      document.getElementById("illat").innerHTML = '<p class="ei-iltoja">Iltojen haku ei onnistunut juuri nyt. Päivitä sivu hetken päästä tai katso illat <a href="index.html#tulevat-illat">täältä</a>.</p>';
+      return;
+    }
+  }
+  document.getElementById("esikatselu").hidden = false;
+  piirra(ESIMERKIT);
+}
+lataa();
+</script>
+</body>
+</html>
