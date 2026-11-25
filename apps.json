@@ -224,6 +224,23 @@
     "haptisynth",
     "fidgettime"
    ]
+  },
+  {
+   "id": "dailyinquiry",
+   "name": "Daily Inquiry",
+   "appStoreId": "6838218581",
+   "group": "hyvinvointi",
+   "released": true,
+   "icon": "https://embodyapps.fi/icons/daily-inquiry.webp",
+   "tagline": {
+    "fi": "Yksi syvä kysymys joka päivä",
+    "en": "One deep question a day"
+   },
+   "promotes": [
+    "affirmationoflife",
+    "balanceoflife",
+    "triggersglimmers"
+   ]
   }
  ]
 }

@@ -15,7 +15,8 @@
 <meta property="og:site_name" content="Embody Apps">
 <meta property="og:title" content="Daily Inquiry – yksi syvä kysymys joka päivä (iPhone)">
 <meta property="og:description" content="Joka päivä yksi huolella valittu kysymys itsetunnosta, ihmissuhteista, työstä ja elämän syvemmistä puolista. Vastaa ja katso myöhemmin, mikä on muuttunut. Ei tiliä, ei mainoksia, ei seurantaa.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://embodyapps.fi/daily-inquiry/img/fi-kysymys.webp">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Daily Inquiry", "applicationCategory": "LifestyleApplication", "operatingSystem": "iOS", "description": "Joka päivä yksi huolella valittu kysymys itsetunnosta, ihmissuhteista, työstä ja elämän syvemmistä puolista. Vastaa ja katso myöhemmin, mikä on muuttunut. Ei tiliä, ei mainoksia, ei seurantaa.", "installUrl": "https://apps.apple.com/app/id6838218581", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Embody Apps", "url": "https://embodyapps.fi/"}}
 </script>
@@ -155,6 +156,7 @@
   .more img{width:44px;height:44px;border-radius:10px;flex:none}
   .more b{display:block;font-size:16px}
   .more span{font-size:14px;color:var(--muted)}
+.shot.frame{background:none;box-shadow:none;border-radius:0}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Miten saan päivittäisen muistutuksen?", "acceptedAnswer": {"@type": "Answer", "text": "⚙ → Tietoja → Muistuta joka päivä. Se tulee kerran päivässä satunnaiseen aikaan klo 9–21, ja ilmoituksessa on päivän kysymys."}}, {"@type": "Question", "name": "Miten palautan Pron uuteen puhelimeen?", "acceptedAnswer": {"@type": "Answer", "text": "⚙ → Tietoja → Palauta ostot, samalla Apple ID:llä kuin ostaessa."}}, {"@type": "Question", "name": "Miten siirrän vastaukset uuteen puhelimeen?", "acceptedAnswer": {"@type": "Answer", "text": "Ne siirtyvät iPhonen iCloud-varmuuskopion mukana. Voit myös tallentaa varmuuskopiotiedoston kohdasta ⚙ → Tietoja ja palauttaa sen uudessa puhelimessa."}}, {"@type": "Question", "name": "Miten peruutan tilauksen?", "acceptedAnswer": {"@type": "Answer", "text": "⚙ → Tietoja → Hallitse tilausta, tai iPhonen Asetukset → oma nimi → Tilaukset."}}]}
@@ -179,31 +181,47 @@ body.has-wl .lang{top:56px}
 
   <div class="hero">
     <div>
-      <div class="app-id"><div><b>Daily Inquiry</b><span>Yksi syvä kysymys joka päivä</span></div></div>
+      <div class="app-id"><img src="/icons/daily-inquiry.webp" alt="" width="64" height="64"><div><b>Daily Inquiry</b><span>Yksi syvä kysymys joka päivä</span></div></div>
       <h1>Yksi kysymys päivässä. Oma vastauksesi.</h1>
       <p class="lede">Daily Inquiry antaa joka päivä yhden huolella valitun kysymyksen itsetunnosta, ihmissuhteista, työstä tai elämän syvemmistä puolista. Lue se rauhassa, kirjoita mitä nousee ja laske puhelin kädestä.</p>
       <div class="cta">
         <a class="store-btn" href="https://apps.apple.com/app/id6838218581">Lataa App Storesta</a>
       </div>
     </div>
+    <img class="shot frame" src="/daily-inquiry/img/fi-kysymys.webp" alt="Tänään-sivu ja yksi kysymys" width="600" height="1304">
   </div>
 
-  <section class="wrap">
-    <div class="eyebrow">Näin se toimii</div>
-    <h2>Tänään yksi kysymys</h2>
-    <ul class="ticks"><li>Tänään-sivulla yksi kysymys, ei mitään selattavaa</li><li>Vastaa omin sanoin; sen jälkeen näet vain kysymyksen ja vastauksesi</li><li>Lempeä muistutus kerran päivässä satunnaiseen aikaan klo 9–21, kysymys näkyy ilmoituksessa</li><li>Widgetit kotinäytölle ja lukitusnäytölle</li></ul>
+  <section>
+    <div class="split rev">
+      <img class="shot frame" src="/daily-inquiry/img/fi-vastattu.webp" alt="Kysymys ja vastauksesi" width="600" height="1304" loading="lazy">
+      <div>
+        <div class="eyebrow">Näin se toimii</div>
+        <h2>Tänään yksi kysymys</h2>
+        <ul class="ticks"><li>Tänään-sivulla yksi kysymys, ei mitään selattavaa</li><li>Vastaa omin sanoin; sen jälkeen näet vain kysymyksen ja vastauksesi</li><li>Lempeä muistutus kerran päivässä satunnaiseen aikaan klo 9–21, kysymys näkyy ilmoituksessa</li><li>Widgetit kotinäytölle ja lukitusnäytölle</li></ul>
+      </div>
+    </div>
   </section>
 
-  <section class="wrap">
-    <div class="eyebrow">Elämänpyörä</div>
-    <h2>Valitse alueet, joita haluat tutkia</h2>
-    <ul class="ticks"><li>Kysymykset on jaettu kahdeksaan elämänalueeseen, keskellä Minä</li><li>Napauta pyörää ja valitse, miltä alueilta kysymykset tulevat</li><li>Vastaukset-sivulla on kaikki, mitä olet kirjoittanut</li></ul>
+  <section>
+    <div class="split">
+      <div>
+        <div class="eyebrow">Elämänpyörä</div>
+        <h2>Valitse alueet, joita haluat tutkia</h2>
+        <ul class="ticks"><li>Kysymykset on jaettu kahdeksaan elämänalueeseen, keskellä Minä</li><li>Napauta pyörää ja valitse, miltä alueilta kysymykset tulevat</li><li>Vastaukset-sivulla on kaikki, mitä olet kirjoittanut</li></ul>
+      </div>
+      <img class="shot frame" src="/daily-inquiry/img/fi-elamanpyora.webp" alt="Elämänpyörä: kahdeksan aluetta ja keskellä Minä" width="600" height="1304" loading="lazy">
+    </div>
   </section>
 
-  <section class="wrap">
-    <div class="eyebrow">Silloin ja nyt</div>
-    <h2>Näe, mikä on muuttunut</h2>
-    <ul class="ticks"><li>Vastaa samaan kysymykseen myöhemmin uudelleen</li><li>Silloin ja nyt näyttää vastauksesi rinnakkain</li><li>Hiljainen tapa huomata oma kasvu</li></ul>
+  <section>
+    <div class="split rev">
+      <img class="shot frame" src="/daily-inquiry/img/fi-silloin-ja-nyt.webp" alt="Silloin ja nyt: kaksi vastausta samaan kysymykseen" width="600" height="1304" loading="lazy">
+      <div>
+        <div class="eyebrow">Silloin ja nyt</div>
+        <h2>Näe, mikä on muuttunut</h2>
+        <ul class="ticks"><li>Vastaa samaan kysymykseen myöhemmin uudelleen</li><li>Silloin ja nyt näyttää vastauksesi rinnakkain</li><li>Hiljainen tapa huomata oma kasvu</li></ul>
+      </div>
+    </div>
   </section>
 
   <section class="wrap">
