@@ -213,7 +213,7 @@
    "name": "Colorlunch",
    "appStoreId": "6838213930",
    "group": "pelit",
-   "released": false,
+   "released": true,
    "icon": "https://embodyapps.fi/icons/colorlunch.png",
    "tagline": {
     "fi": "Värireaktiopeli: syö värejä",
