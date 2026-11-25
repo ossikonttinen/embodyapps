@@ -164,4 +164,14 @@
   </url>
   <url><loc>https://embodyapps.fi/colorlunch/privacy/</loc></url>
   <url><loc>https://embodyapps.fi/colorlunch/support/</loc></url>
+  <url><loc>https://embodyapps.fi/daily-inquiry/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://embodyapps.fi/daily-inquiry/"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/daily-inquiry/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/daily-inquiry/"/>
+  </url>
+  <url><loc>https://embodyapps.fi/fi/daily-inquiry/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://embodyapps.fi/daily-inquiry/"/>
+    <xhtml:link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/daily-inquiry/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/daily-inquiry/"/>
+  </url>
 </urlset>
