@@ -174,4 +174,13 @@
     <xhtml:link rel="alternate" hreflang="fi" href="https://embodyapps.fi/fi/daily-inquiry/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://embodyapps.fi/daily-inquiry/"/>
   </url>
+  <url><loc>https://embodyapps.fi/facilitimer/support/</loc></url>
+  <url><loc>https://embodyapps.fi/balance-of-life/support/</loc></url>
+  <url><loc>https://embodyapps.fi/fairtimer/support/</loc></url>
+  <url><loc>https://embodyapps.fi/fidget-time/support/</loc></url>
+  <url><loc>https://embodyapps.fi/haptisynth/support/</loc></url>
+  <url><loc>https://embodyapps.fi/simple-hrv/support/</loc></url>
+  <url><loc>https://embodyapps.fi/timepace/support/</loc></url>
+  <url><loc>https://embodyapps.fi/shapeslide/support/</loc></url>
+  <url><loc>https://embodyapps.fi/blindslide/support/</loc></url>
 </urlset>

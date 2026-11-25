@@ -6,16 +6,10 @@ const TESTER_URL = 'https://script.google.com/macros/s/AKfycbwDNhQvIeNaigZbrI6ir
 /* TESTFLIGHT-LINKIT: liitä apin julkinen linkki lainausmerkkeihin, kun appi on testissä.
    Tyhjä = näytetään "Tulossa testiin". */
 const TESTFLIGHT = {
-  'Facilitimer': 'https://testflight.apple.com/join/uF9Xq1T9',
-  'Affirmation of Life': 'https://testflight.apple.com/join/cfKkwaG7',
-  'Friendist': 'https://testflight.apple.com/join/BPnMNWDV',
   'Bodybreath': 'https://testflight.apple.com/join/sERBssgz',
   'Timepace': 'https://testflight.apple.com/join/TCusjgeE',
-  'Fairtimer': 'https://testflight.apple.com/join/mkpNH7Hb',
-  'Simple HRV': 'https://testflight.apple.com/join/39EQ9eC7',
   'Blindslide': 'https://testflight.apple.com/join/Vb2TQ2KH',
-  'Shapeslide': 'https://testflight.apple.com/join/Bf6YUgBZ',
-  'Balance of Life': 'https://testflight.apple.com/join/7RUtRCDa'
+  'Shapeslide': 'https://testflight.apple.com/join/Bf6YUgBZ'
 };
 
 /* Testaajalomake: käyttää samaa TESTER_URL-osoitetta, type=tester */
